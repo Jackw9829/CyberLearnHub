@@ -6,11 +6,12 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Configuration;
 
 public class ChatbotHandler : IHttpHandler
 {
-    // *** PASTE YOUR GROQ API KEY HERE ***
-    private const string API_KEY = "REMOVED";
+    
+    string apiKey = ConfigurationManager.AppSettings["GroqApiKey"];
 
     // Groq uses OpenAI-compatible API format
     private const string API_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -67,7 +68,7 @@ public class ChatbotHandler : IHttpHandler
             webRequest.ContentType = "application/json";
             webRequest.Accept = "application/json";
             webRequest.Timeout = 30000;
-            webRequest.Headers.Add("Authorization", "Bearer " + API_KEY);
+            webRequest.Headers.Add("Authorization", "Bearer " + apiKey);
 
             byte[] data = Encoding.UTF8.GetBytes(jsonPayload);
             webRequest.ContentLength = data.Length;
