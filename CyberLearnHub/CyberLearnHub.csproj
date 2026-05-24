@@ -68,12 +68,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Chatbot.aspx" />
+    <Content Include="cyberlearnhub_homepage.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chatbot.aspx.cs">
       <DependentUpon>Chatbot.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="cyberlearnhub_homepage.aspx.cs">
+      <DependentUpon>cyberlearnhub_homepage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="cyberlearnhub_homepage.aspx.designer.cs">
+      <DependentUpon>cyberlearnhub_homepage.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
