@@ -1,0 +1,337 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+.topbar-left{display:flex;align-items:center;gap:8px;flex:1}
+.lab-chip{font-size:11px;font-weight:500;padding:2px 8px;border-radius:var(--border-radius-md);background:var(--color-background-info);color:var(--color-text-info)}
+.lab-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#52a852;flex-shrink:0}
+.status-txt{font-size:11px;color:var(--color-text-secondary)}
+.main{display:grid;grid-template-columns:300px 1fr;min-height:520px}
+.left{border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;background:var(--color-background-primary)}
+.prog-wrap{padding:12px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.prog-row{display:flex;justify-content:space-between;font-size:11px;color:var(--color-text-secondary);margin-bottom:5px}
+.prog-bar{height:3px;background:var(--color-border-tertiary);border-radius:999px;overflow:hidden}
+.prog-fill{height:100%;background:#52a852;border-radius:999px;transition:width .4s}
+.tasks{flex:1;overflow-y:auto}
+.task{display:flex;gap:9px;padding:9px 14px;cursor:pointer;border-left:2px solid transparent;transition:background .12s}
+.task:hover{background:var(--color-background-secondary)}
+.task.active{background:var(--color-background-secondary);border-left-color:var(--color-text-info)}
+.tnum{width:20px;height:20px;border-radius:50%;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:var(--color-text-secondary);flex-shrink:0;margin-top:1px;transition:all .2s}
+.tnum.done{background:var(--color-background-success);border-color:var(--color-border-success);color:var(--color-text-success)}
+.tinfo h4{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:1px}
+.tinfo p{font-size:11px;color:var(--color-text-secondary)}
+.detail{padding:12px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.detail h3{font-size:12px;font-weight:500;margin-bottom:6px;color:var(--color-text-primary)}
+.detail-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:10px}
+.hint{font-size:11px;color:var(--color-text-warning);background:var(--color-background-warning);border:0.5px solid var(--color-border-warning);border-radius:var(--border-radius-md);padding:6px 9px;margin-bottom:8px;display:none}
+.hint.on{display:block}
+.action-row{display:flex;gap:5px;margin-bottom:8px}
+.btn{font-size:11px;padding:5px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);cursor:pointer}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-sm{font-size:11px;padding:4px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);cursor:pointer}
+.btn-sm:hover{background:var(--color-background-secondary)}
+.flag-row{display:flex;gap:5px}
+.flag-in{flex:1;font-size:11px;padding:5px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);font-family:var(--font-mono)}
+.flag-in:focus{outline:none;border-color:var(--color-border-info)}
+.flag-msg{font-size:11px;margin-top:5px;display:none}
+.flag-msg.ok{color:var(--color-text-success);display:block}
+.flag-msg.err{color:var(--color-text-danger);display:block}
+.right{display:flex;flex-direction:column;background:var(--color-background-primary)}
+.term-header{padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:8px;background:var(--color-background-secondary)}
+.dots{display:flex;gap:4px}
+.dot{width:9px;height:9px;border-radius:50%}
+.dr{background:#e05252}.dy{background:#e0a052}.dg{background:#52a852}
+.term-lbl{font-size:11px;color:var(--color-text-secondary);font-family:var(--font-mono);flex:1}
+.ai-badge{font-size:10px;padding:2px 7px;border-radius:var(--border-radius-md);background:var(--color-background-info);color:var(--color-text-info);font-weight:500}
+.term-body{flex:1;padding:12px;font-family:var(--font-mono);font-size:11.5px;overflow-y:auto;min-height:280px;max-height:340px;line-height:1.75}
+.tl{color:var(--color-text-secondary)}
+.tl.cmd{color:var(--color-text-primary)}
+.tl.ok{color:var(--color-text-success)}
+.tl.err{color:var(--color-text-danger)}
+.tl.sys{color:var(--color-text-info)}
+.tl.ai{color:var(--color-text-warning)}
+.tl.thinking{color:var(--color-text-tertiary);font-style:italic}
+.inp-row{display:flex;align-items:center;padding:0 12px 10px;gap:6px;border-top:0.5px solid var(--color-border-tertiary);padding-top:8px}
+.prompt{font-family:var(--font-mono);font-size:11.5px;color:var(--color-text-success);white-space:nowrap}
+.term-inp{flex:1;font-family:var(--font-mono);font-size:11.5px;border:none;background:transparent;color:var(--color-text-primary);outline:none}
+.quick-row{padding:7px 12px;border-top:0.5px solid var(--color-border-tertiary);display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.qlabel{font-size:10px;color:var(--color-text-tertiary)}
+.qc{font-family:var(--font-mono);font-size:10px;padding:2px 7px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer}
+.qc:hover{color:var(--color-text-primary);border-color:var(--color-border-primary)}
+.api-bar{padding:8px 12px;border-top:0.5px solid var(--color-border-tertiary);display:flex;gap:6px;align-items:center;background:var(--color-background-secondary)}
+.api-bar label{font-size:11px;color:var(--color-text-secondary);white-space:nowrap}
+.api-in{flex:1;font-size:11px;padding:4px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);font-family:var(--font-mono)}
+.api-in:focus{outline:none;border-color:var(--color-border-info)}
+.api-status{font-size:10px;color:var(--color-text-tertiary);white-space:nowrap}
+.api-status.live{color:var(--color-text-success)}
+</style>
+
+<h2 class="sr-only">CyberLearnHub interactive lab simulation with AI-powered terminal</h2>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="topbar-left">
+      <i class="ti ti-shield-lock" style="font-size:16px;color:var(--color-text-info)" aria-hidden="true"></i>
+      <span class="lab-chip">Lab 01</span>
+      <span class="lab-title">Network Reconnaissance</span>
+    </div>
+    <div class="status-dot"></div>
+    <span class="status-txt">Target online — 10.10.10.5</span>
+  </div>
+
+  <div class="main">
+    <div class="left">
+      <div class="prog-wrap">
+        <div class="prog-row"><span>Progress</span><span id="ptxt">0 / 4 tasks</span></div>
+        <div class="prog-bar"><div class="prog-fill" id="pfill" style="width:0%"></div></div>
+      </div>
+
+      <div class="tasks">
+        <div class="task active" onclick="selTask(0)">
+          <div class="tnum" id="tn0">1</div>
+          <div class="tinfo"><h4>Ping the target</h4><p>Verify the host is reachable</p></div>
+        </div>
+        <div class="task" onclick="selTask(1)">
+          <div class="tnum" id="tn1">2</div>
+          <div class="tinfo"><h4>Port scan</h4><p>Discover open ports with nmap</p></div>
+        </div>
+        <div class="task" onclick="selTask(2)">
+          <div class="tnum" id="tn2">3</div>
+          <div class="tinfo"><h4>Service detection</h4><p>Identify versions on open ports</p></div>
+        </div>
+        <div class="task" onclick="selTask(3)">
+          <div class="tnum" id="tn3">4</div>
+          <div class="tinfo"><h4>Capture the flag</h4><p>Find and submit the hidden flag</p></div>
+        </div>
+      </div>
+
+      <div class="detail">
+        <h3 id="dtitle">Task 1: Ping the target</h3>
+        <p class="detail-desc" id="ddesc">Use <code>ping 10.10.10.5</code> to check if the target machine is online. A live host will reply with ICMP packets.</p>
+        <div class="hint on" id="hintbox">Hint: <code>ping 10.10.10.5</code></div>
+        <div class="action-row">
+          <button class="btn-sm" onclick="toggleHint()">Toggle hint</button>
+          <button class="btn-sm" onclick="insertCmd()">Insert command</button>
+        </div>
+        <div class="flag-row">
+          <input class="flag-in" id="flagin" type="text" placeholder="FLAG{...}" />
+          <button class="btn" onclick="checkFlag()">Submit</button>
+        </div>
+        <div class="flag-msg" id="flagmsg"></div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="term-header">
+        <div class="dots"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div></div>
+        <span class="term-lbl">student@cyberlearnhub ~ bash</span>
+        <span class="ai-badge"><i class="ti ti-sparkles" aria-hidden="true"></i> AI terminal</span>
+      </div>
+
+      <div class="term-body" id="tbody">
+        <div class="tl sys">CyberLearnHub Lab Environment v1.0 — AI Mode</div>
+        <div class="tl sys">Target: 10.10.10.5 | Subnet: 10.10.10.0/24</div>
+        <div class="tl" style="margin-top:6px">Add your API key below, then type any command. The AI terminal understands context!</div>
+        <div class="tl" style="margin-top:4px">No API key? Use built-in commands: <span style="color:var(--color-text-primary)">ping, nmap, help, whoami, ls, cat</span></div>
+        <div class="tl" style="height:6px"></div>
+      </div>
+
+      <div class="inp-row">
+        <span class="prompt">student@lab:~$</span>
+        <input class="term-inp" id="tinput" type="text" placeholder="type a command..." autocomplete="off" spellcheck="false" />
+      </div>
+
+      <div class="quick-row">
+        <span class="qlabel">Quick:</span>
+        <span class="qc" onclick="runQ('ping 10.10.10.5')">ping 10.10.10.5</span>
+        <span class="qc" onclick="runQ('nmap 10.10.10.5')">nmap</span>
+        <span class="qc" onclick="runQ('nmap -sV 10.10.10.5')">nmap -sV</span>
+        <span class="qc" onclick="runQ('ls')">ls</span>
+        <span class="qc" onclick="runQ('cat flag.txt')">cat flag.txt</span>
+        <span class="qc" onclick="runQ('help')">help</span>
+        <span class="qc" onclick="runQ('clear')">clear</span>
+      </div>
+
+      <div class="api-bar">
+        <i class="ti ti-key" style="font-size:14px;color:var(--color-text-secondary)" aria-hidden="true"></i>
+        <label for="apikey">API key</label>
+        <input class="api-in" id="apikey" type="password" placeholder="sk-ant-api03-..." oninput="checkKey()" />
+        <span class="api-status" id="keystatus">not set — using built-in</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TASKS = [
+  {title:"Task 1: Ping the target", desc:'Use <code>ping 10.10.10.5</code> to check if the target is alive. A live host replies with ICMP packets.', hint:'<code>ping 10.10.10.5</code>', cmd:'ping 10.10.10.5', flag:'FLAG{HOST_IS_ALIVE}'},
+  {title:"Task 2: Port scan", desc:'Run <code>nmap 10.10.10.5</code> to discover which TCP ports are open on the target.', hint:'<code>nmap 10.10.10.5</code>', cmd:'nmap 10.10.10.5', flag:'FLAG{3_PORTS_OPEN}'},
+  {title:"Task 3: Service detection", desc:'Use <code>nmap -sV 10.10.10.5</code> to fingerprint the software versions running on each open port.', hint:'<code>nmap -sV 10.10.10.5</code>', cmd:'nmap -sV 10.10.10.5', flag:'FLAG{APACHE_2.4.29}'},
+  {title:"Task 4: Capture the flag", desc:'You have enough recon. SSH creds are <code>guest:guest123</code>. Connect, then read the flag file on the target.', hint:'Try <code>cat flag.txt</code>', cmd:'cat flag.txt', flag:'FLAG{R3C0N_M4ST3R}'}
+];
+
+const BUILTIN = {
+  'help':()=>[{c:'ok',v:'Built-in commands:'},{c:'tl',v:'  ping <host>        check connectivity'},{c:'tl',v:'  nmap <host>        port scan'},{c:'tl',v:'  nmap -sV <host>    version detection'},{c:'tl',v:'  whoami             current user'},{c:'tl',v:'  ls                 list files'},{c:'tl',v:'  cat <file>         read file'},{c:'tl',v:'  clear              clear screen'},{c:'tl',v:' '},{c:'sys',v:'AI mode: type anything else and Claude responds in character!'}],
+  'whoami':()=>[{c:'tl',v:'student'}],
+  'ls':()=>[{c:'tl',v:'Desktop  Documents  labs  tools'},{c:'tl',v:'flag.txt  notes.txt  recon.sh'}],
+  'cat flag.txt':()=>[{c:'ok',v:'FLAG{R3C0N_M4ST3R}'},{c:'sys',v:'Task 4 complete — submit this flag!'}],
+  'cat notes.txt':()=>[{c:'tl',v:'# Recon notes'},{c:'tl',v:'Target: 10.10.10.5'},{c:'tl',v:'Always enumerate before exploiting.'}],
+  'cat recon.sh':()=>[{c:'tl',v:'#!/bin/bash'},{c:'tl',v:'nmap -sV -oN scan.txt $1'}],
+  'ping 10.10.10.5':()=>[{c:'sys',v:'PING 10.10.10.5: 56 bytes'},{c:'tl',v:'64 bytes from 10.10.10.5: icmp_seq=0 ttl=63 time=1.24ms'},{c:'tl',v:'64 bytes from 10.10.10.5: icmp_seq=1 ttl=63 time=1.18ms'},{c:'tl',v:'64 bytes from 10.10.10.5: icmp_seq=2 ttl=63 time=1.31ms'},{c:'tl',v:'3 packets, 0% loss, avg 1.24ms'},{c:'ok',v:'Host is UP!  →  FLAG{HOST_IS_ALIVE}'}],
+  'nmap 10.10.10.5':()=>[{c:'sys',v:'Nmap 7.80 — scanning 10.10.10.5'},{c:'tl',v:'Host is up (0.012s latency)'},{c:'tl',v:' '},{c:'tl',v:'PORT    STATE  SERVICE'},{c:'ok',v:'22/tcp  open   ssh'},{c:'ok',v:'80/tcp  open   http'},{c:'ok',v:'443/tcp open   https'},{c:'tl',v:' '},{c:'sys',v:'3 open ports  →  FLAG{3_PORTS_OPEN}'}],
+  'nmap -sv 10.10.10.5':()=>[{c:'sys',v:'Nmap 7.80 — version detection on 10.10.10.5'},{c:'tl',v:' '},{c:'tl',v:'PORT    STATE  SERVICE  VERSION'},{c:'ok',v:'22/tcp  open   ssh      OpenSSH 7.6p1 Ubuntu'},{c:'ok',v:'80/tcp  open   http     Apache httpd 2.4.29'},{c:'ok',v:'443/tcp open   ssl      Apache httpd 2.4.29'},{c:'tl',v:' '},{c:'sys',v:'Web server: Apache 2.4.29  →  FLAG{APACHE_2.4.29}'}],
+};
+BUILTIN['nmap -sv 10.10.10.5'] = BUILTIN['nmap -sv 10.10.10.5'];
+
+let done = new Set(), cur = 0, hintOn = true, busy = false;
+
+const SYS_PROMPT = `You are a realistic Linux bash terminal simulator for a cybersecurity learning lab called CyberLearnHub.
+The student is doing a Network Reconnaissance lab. Target machine IP: 10.10.10.5.
+Lab context: The target has ports 22 (OpenSSH 7.6), 80 (Apache 2.4.29), 443 (Apache 2.4.29) open.
+SSH creds: guest / guest123. File flag.txt on target contains FLAG{R3C0N_M4ST3R}.
+
+Rules:
+- Respond ONLY as a terminal — output the command result, nothing else. No explanations, no markdown headers.
+- Be realistic: simulate actual tool output (nmap, ping, ssh, curl, gobuster, etc.)
+- For unknown/irrelevant commands output a realistic bash error.
+- If the student finds something interesting (open port, service version, a flag), end your output with a line like: → FLAG{...} so they know a flag is available.
+- Keep responses concise — max 12 lines.
+- Stay in character as a hacking lab terminal at all times.`;
+
+async function aiRun(cmd) {
+  const key = document.getElementById('apikey').value.trim();
+  if (!key) return null;
+  addLine('thinking', '[ AI thinking... ]');
+  busy = true;
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:SYS_PROMPT,messages:[{role:'user',content:cmd}]})
+    });
+    const d = await r.json();
+    removeLast();
+    if (d.error) { addLine('err','[API error] ' + d.error.message); return true; }
+    const txt = d.content?.[0]?.text || '';
+    txt.split('\n').forEach(l => {
+      if (!l.trim()) return;
+      const c = l.startsWith('→') ? 'ok' : l.startsWith('[') ? 'sys' : l.startsWith('bash:') || l.includes('error') ? 'err' : 'tl';
+      addLine(c, l);
+    });
+    return true;
+  } catch(e) {
+    removeLast();
+    addLine('err','[Network error] ' + e.message);
+    return true;
+  } finally { busy = false; }
+}
+
+function addLine(cls, txt) {
+  const tb = document.getElementById('tbody');
+  const d = document.createElement('div');
+  d.className = 'tl ' + cls;
+  d.textContent = txt;
+  d.dataset.dyn = '1';
+  tb.appendChild(d);
+  tb.scrollTop = tb.scrollHeight;
+}
+
+function removeLast() {
+  const tb = document.getElementById('tbody');
+  const last = tb.querySelector('.tl[data-dyn="1"]:last-child');
+  if (last) last.remove();
+}
+
+async function runCmd(raw) {
+  if (busy) return;
+  const tb = document.getElementById('tbody');
+  const p = document.createElement('div');
+  p.className = 'tl cmd';
+  p.textContent = 'student@lab:~$ ' + raw;
+  tb.appendChild(p);
+  tb.scrollTop = tb.scrollHeight;
+
+  const key = raw.toLowerCase().trim();
+  if (key === 'clear') { tb.innerHTML = ''; return; }
+
+  const fn = BUILTIN[key] || BUILTIN[raw.toLowerCase()];
+  if (fn) {
+    fn().forEach(l => addLine(l.c, l.v));
+    return;
+  }
+
+  const used = await aiRun(raw);
+  if (!used) {
+    addLine('err', 'bash: ' + raw + ': command not found');
+    addLine('tl', "Type 'help' or add your API key for AI-powered responses.");
+  }
+}
+
+function runQ(cmd) {
+  runCmd(cmd);
+  document.getElementById('tinput').focus();
+}
+
+function selTask(i) {
+  cur = i;
+  document.querySelectorAll('.task').forEach((el,j) => el.classList.toggle('active', j===i));
+  document.getElementById('dtitle').textContent = TASKS[i].title;
+  document.getElementById('ddesc').innerHTML = TASKS[i].desc;
+  document.getElementById('hintbox').innerHTML = 'Hint: ' + TASKS[i].hint;
+  document.getElementById('hintbox').className = 'hint on';
+  document.getElementById('flagin').value = '';
+  document.getElementById('flagmsg').className = 'flag-msg';
+  hintOn = true;
+}
+
+function toggleHint() {
+  hintOn = !hintOn;
+  document.getElementById('hintbox').className = 'hint' + (hintOn?' on':'');
+}
+
+function insertCmd() {
+  document.getElementById('tinput').value = TASKS[cur].cmd;
+  document.getElementById('tinput').focus();
+}
+
+function checkFlag() {
+  const v = document.getElementById('flagin').value.trim().toUpperCase();
+  const msg = document.getElementById('flagmsg');
+  if (v === TASKS[cur].flag.toUpperCase()) {
+    msg.textContent = '✓ Correct! Task complete.';
+    msg.className = 'flag-msg ok';
+    done.add(cur);
+    const tn = document.getElementById('tn'+cur);
+    tn.textContent = '✓';
+    tn.className = 'tnum done';
+    updateProg();
+    addLine('ok', '[+] FLAG submitted: ' + TASKS[cur].flag + ' — task ' + (cur+1) + ' complete!');
+  } else {
+    msg.textContent = v ? '✗ Wrong flag. Check terminal output.' : '✗ Enter a flag first.';
+    msg.className = 'flag-msg err';
+  }
+}
+
+function updateProg() {
+  const pct = Math.round(done.size / TASKS.length * 100);
+  document.getElementById('pfill').style.width = pct + '%';
+  document.getElementById('ptxt').textContent = done.size + ' / ' + TASKS.length + ' tasks';
+}
+
+function checkKey() {
+  const k = document.getElementById('apikey').value.trim();
+  const s = document.getElementById('keystatus');
+  if (k.startsWith('sk-ant')) { s.textContent = 'API key set — AI mode active'; s.className = 'api-status live'; }
+  else if (k.length > 0) { s.textContent = 'key format looks wrong'; s.className = 'api-status'; }
+  else { s.textContent = 'not set — using built-in'; s.className = 'api-status'; }
+}
+
+document.getElementById('tinput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && this.value.trim() && !busy) {
+    runCmd(this.value.trim());
+    this.value = '';
+  }
+});
+</script>
