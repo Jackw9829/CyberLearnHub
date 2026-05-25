@@ -70,6 +70,7 @@
     <Content Include="Chatbot.aspx" />
     <Content Include="cyberlearnhub_homepage.aspx" />
     <Content Include="cyberlearnhub_lab_ai_simulation.html" />
+    <Content Include="Lab.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +84,19 @@
     </Compile>
     <Compile Include="cyberlearnhub_homepage.aspx.designer.cs">
       <DependentUpon>cyberlearnhub_homepage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Lab.aspx.cs">
+      <DependentUpon>Lab.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Lab.aspx.cs.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Lab.aspx.cs.designer.cs">
+      <DependentUpon>Lab.aspx.cs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Lab.aspx.designer.cs">
+      <DependentUpon>Lab.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
