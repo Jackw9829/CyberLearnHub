@@ -71,6 +71,8 @@
     <Content Include="cyberlearnhub_homepage.aspx" />
     <Content Include="cyberlearnhub_lab_ai_simulation.html" />
     <Content Include="Lab.aspx" />
+    <Content Include="Login.aspx" />
+    <Content Include="Register.aspx" />
     <Content Include="Site.Master" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -98,6 +100,20 @@
     </Compile>
     <Compile Include="Lab.aspx.designer.cs">
       <DependentUpon>Lab.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
