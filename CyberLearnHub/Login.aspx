@@ -162,7 +162,7 @@
                     <a href="ForgotPassword.aspx" class="forgot-link">Forgot password?</a>
                 </label>
                 <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control"
-                    placeholder="••••••••" TextMode="Password" MaxLength="100" />
+                    placeholder="********" TextMode="Password" MaxLength="100" />
                 <asp:RequiredFieldValidator ID="rfvPassword" runat="server"
                     ControlToValidate="txtPassword"
                     CssClass="form-error"

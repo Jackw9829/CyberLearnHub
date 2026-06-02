@@ -156,7 +156,7 @@
                     CssClass="form-error"
                     ErrorMessage="&gt; Username is required."
                     Display="Dynamic" />
-                <span class="form-hint">3–50 characters</span>
+                <span class="form-hint">3 - 50 characters</span>
             </div>
 
             <%-- Email --%>
@@ -181,7 +181,7 @@
             <div class="form-group">
                 <label class="form-label" for="txtPassword">Password</label>
                 <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control"
-                    placeholder="••••••••" TextMode="Password" MaxLength="100" />
+                    placeholder="********" TextMode="Password" MaxLength="100" />
                 <asp:RequiredFieldValidator ID="rfvPassword" runat="server"
                     ControlToValidate="txtPassword"
                     CssClass="form-error"
@@ -200,7 +200,7 @@
             <div class="form-group">
                 <label class="form-label" for="txtConfirmPassword">Confirm Password</label>
                 <asp:TextBox ID="txtConfirmPassword" runat="server" CssClass="form-control"
-                    placeholder="••••••••" TextMode="Password" MaxLength="100" />
+                    placeholder="********" TextMode="Password" MaxLength="100" />
                 <asp:RequiredFieldValidator ID="rfvConfirm" runat="server"
                     ControlToValidate="txtConfirmPassword"
                     CssClass="form-error"
