@@ -1,180 +1,9 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="cyberlearnhub_homepage.aspx.cs" Inherits="CyberLearnHub.cyberlearnhub_homepage" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="cyberlearnhub_homepage.aspx.cs"
+         Inherits="CyberLearnHub.cyberlearnhub_homepage" MasterPageFile="~/Site.Master" %>
 
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
     <title>CyberLearn Hub - Master Cybersecurity</title>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
-
-    <!-- Tabler Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" />
-
     <style>
-        /* =============================================
-           RESET & ROOT VARIABLES
-        ============================================= */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --cyber-bg:      #080d14;
-            --cyber-surface: #0d1520;
-            --cyber-card:    #111c2b;
-            --cyber-border:  #1a3050;
-            --cyber-accent:  #00d4ff;
-            --cyber-accent2: #00ff9d;
-            --cyber-danger:  #ff3b5c;
-            --cyber-text:    #c8dff0;
-            --cyber-muted:   #5a7a99;
-            --cyber-heading: #e8f4ff;
-        }
-
-        body {
-            background: var(--cyber-bg);
-            font-family: 'Inter', sans-serif;
-            color: var(--cyber-text);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* =============================================
-           BACKGROUND EFFECTS
-        ============================================= */
-        .grid-overlay {
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .scanline {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
-            animation: scan 8s linear infinite;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        @keyframes scan {
-            0%   { top: 0; }
-            100% { top: 100vh; }
-        }
-
-        /* =============================================
-           NAVIGATION
-        ============================================= */
-        .navbar {
-            position: relative;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 40px;
-            border-bottom: 1px solid var(--cyber-border);
-            background: rgba(8,13,20,0.95);
-            backdrop-filter: blur(8px);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 20px;
-            color: var(--cyber-heading);
-            letter-spacing: 1px;
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            width: 34px;
-            height: 34px;
-            background: rgba(0,212,255,0.1);
-            border: 1px solid var(--cyber-accent);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 17px;
-            color: var(--cyber-accent);
-        }
-
-        .logo-accent { color: var(--cyber-accent); }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .nav-links li a {
-            text-decoration: none;
-            color: var(--cyber-muted);
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            transition: color 0.2s;
-        }
-
-        .nav-links li a:hover { color: var(--cyber-accent); }
-
-        .nav-buttons { display: flex; gap: 10px; }
-
-        /* ASP.NET Button controls — override default styling */
-        .btn-ghost,
-        input[type="submit"].btn-ghost,
-        .btn-ghost[type="submit"] {
-            padding: 8px 18px;
-            border: 1px solid var(--cyber-border);
-            background: transparent;
-            color: var(--cyber-text);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            border-radius: 4px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-
-        .btn-ghost:hover { border-color: var(--cyber-accent); color: var(--cyber-accent); }
-
-        .btn-primary,
-        input[type="submit"].btn-primary,
-        .btn-primary[type="submit"] {
-            padding: 8px 20px;
-            background: var(--cyber-accent);
-            border: none;
-            color: #080d14;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            border-radius: 4px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: background 0.2s;
-        }
-
-        .btn-primary:hover { background: #33ddff; }
-
         /* =============================================
            HERO SECTION
         ============================================= */
@@ -201,19 +30,6 @@
             letter-spacing: 1.5px;
             margin-bottom: 28px;
             text-transform: uppercase;
-        }
-
-        .badge-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--cyber-accent2);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50%       { opacity: 0.3; }
         }
 
         .hero h1 {
@@ -250,30 +66,6 @@
             justify-content: center;
             flex-wrap: wrap;
         }
-
-        .btn-lg {
-            padding: 13px 30px !important;
-            font-size: 14px !important;
-            letter-spacing: 1.5px !important;
-            border-radius: 5px !important;
-        }
-
-        .btn-outline-lg {
-            padding: 13px 30px;
-            border: 1px solid var(--cyber-border);
-            background: transparent;
-            color: var(--cyber-text);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            border-radius: 5px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-
-        .btn-outline-lg:hover { border-color: var(--cyber-accent); color: var(--cyber-accent); }
 
         /* =============================================
            STATS BAR
@@ -362,23 +154,6 @@
             margin-bottom: 24px;
         }
 
-        .section-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--cyber-heading);
-            letter-spacing: 0.5px;
-        }
-
-        .section-subtitle {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 11px;
-            color: var(--cyber-muted);
-            letter-spacing: 2px;
-            margin-left: 10px;
-            text-transform: uppercase;
-        }
-
         .link-all {
             font-size: 12px;
             color: var(--cyber-accent);
@@ -395,96 +170,6 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 18px;
         }
-
-        .course-card {
-            background: var(--cyber-card);
-            border: 1px solid var(--cyber-border);
-            border-radius: 8px;
-            padding: 22px;
-            position: relative;
-            overflow: hidden;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-
-        .course-card:hover {
-            border-color: var(--cyber-accent);
-            transform: translateY(-3px);
-        }
-
-        /* Coloured top accent bar */
-        .course-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-        }
-
-        .card-green::before  { background: var(--cyber-accent2); }
-        .card-blue::before   { background: var(--cyber-accent); }
-        .card-red::before    { background: var(--cyber-danger); }
-
-        .course-level {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-
-        .level-beginner     { color: var(--cyber-accent2); }
-        .level-intermediate { color: var(--cyber-accent); }
-        .level-advanced     { color: var(--cyber-danger); }
-
-        .course-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--cyber-heading);
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .course-desc {
-            font-size: 13px;
-            color: var(--cyber-muted);
-            line-height: 1.65;
-            margin-bottom: 18px;
-        }
-
-        .course-meta {
-            display: flex;
-            gap: 16px;
-            font-size: 11px;
-            color: var(--cyber-muted);
-            font-family: 'Share Tech Mono', monospace;
-            margin-bottom: 16px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* Enroll button — asp:Button rendered as input[type=submit] */
-        .btn-enroll,
-        input[type="submit"].btn-enroll {
-            width: 100%;
-            padding: 9px;
-            background: rgba(0,212,255,0.06);
-            border: 1px solid rgba(0,212,255,0.22);
-            border-radius: 4px;
-            color: var(--cyber-accent);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-enroll:hover { background: rgba(0,212,255,0.14); }
 
         /* =============================================
            FEATURES SECTION
@@ -509,23 +194,6 @@
 
         .feature-card:hover { border-color: rgba(0,212,255,0.35); }
 
-        .feature-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 14px;
-            font-size: 20px;
-            border: 1px solid;
-        }
-
-        .fi-cyan   { background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.3); color: var(--cyber-accent); }
-        .fi-green  { background: rgba(0,255,157,0.08); border-color: rgba(0,255,157,0.3); color: var(--cyber-accent2); }
-        .fi-amber  { background: rgba(250,199,117,0.08); border-color: rgba(250,199,117,0.3); color: #fac775; }
-        .fi-red    { background: rgba(255,59,92,0.08); border-color: rgba(255,59,92,0.3); color: var(--cyber-danger); }
-
         .feature-title {
             font-family: 'Rajdhani', sans-serif;
             font-size: 14px;
@@ -541,266 +209,157 @@
             color: var(--cyber-muted);
             line-height: 1.65;
         }
-
-        /* =============================================
-           FOOTER
-        ============================================= */
-        .site-footer {
-            position: relative;
-            z-index: 5;
-            border-top: 1px solid var(--cyber-border);
-            padding: 22px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--cyber-surface);
-        }
-
-        .footer-copy {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 11px;
-            color: var(--cyber-muted);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 22px;
-        }
-
-        .footer-links a {
-            font-size: 11px;
-            color: var(--cyber-muted);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover { color: var(--cyber-accent); }
     </style>
-</head>
-<body>
-    <!-- Background decorative elements -->
-    <div class="grid-overlay" aria-hidden="true"></div>
-    <div class="scanline" aria-hidden="true"></div>
+</asp:Content>
 
-    <!-- ASP.NET requires one server-side form wrapping all server controls -->
-    <form id="form1" runat="server">
+<asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">
 
-        <!-- =============================================
-             NAVIGATION
-        ============================================= -->
-        <nav class="navbar" role="navigation" aria-label="Main navigation">
-            <a href="cyberlearnhub_homepage.aspx" class="logo">
-                <div class="logo-icon" aria-hidden="true">
-                    <i class="ti ti-shield-lock"></i>
-                </div>
-                CYBER<span class="logo-accent">LEARN</span> HUB
-            </a>
-
-            <ul class="nav-links">
-                <li><a href="CourseListing.aspx">Courses</a></li>
-                <li><a href="Quizzes.aspx">Quizzes</a></li>
-                <li><a href="Progress.aspx">Progress</a></li>
-                <li><a href="About.aspx">About</a></li>
-            </ul>
-
-            <div class="nav-buttons">
-                <%-- asp:Button renders as <input type="submit"> — OnClick fires code-behind method --%>
-                <asp:Button ID="btnLogin"    runat="server" Text="Log In"   CssClass="btn-ghost"   OnClick="btnLogin_Click" />
-                <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="btn-primary" OnClick="btnRegister_Click" />
-            </div>
-        </nav>
-
-        <!-- =============================================
-             HERO
-        ============================================= -->
-        <section class="hero" aria-label="Hero section">
-            <div class="hero-badge" aria-label="Platform status">
-                <div class="badge-dot" aria-hidden="true"></div>
-                LIVE PLATFORM &mdash; CYBERSECURITY EDUCATION
-            </div>
-
-            <h1>Master <span class="accent">Cybersecurity</span><br />from the Ground Up</h1>
-
-            <p>
-                Interactive courses, auto-graded quizzes, and real-time progress tracking —
-                designed for students and beginners entering the world of digital defence.
-            </p>
-
-            <span class="terminal-tag">&gt; enrollment.open // all skill levels welcome</span>
-
-            <div class="hero-ctas">
-                <asp:Button ID="btnBrowseCourses" runat="server" Text="Browse Courses"
-                    CssClass="btn-primary btn-lg" OnClick="btnBrowseCourses_Click" />
-
-                <a href="About.aspx" class="btn-outline-lg">Learn More</a>
-            </div>
-        </section>
-
-        <!-- =============================================
-             STATS BAR
-        ============================================= -->
-        <div class="stats-bar" role="region" aria-label="Platform statistics">
-            <div class="stat-item">
-                <span class="stat-num">12+</span>
-                <span class="stat-label">Courses Available</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-num">100%</span>
-                <span class="stat-label">Auto-Marked Quizzes</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-num">3</span>
-                <span class="stat-label">User Roles</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-num">24/7</span>
-                <span class="stat-label">Self-Paced Access</span>
-            </div>
+    <!-- =============================================
+         HERO
+    ============================================= -->
+    <section class="hero" aria-label="Hero section">
+        <div class="hero-badge" aria-label="Platform status">
+            <div class="badge-dot" aria-hidden="true"></div>
+            LIVE PLATFORM &mdash; CYBERSECURITY EDUCATION
         </div>
 
-        <!-- =============================================
-             SEARCH BAR
-        ============================================= -->
-        <div class="search-section" role="search" aria-label="Course search">
-            <div class="search-wrapper">
-                <%-- TextBox renders as <input type="text"> --%>
-                <asp:TextBox ID="txtSearch" runat="server"
-                    CssClass="search-input"
-                    placeholder="Search courses, topics, keywords..."
-                    AutoCompleteType="Disabled" />
+        <h1>Master <span class="accent">Cybersecurity</span><br />from the Ground Up</h1>
 
-                <asp:Button ID="btnSearch" runat="server" Text="Search"
-                    CssClass="btn-primary" OnClick="btnSearch_Click" />
+        <p>
+            Interactive courses, auto-graded quizzes, and real-time progress tracking &mdash;
+            designed for students and beginners entering the world of digital defence.
+        </p>
+
+        <span class="terminal-tag">&gt; enrollment.open // all skill levels welcome</span>
+
+        <div class="hero-ctas">
+            <asp:Button ID="btnBrowseCourses" runat="server" Text="Browse Courses"
+                CssClass="btn-primary btn-lg" OnClick="btnBrowseCourses_Click" />
+            <a href="About.aspx" class="btn-outline-lg">Learn More</a>
+        </div>
+    </section>
+
+    <!-- =============================================
+         STATS BAR
+    ============================================= -->
+    <div class="stats-bar" role="region" aria-label="Platform statistics">
+        <div class="stat-item">
+            <span class="stat-num">12+</span>
+            <span class="stat-label">Courses Available</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">100%</span>
+            <span class="stat-label">Auto-Marked Quizzes</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">3</span>
+            <span class="stat-label">User Roles</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">24/7</span>
+            <span class="stat-label">Self-Paced Access</span>
+        </div>
+    </div>
+
+    <!-- =============================================
+         SEARCH BAR
+    ============================================= -->
+    <div class="search-section" role="search" aria-label="Course search">
+        <div class="search-wrapper">
+            <asp:TextBox ID="txtSearch" runat="server"
+                CssClass="search-input"
+                placeholder="Search courses, topics, keywords..."
+                AutoCompleteType="Disabled" />
+            <asp:Button ID="btnSearch" runat="server" Text="Search"
+                CssClass="btn-primary" OnClick="btnSearch_Click" />
+        </div>
+        <asp:Label ID="lblSearchMsg" runat="server" Text=""
+            Style="display:block; text-align:center; margin-top:10px;
+                   font-family:'Share Tech Mono',monospace; font-size:12px;
+                   color:var(--cyber-muted);" />
+    </div>
+
+    <!-- =============================================
+         FEATURED COURSES
+    ============================================= -->
+    <section class="courses-section" aria-label="Featured courses">
+        <div class="section-header">
+            <div>
+                <span class="section-title">Featured Courses</span>
+                <span class="section-subtitle">// curated content</span>
             </div>
-
-            <%-- Label to show search feedback from code-behind --%>
-            <asp:Label ID="lblSearchMsg" runat="server" Text=""
-                Style="display:block; text-align:center; margin-top:10px;
-                       font-family:'Share Tech Mono',monospace; font-size:12px;
-                       color:#5a7a99;" />
+            <a href="CourseListing.aspx" class="link-all">View All &rarr;</a>
         </div>
 
-        <!-- =============================================
-             FEATURED COURSES
-        ============================================= -->
-        <section class="courses-section" aria-label="Featured courses">
-            <div class="section-header">
-                <div>
-                    <span class="section-title">Featured Courses</span>
-                    <span class="section-subtitle">// curated content</span>
+        <div class="course-grid">
+
+            <div class="course-card card-green">
+                <div class="course-level level-beginner">&#9679; Beginner</div>
+                <div class="course-title">Introduction to Cybersecurity</div>
+                <div class="course-desc">
+                    Core concepts, threats, and terminology for those starting their security journey.
                 </div>
-                <a href="CourseListing.aspx" class="link-all">View All &rarr;</a>
+                <div class="course-meta">
+                    <span class="meta-item">
+                        <i class="ti ti-clock" style="font-size:13px;" aria-hidden="true"></i> 4h 30m
+                    </span>
+                    <span class="meta-item">
+                        <i class="ti ti-list-check" style="font-size:13px;" aria-hidden="true"></i> 8 quizzes
+                    </span>
+                </div>
+                <asp:Button ID="btnEnroll1" runat="server" Text="Enroll Now"
+                    CssClass="btn-enroll" OnClick="btnEnroll1_Click" CommandArgument="1" />
             </div>
 
-            <div class="course-grid">
-
-                <!-- Course Card 1 — Beginner -->
-                <div class="course-card card-green">
-                    <div class="course-level level-beginner">&#9679; Beginner</div>
-                    <div class="course-title">Introduction to Cybersecurity</div>
-                    <div class="course-desc">
-                        Core concepts, threats, and terminology for those starting their security journey.
-                    </div>
-                    <div class="course-meta">
-                        <span class="meta-item">
-                            <i class="ti ti-clock" style="font-size:13px;" aria-hidden="true"></i> 4h 30m
-                        </span>
-                        <span class="meta-item">
-                            <i class="ti ti-list-check" style="font-size:13px;" aria-hidden="true"></i> 8 quizzes
-                        </span>
-                    </div>
-                    <asp:Button ID="btnEnroll1" runat="server" Text="Enroll Now"
-                        CssClass="btn-enroll" OnClick="btnEnroll1_Click"
-                        CommandArgument="1" />
+            <div class="course-card card-blue">
+                <div class="course-level level-intermediate">&#9670; Intermediate</div>
+                <div class="course-title">TBC</div>
+                <div class="course-desc">TBC</div>
+                <div class="course-meta">
+                    <span class="meta-item">TBC</span>
                 </div>
-
-                <!-- Course Card 2 — Intermediate -->
-                <div class="course-card card-blue">
-                    <div class="course-level level-intermediate">&#9670; Intermediate</div>
-                    <div class="course-title">TBC</div>
-                    <div class="course-desc">
-                        TBC</div>
-                    <div class="course-meta">
-                        <span class="meta-item">
-                            h m quizzes
-                        </span>
-                    </div>
-                    <asp:Button ID="btnEnroll2" runat="server" Text="Enroll Now"
-                        CssClass="btn-enroll" OnClick="btnEnroll2_Click"
-                        CommandArgument="2" />
-                </div>
-
-                <!-- Course Card 3 — Advanced -->
-                <div class="course-card card-red">
-                    <div class="course-level level-advanced">&#9650; Advanced</div>
-                    <div class="course-title">TBC</div>
-                    <div class="course-desc">
-                        TBC</div>
-                    <div class="course-meta">
-                        <span class="meta-item">
-                            h m&nbsp; quizzes </span>
-                    </div>
-                    <asp:Button ID="btnEnroll3" runat="server" Text="Enroll Now"
-                        CssClass="btn-enroll" OnClick="btnEnroll3_Click"
-                        CommandArgument="3" />
-                </div>
-
-            </div>
-        </section>
-
-        <!-- =============================================
-             FEATURES HIGHLIGHT
-        ============================================= -->
-        <div class="features-section" role="region" aria-label="Platform features">
-            <div class="feature-card">
-                <div class="feature-icon fi-cyan" aria-hidden="true">
-                    <i class="ti ti-school"></i>
-                </div>
-                <div class="feature-title">Structured Learning</div>
-                <div class="feature-desc">Courses organised by difficulty with downloadable PDF resources.</div>
+                <asp:Button ID="btnEnroll2" runat="server" Text="Enroll Now"
+                    CssClass="btn-enroll" OnClick="btnEnroll2_Click" CommandArgument="2" />
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon fi-green" aria-hidden="true">
-                    <i class="ti ti-checkbox"></i>
+            <div class="course-card card-red">
+                <div class="course-level level-advanced">&#9650; Advanced</div>
+                <div class="course-title">TBC</div>
+                <div class="course-desc">TBC</div>
+                <div class="course-meta">
+                    <span class="meta-item">TBC</span>
                 </div>
-                <div class="feature-title">Auto-Graded Quizzes</div>
-                <div class="feature-desc">Instant feedback on every quiz with detailed result breakdowns.</div>
+                <asp:Button ID="btnEnroll3" runat="server" Text="Enroll Now"
+                    CssClass="btn-enroll" OnClick="btnEnroll3_Click" CommandArgument="3" />
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon fi-amber" aria-hidden="true">
-                    <i class="ti ti-chart-line"></i>
-                </div>
-                <div class="feature-title">Progress Tracking</div>
-                <div class="feature-desc">Dashboard statistics to monitor your learning milestones.</div>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon fi-red" aria-hidden="true">
-                    <i class="ti ti-shield-check"></i>
-                </div>
-                <div class="feature-title">Secure Platform</div>
-                <div class="feature-desc">Session-based authentication protecting your account and data.</div>
-            </div>
         </div>
+    </section>
 
-        <!-- =============================================
-             FOOTER
-        ============================================= -->
-        <footer class="site-footer" role="contentinfo">
-            <span class="footer-copy">
-                © 2025 CyberLearn Hub
-            </span>
-            <nav class="footer-links" aria-label="Footer navigation">
-                <a href="About.aspx">About</a>
-                <a href="Privacy.aspx">Privacy</a>
-                <a href="Contact.aspx">Contact</a>
-            </nav>
-        </footer>
+    <!-- =============================================
+         FEATURES HIGHLIGHT
+    ============================================= -->
+    <div class="features-section" role="region" aria-label="Platform features">
+        <div class="feature-card">
+            <div class="feature-icon fi-cyan" aria-hidden="true"><i class="ti ti-school"></i></div>
+            <div class="feature-title">Structured Learning</div>
+            <div class="feature-desc">Courses organised by difficulty with downloadable resources.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon fi-green" aria-hidden="true"><i class="ti ti-checkbox"></i></div>
+            <div class="feature-title">Auto-Graded Quizzes</div>
+            <div class="feature-desc">Instant feedback on every quiz with detailed result breakdowns.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon fi-amber" aria-hidden="true"><i class="ti ti-chart-line"></i></div>
+            <div class="feature-title">Progress Tracking</div>
+            <div class="feature-desc">Dashboard statistics to monitor your learning milestones.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon fi-red" aria-hidden="true"><i class="ti ti-shield-check"></i></div>
+            <div class="feature-title">Secure Platform</div>
+            <div class="feature-desc">Session-based authentication protecting your account and data.</div>
+        </div>
+    </div>
 
-    </form><!-- end form1 -->
-</body>
-</html>
+</asp:Content>
