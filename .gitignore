@@ -362,6 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-Web.config
-/CyberLearnHub/Web.config
-/CyberLearnHub/Web.config
+# Web.config is tracked (contains no real secrets - use placeholder for API keys)
+# /CyberLearnHub/Web.config
