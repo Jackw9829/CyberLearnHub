@@ -69,8 +69,6 @@
   <ItemGroup>
     <Content Include="Chatbot.aspx" />
     <Content Include="cyberlearnhub_homepage.aspx" />
-    <Content Include="cyberlearnhub_lab_ai_simulation.html" />
-    <Content Include="Lab.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Register.aspx" />
     <Content Include="Site.Master" />
@@ -87,13 +85,6 @@
     </Compile>
     <Compile Include="cyberlearnhub_homepage.aspx.designer.cs">
       <DependentUpon>cyberlearnhub_homepage.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Lab.aspx.cs">
-      <DependentUpon>Lab.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-<Compile Include="Lab.aspx.designer.cs">
-      <DependentUpon>Lab.aspx</DependentUpon>
     </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
