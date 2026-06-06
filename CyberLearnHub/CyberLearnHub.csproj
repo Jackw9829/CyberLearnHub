@@ -69,9 +69,6 @@
   <ItemGroup>
     <Compile Include="App_Code\DatabaseHelper.cs" />
     <Content Include="Chatbot.aspx" />
-    <Content Include="cyberlearnhub_homepage.aspx" />
-    <Content Include="Login.aspx" />
-    <Content Include="Register.aspx" />
     <Content Include="Site.Master" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -79,24 +76,6 @@
     <Compile Include="Chatbot.aspx.cs">
       <DependentUpon>Chatbot.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="cyberlearnhub_homepage.aspx.cs">
-      <DependentUpon>cyberlearnhub_homepage.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="cyberlearnhub_homepage.aspx.designer.cs">
-      <DependentUpon>cyberlearnhub_homepage.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Login.aspx.cs">
-      <DependentUpon>Login.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Login.aspx.designer.cs">
-      <DependentUpon>Login.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Register.aspx.cs">
-      <DependentUpon>Register.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Register.aspx.designer.cs">
-      <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
