@@ -1,4 +1,5 @@
 using System;
+using System.Data.SqlClient;
 using System.Web.UI;
 
 namespace CyberLearnHub
@@ -7,6 +8,7 @@ namespace CyberLearnHub
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Already logged in — skip the login page
             if (!IsPostBack && Session["UserID"] != null)
                 Response.Redirect("~/Dashboard.aspx");
         }
@@ -15,30 +17,55 @@ namespace CyberLearnHub
         {
             if (!Page.IsValid) return;
 
-            string email    = txtEmail.Text.Trim();
-            string password = txtPassword.Text;
+            string email    = txtEmail.Text.Trim().ToLower();
+            string passHash = DatabaseHelper.HashPassword(txtPassword.Text);
 
-            // TODO: Replace with real DB lookup once the database is ready.
-            // Example:
-            //   var user = UserManager.GetByEmail(email);
-            //   if (user == null || !PasswordHelper.Verify(password, user.PasswordHash))
-            //   {
-            //       ShowAlert("Invalid email or password.");
-            //       return;
-            //   }
-            //   Session["UserID"]  = user.UserID;
-            //   Session["Username"] = user.Username;
-            //   Session["Role"]    = user.Role;   // "User" or "Admin"
-            //   RedirectAfterLogin();
+            try
+            {
+                using (SqlConnection conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
 
-            // --- Temporary stub: always fail so the form is testable ---
-            ShowAlert("&gt; Login is not yet connected to the database.");
+                    SqlCommand cmd = new SqlCommand(
+                        @"SELECT UserID, FullName, Role
+                          FROM   dbo.Users
+                          WHERE  Email        = @Email
+                            AND  PasswordHash = @Hash
+                            AND  IsActive     = 1",
+                        conn);
+
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.AddWithValue("@Hash",  passHash);
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            Session["UserID"]   = dr["UserID"].ToString();
+                            Session["Username"] = dr["FullName"].ToString();
+                            Session["Role"]     = dr["Role"].ToString();  // "Member" or "Admin"
+                            RedirectAfterLogin();
+                        }
+                        else
+                        {
+                            ShowAlert("&gt; Invalid email or password.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowAlert("&gt; Database error: " + ex.Message);
+            }
         }
 
+        // =============================================
+        // HELPERS
+        // =============================================
         private void ShowAlert(string message)
         {
-            lblAlert.Text      = message;
-            pnlAlert.Visible   = true;
+            lblAlert.Text    = message;
+            pnlAlert.Visible = true;
         }
 
         private void RedirectAfterLogin()

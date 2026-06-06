@@ -12,7 +12,7 @@ namespace CyberLearnHub
         protected global::System.Web.UI.WebControls.Label lblSuccess;
         protected global::System.Web.UI.WebControls.Panel pnlError;
         protected global::System.Web.UI.WebControls.Label lblError;
-        protected global::System.Web.UI.WebControls.TextBox txtUsername;
+        protected global::System.Web.UI.WebControls.TextBox txtFullName;
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvUsername;
         protected global::System.Web.UI.WebControls.TextBox txtEmail;
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvEmail;

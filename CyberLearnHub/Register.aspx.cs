@@ -1,4 +1,5 @@
 using System;
+using System.Data.SqlClient;
 using System.Web.UI;
 
 namespace CyberLearnHub
@@ -15,37 +16,61 @@ namespace CyberLearnHub
         {
             if (!Page.IsValid) return;
 
-            string username = txtUsername.Text.Trim();
+            string fullName = txtFullName.Text.Trim();
             string email    = txtEmail.Text.Trim().ToLower();
-            string password = txtPassword.Text;
+            string passHash = DatabaseHelper.HashPassword(txtPassword.Text);
 
-            // Basic server-side length check (validators handle the rest)
-            if (username.Length < 3)
+            if (fullName.Length < 3)
             {
-                ShowError("&gt; Username must be at least 3 characters.");
+                ShowError("&gt; Full name must be at least 3 characters.");
                 return;
             }
 
-            // TODO: Replace with real DB calls once the database is ready.
-            // Example:
-            //   if (UserManager.EmailExists(email))
-            //   {
-            //       ShowError("> That email address is already registered.");
-            //       return;
-            //   }
-            //   string passwordHash = PasswordHelper.Hash(password);
-            //   UserManager.Create(username, email, passwordHash, role: "User");
-            //   ShowSuccess("> Account created! You can now log in.");
+            try
+            {
+                using (SqlConnection conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
 
-            // --- Temporary stub: show success message without touching DB ---
-            ShowSuccess("&gt; Account created successfully! <a href='Login.aspx'>Log in here</a>.");
-            ClearForm();
+                    // Check if email is already registered
+                    SqlCommand checkCmd = new SqlCommand(
+                        "SELECT COUNT(*) FROM dbo.Users WHERE Email = @Email", conn);
+                    checkCmd.Parameters.AddWithValue("@Email", email);
+                    int exists = (int)checkCmd.ExecuteScalar();
+
+                    if (exists > 0)
+                    {
+                        ShowError("&gt; That email address is already registered.");
+                        return;
+                    }
+
+                    // Insert new member
+                    SqlCommand insertCmd = new SqlCommand(
+                        @"INSERT INTO dbo.Users (FullName, Email, PasswordHash, Role)
+                          VALUES (@FullName, @Email, @Hash, 'Member')",
+                        conn);
+                    insertCmd.Parameters.AddWithValue("@FullName", fullName);
+                    insertCmd.Parameters.AddWithValue("@Email",    email);
+                    insertCmd.Parameters.AddWithValue("@Hash",     passHash);
+                    insertCmd.ExecuteNonQuery();
+                }
+
+                ShowSuccess("&gt; Account created successfully! <a href='Login.aspx'>Log in here</a>.");
+                ClearForm();
+            }
+            catch (Exception ex)
+            {
+                ShowError("&gt; Database error: " + ex.Message);
+            }
         }
 
+        // =============================================
+        // HELPERS
+        // =============================================
         private void ShowError(string message)
         {
-            lblError.Text    = message;
-            pnlError.Visible = true;
+            lblError.Text      = message;
+            pnlError.Visible   = true;
             pnlSuccess.Visible = false;
         }
 
@@ -58,7 +83,7 @@ namespace CyberLearnHub
 
         private void ClearForm()
         {
-            txtUsername.Text        = string.Empty;
+            txtFullName.Text        = string.Empty;
             txtEmail.Text           = string.Empty;
             txtPassword.Text        = string.Empty;
             txtConfirmPassword.Text = string.Empty;
