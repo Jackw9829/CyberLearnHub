@@ -67,7 +67,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="App_Code\DatabaseHelper.cs" />
+=======
+    <Content Include="App_Data\CyberLearnHub.mdf" />
+    <Content Include="App_Data\CyberLearnHub_log.ldf">
+      <DependentUpon>CyberLearnHub.mdf</DependentUpon>
+    </Content>
+>>>>>>> origin/master
     <Content Include="Chatbot.aspx" />
     <Content Include="cyberlearnhub_homepage.aspx" />
     <Content Include="Login.aspx" />
@@ -88,12 +95,20 @@
     </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+<<<<<<< HEAD
+=======
+      <SubType>ASPXCodeBehind</SubType>
+>>>>>>> origin/master
     </Compile>
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Register.aspx.cs">
       <DependentUpon>Register.aspx</DependentUpon>
+<<<<<<< HEAD
+=======
+      <SubType>ASPXCodeBehind</SubType>
+>>>>>>> origin/master
     </Compile>
     <Compile Include="Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
@@ -117,6 +132,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
