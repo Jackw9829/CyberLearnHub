@@ -365,3 +365,4 @@ FodyWeavers.xsd
 # Web.config is tracked (contains no real secrets - use placeholder for API keys)
 # /CyberLearnHub/Web.config
 /CyberLearnHub/Web.config
+/CyberLearnHub/Web.config
