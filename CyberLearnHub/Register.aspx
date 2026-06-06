@@ -146,17 +146,17 @@
                 </div>
             </asp:Panel>
 
-            <%-- Full Name --%>
+            <%-- Username --%>
             <div class="form-group">
-                <label class="form-label" for="txtFullName">Full Name</label>
-                <asp:TextBox ID="txtFullName" runat="server" CssClass="form-control"
-                    placeholder="e.g. Alex Johnson" MaxLength="100" />
+                <label class="form-label" for="txtUsername">Username</label>
+                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control"
+                    placeholder="e.g. cyber_hawk" MaxLength="50" />
                 <asp:RequiredFieldValidator ID="rfvUsername" runat="server"
-                    ControlToValidate="txtFullName"
+                    ControlToValidate="txtUsername"
                     CssClass="form-error"
-                    ErrorMessage="&gt; Full name is required."
+                    ErrorMessage="&gt; Username is required."
                     Display="Dynamic" />
-                <span class="form-hint">3 - 100 characters</span>
+                <span class="form-hint">3 - 50 characters</span>
             </div>
 
             <%-- Email --%>

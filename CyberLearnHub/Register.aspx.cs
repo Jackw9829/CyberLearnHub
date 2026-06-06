@@ -1,5 +1,8 @@
 using System;
+using System.Configuration;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web.UI;
 
 namespace CyberLearnHub
@@ -9,83 +12,114 @@ namespace CyberLearnHub
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack && Session["UserID"] != null)
-                Response.Redirect("~/Dashboard.aspx");
+                Response.Redirect("~/cyberlearnhub_homepage.aspx");
         }
 
         protected void btnRegister_Click(object sender, EventArgs e)
         {
             if (!Page.IsValid) return;
 
-            string fullName = txtFullName.Text.Trim();
-            string email    = txtEmail.Text.Trim().ToLower();
-            string passHash = DatabaseHelper.HashPassword(txtPassword.Text);
+            string username = txtUsername.Text.Trim();
+            string email = txtEmail.Text.Trim().ToLower();
+            string password = txtPassword.Text;
 
-            if (fullName.Length < 3)
+            if (username.Length < 3)
             {
-                ShowError("&gt; Full name must be at least 3 characters.");
+                ShowError("&gt; Username must be at least 3 characters.");
                 return;
             }
 
             try
             {
-                using (SqlConnection conn = DatabaseHelper.GetConnection())
+                if (EmailExists(email))
                 {
-                    conn.Open();
-
-                    // Check if email is already registered
-                    SqlCommand checkCmd = new SqlCommand(
-                        "SELECT COUNT(*) FROM dbo.Users WHERE Email = @Email", conn);
-                    checkCmd.Parameters.AddWithValue("@Email", email);
-                    int exists = (int)checkCmd.ExecuteScalar();
-
-                    if (exists > 0)
-                    {
-                        ShowError("&gt; That email address is already registered.");
-                        return;
-                    }
-
-                    // Insert new member
-                    SqlCommand insertCmd = new SqlCommand(
-                        @"INSERT INTO dbo.Users (FullName, Email, PasswordHash, Role)
-                          VALUES (@FullName, @Email, @Hash, 'Member')",
-                        conn);
-                    insertCmd.Parameters.AddWithValue("@FullName", fullName);
-                    insertCmd.Parameters.AddWithValue("@Email",    email);
-                    insertCmd.Parameters.AddWithValue("@Hash",     passHash);
-                    insertCmd.ExecuteNonQuery();
+                    ShowError("&gt; That email address is already registered.");
+                    return;
                 }
+
+                CreateUser(username, email, HashPassword(password));
 
                 ShowSuccess("&gt; Account created successfully! <a href='Login.aspx'>Log in here</a>.");
                 ClearForm();
             }
             catch (Exception ex)
             {
-                ShowError("&gt; Database error: " + ex.Message);
+                ShowError("&gt; Registration failed: " + Server.HtmlEncode(ex.Message));
             }
         }
 
-        // =============================================
-        // HELPERS
-        // =============================================
+        private static string ConnectionString
+        {
+            get
+            {
+                return ConfigurationManager.ConnectionStrings["CyberLearnConnection"].ConnectionString;
+            }
+        }
+
+        private static bool EmailExists(string email)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) FROM dbo.Users WHERE Email = @Email", conn))
+            {
+                cmd.Parameters.AddWithValue("@Email", email);
+                conn.Open();
+
+                return (int)cmd.ExecuteScalar() > 0;
+            }
+        }
+
+        private static void CreateUser(string fullName, string email, string passwordHash)
+        {
+            string sql = @"
+                INSERT INTO dbo.Users (FullName, Email, PasswordHash, Role, IsActive)
+                VALUES (@FullName, @Email, @PasswordHash, @Role, 1)";
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@FullName", fullName);
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
+                cmd.Parameters.AddWithValue("@Role", "Member");
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        private static string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+
+                foreach (byte b in bytes)
+                    builder.Append(b.ToString("X2"));
+
+                return builder.ToString();
+            }
+        }
+
         private void ShowError(string message)
         {
-            lblError.Text      = message;
-            pnlError.Visible   = true;
+            lblError.Text = message;
+            pnlError.Visible = true;
             pnlSuccess.Visible = false;
         }
 
         private void ShowSuccess(string message)
         {
-            lblSuccess.Text    = message;
+            lblSuccess.Text = message;
             pnlSuccess.Visible = true;
-            pnlError.Visible   = false;
+            pnlError.Visible = false;
         }
 
         private void ClearForm()
         {
-            txtFullName.Text        = string.Empty;
-            txtEmail.Text           = string.Empty;
-            txtPassword.Text        = string.Empty;
+            txtUsername.Text = string.Empty;
+            txtEmail.Text = string.Empty;
+            txtPassword.Text = string.Empty;
             txtConfirmPassword.Text = string.Empty;
         }
     }
