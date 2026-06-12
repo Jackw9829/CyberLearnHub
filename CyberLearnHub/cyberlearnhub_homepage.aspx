@@ -175,6 +175,48 @@
 
         .btn-primary:hover { background: #33ddff; }
 
+        .btn-danger,
+        input[type="submit"].btn-danger,
+        .btn-danger[type="submit"] {
+            padding: 8px 18px;
+            background: transparent;
+            border: 1px solid var(--cyber-danger);
+            color: var(--cyber-danger);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .btn-danger:hover { background: var(--cyber-danger); color: #fff; }
+
+        .nav-user-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(0,212,255,0.06);
+            border: 1px solid rgba(0,212,255,0.2);
+            border-radius: 4px;
+        }
+
+        .nav-user-chip .user-icon {
+            font-size: 14px;
+            color: var(--cyber-accent);
+            line-height: 1;
+        }
+
+        .nav-user-chip .user-name {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 13px;
+            color: var(--cyber-accent);
+            letter-spacing: 0.5px;
+        }
+
         /* =============================================
            HERO SECTION
         ============================================= */
@@ -577,6 +619,278 @@
         }
 
         .footer-links a:hover { color: var(--cyber-accent); }
+
+        /* =============================================
+           FLOATING CHATBOT
+        ============================================= */
+        #cb-container {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 9998;
+            user-select: none;
+        }
+
+        #cb-toggle {
+            position: relative;
+            width: 54px;
+            height: 54px;
+            background: linear-gradient(135deg, #0f3460, #00d4ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            box-shadow: 0 4px 20px rgba(0,212,255,0.45);
+            transition: box-shadow 0.2s;
+            font-size: 22px;
+            border: none;
+            z-index: 1;
+        }
+
+        #cb-toggle:active { cursor: grabbing; }
+
+        #cb-toggle:hover {
+            box-shadow: 0 6px 24px rgba(0,212,255,0.65);
+        }
+
+        #cb-badge {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 14px;
+            height: 14px;
+            background: var(--cyber-danger);
+            border-radius: 50%;
+            border: 2px solid var(--cyber-bg);
+            display: none;
+        }
+
+        #cb-window {
+            position: absolute;
+            bottom: 64px;
+            right: 0;
+            width: 340px;
+            height: 460px;
+            background: var(--cyber-card);
+            border: 1px solid var(--cyber-border);
+            border-top: 2px solid var(--cyber-accent);
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: cb-slide-up 0.25s ease;
+        }
+
+        #cb-window.open { display: flex; }
+
+        @keyframes cb-slide-up {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        #cb-head {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 14px;
+            background: var(--cyber-surface);
+            border-bottom: 1px solid var(--cyber-border);
+            flex-shrink: 0;
+        }
+
+        #cb-head .cb-av {
+            width: 30px; height: 30px;
+            background: rgba(0,212,255,0.1);
+            border: 1px solid var(--cyber-accent);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; flex-shrink: 0;
+        }
+
+        #cb-head .cb-title { flex: 1; }
+
+        #cb-head .cb-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--cyber-accent);
+            letter-spacing: 1px;
+        }
+
+        #cb-head .cb-sub {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-muted);
+            margin-top: 1px;
+        }
+
+        .cb-online {
+            width: 8px; height: 8px;
+            background: var(--cyber-accent2);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--cyber-accent2);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        #cb-close,
+        #cb-expand {
+            background: none;
+            border: none;
+            color: var(--cyber-muted);
+            font-size: 16px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 2px;
+            transition: color 0.2s;
+        }
+
+        #cb-close:hover  { color: var(--cyber-danger); }
+        #cb-expand:hover { color: var(--cyber-accent); }
+
+        #cb-msgs {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: var(--cyber-card);
+        }
+
+        #cb-msgs::-webkit-scrollbar { width: 3px; }
+        #cb-msgs::-webkit-scrollbar-thumb { background: var(--cyber-border); border-radius: 3px; }
+
+        .cb-row {
+            display: flex;
+            gap: 7px;
+            align-items: flex-end;
+            animation: cb-msg-in 0.2s ease both;
+        }
+
+        .cb-row.user { flex-direction: row-reverse; }
+
+        @keyframes cb-msg-in {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .cb-row .cb-av {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; flex-shrink: 0;
+        }
+
+        .cb-row.bot  .cb-av { background: rgba(0,212,255,0.1);  border: 1px solid var(--cyber-accent); }
+        .cb-row.user .cb-av { background: rgba(0,255,157,0.1);  border: 1px solid var(--cyber-accent2); }
+
+        .cb-bubble {
+            max-width: 80%;
+            padding: 8px 12px;
+            font-size: 13px;
+            line-height: 1.55;
+            border-radius: 10px;
+            word-wrap: break-word;
+        }
+
+        .cb-row.bot  .cb-bubble {
+            background: var(--cyber-surface);
+            border: 1px solid var(--cyber-border);
+            border-bottom-left-radius: 3px;
+            color: var(--cyber-text);
+        }
+
+        .cb-row.user .cb-bubble {
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.25);
+            border-bottom-right-radius: 3px;
+            color: var(--cyber-heading);
+        }
+
+        .cb-dots { display: flex; gap: 4px; padding: 3px 0; align-items: center; }
+        .cb-dots span {
+            width: 5px; height: 5px;
+            background: var(--cyber-accent);
+            border-radius: 50%;
+            animation: cb-bounce 1s infinite;
+        }
+        .cb-dots span:nth-child(2) { animation-delay: 0.15s; }
+        .cb-dots span:nth-child(3) { animation-delay: 0.30s; }
+        @keyframes cb-bounce {
+            0%,60%,100% { transform: translateY(0); }
+            30%          { transform: translateY(-5px); }
+        }
+
+        #cb-foot {
+            padding: 10px 12px;
+            border-top: 1px solid var(--cyber-border);
+            display: flex;
+            gap: 8px;
+            background: var(--cyber-surface);
+            flex-shrink: 0;
+        }
+
+        #cb-input {
+            flex: 1;
+            background: var(--cyber-card);
+            border: 1px solid var(--cyber-border);
+            border-radius: 6px;
+            padding: 8px 11px;
+            color: var(--cyber-text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        #cb-input:focus { border-color: var(--cyber-accent); }
+        #cb-input::placeholder { color: var(--cyber-muted); }
+
+        #cb-send {
+            background: var(--cyber-accent);
+            color: var(--cyber-bg);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-transform: uppercase;
+        }
+
+        #cb-send:hover    { background: #33ddff; }
+        #cb-send:disabled { background: var(--cyber-border); color: var(--cyber-muted); cursor: not-allowed; }
+
+        #cb-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px 12px 4px;
+            border-top: 1px solid var(--cyber-border);
+            background: rgba(0,0,0,0.25);
+        }
+        .cb-chip {
+            background: rgba(0,212,255,0.08);
+            border: 1px solid rgba(0,212,255,0.35);
+            color: var(--cyber-accent);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            white-space: nowrap;
+        }
+        .cb-chip:hover {
+            background: rgba(0,212,255,0.18);
+            border-color: var(--cyber-accent);
+        }
     </style>
 </head>
 <body>
@@ -606,9 +920,21 @@
             </ul>
 
             <div class="nav-buttons">
-                <%-- asp:Button renders as <input type="submit"> — OnClick fires code-behind method --%>
-                <asp:Button ID="btnLogin"    runat="server" Text="Log In"   CssClass="btn-ghost"   OnClick="btnLogin_Click" />
-                <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="btn-primary" OnClick="btnRegister_Click" />
+                <%-- Guest buttons: shown when not logged in --%>
+                <asp:Panel ID="pnlGuestButtons" runat="server" Visible="true" style="display:flex;gap:10px;">
+                    <asp:Button ID="btnLogin"    runat="server" Text="Log In"   CssClass="btn-ghost"   OnClick="btnLogin_Click"    CausesValidation="false" />
+                    <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="btn-primary" OnClick="btnRegister_Click" CausesValidation="false" />
+                </asp:Panel>
+
+                <%-- Logged-in buttons: shown when session is active --%>
+                <asp:Panel ID="pnlUserButtons" runat="server" Visible="false" style="display:flex;gap:10px;align-items:center;">
+                    <span class="nav-user-chip">
+                        <i class="ti ti-user user-icon"></i>
+                        <asp:Label ID="lblNavUsername" runat="server" CssClass="user-name" />
+                    </span>
+                    <asp:HyperLink ID="hlProfile" runat="server" NavigateUrl="~/Profile.aspx" CssClass="btn-ghost">Profile</asp:HyperLink>
+                    <asp:Button ID="btnLogout" runat="server" Text="Log Out" CssClass="btn-danger" OnClick="btnLogout_Click" CausesValidation="false" />
+                </asp:Panel>
             </div>
         </nav>
 
@@ -800,6 +1126,273 @@
                 <a href="Contact.aspx">Contact</a>
             </nav>
         </footer>
+
+        <!-- =============================================
+             FLOATING CHATBOT
+        ============================================= -->
+
+        <div id="cb-container">
+
+        <!-- Toggle Button -->
+        <button id="cb-toggle" title="Chat with CyberBot" type="button">
+            <i class="ti ti-shield-bolt" style="color:#fff; font-size:22px;"></i>
+            <span id="cb-badge"></span>
+        </button>
+
+        <!-- Chat Window -->
+        <div id="cb-window" role="dialog" aria-label="CyberBot chat">
+
+            <!-- Header -->
+            <div id="cb-head">
+                <div class="cb-av">
+                    <i class="ti ti-robot" style="color:var(--cyber-accent);"></i>
+                </div>
+                <div class="cb-title">
+                    <div class="cb-name">CYBERBOT</div>
+                    <div class="cb-sub">// AI Security Assistant</div>
+                </div>
+                <div class="cb-online"></div>
+                <button id="cb-expand" onclick="window.open('Chatbot.aspx','_blank')" title="Open full page" type="button"><i class="ti ti-external-link"></i></button>
+                <button id="cb-close" onclick="cbToggle()" title="Close" type="button">&#10005;</button>
+            </div>
+
+            <!-- Messages -->
+            <div id="cb-msgs">
+                <div class="cb-row bot">
+                    <div class="cb-av"><i class="ti ti-robot" style="color:var(--cyber-accent);font-size:11px;"></i></div>
+                    <div class="cb-bubble">
+                        Hi! I&#39;m <strong>CyberBot</strong> &#128737;<br />
+                        Ask me anything about cybersecurity!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suggestion chips -->
+            <div id="cb-chips">
+                <button class="cb-chip" onclick="cbChip(this)" type="button">What is phishing?</button>
+                <button class="cb-chip" onclick="cbChip(this)" type="button">How does encryption work?</button>
+                <button class="cb-chip" onclick="cbChip(this)" type="button">What is the OWASP Top 10?</button>
+                <button class="cb-chip" onclick="cbChip(this)" type="button">Explain SQL Injection</button>
+            </div>
+
+            <!-- Input -->
+            <div id="cb-foot">
+                <input id="cb-input" type="text" placeholder="Ask a question..."
+                       autocomplete="off" onkeydown="if(event.key==='Enter'){cbSend();return false;}" />
+                <button id="cb-send" onclick="cbSend()" type="button">Send</button>
+            </div>
+        </div>
+
+        </div><!-- end cb-container -->
+
+        <!-- Chatbot Script -->
+        <script type="text/javascript">
+            var cbIsOpen    = false;
+            var cbIsBusy    = false;
+            var cbHadChat   = false;
+            var cbGuestLimit = 3;
+            var cbLoggedIn   = <%= Session["UserID"] != null ? "true" : "false" %>;
+
+            // ---- Drag logic ----
+            (function () {
+                var container = document.getElementById('cb-container');
+                var toggle    = document.getElementById('cb-toggle');
+                var startX, startY, origLeft, origTop, moved;
+
+                function getPos() {
+                    var r = container.getBoundingClientRect();
+                    return { left: r.left, top: r.top };
+                }
+
+                function onDown(e) {
+                    var pt = e.touches ? e.touches[0] : e;
+                    startX = pt.clientX;
+                    startY = pt.clientY;
+                    var pos = getPos();
+                    origLeft = pos.left;
+                    origTop  = pos.top;
+                    moved = false;
+                    document.addEventListener('mousemove', onMove);
+                    document.addEventListener('mouseup',   onUp);
+                    document.addEventListener('touchmove', onMove, { passive: false });
+                    document.addEventListener('touchend',  onUp);
+                }
+
+                function onMove(e) {
+                    if (e.cancelable) e.preventDefault();
+                    var pt = e.touches ? e.touches[0] : e;
+                    var dx = pt.clientX - startX;
+                    var dy = pt.clientY - startY;
+                    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+                    var newLeft = Math.max(0, Math.min(origLeft + dx, window.innerWidth  - container.offsetWidth));
+                    var newTop  = Math.max(0, Math.min(origTop  + dy, window.innerHeight - container.offsetHeight));
+                    container.style.left   = newLeft + 'px';
+                    container.style.top    = newTop  + 'px';
+                    container.style.right  = 'auto';
+                    container.style.bottom = 'auto';
+                }
+
+                function onUp() {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup',   onUp);
+                    document.removeEventListener('touchmove', onMove);
+                    document.removeEventListener('touchend',  onUp);
+                    if (!moved) cbToggle();
+                }
+
+                toggle.addEventListener('mousedown', onDown);
+                toggle.addEventListener('touchstart', onDown, { passive: true });
+            })();
+            // ---- End drag logic ----
+
+            function cbToggle() {
+                cbIsOpen = !cbIsOpen;
+                var win   = document.getElementById('cb-window');
+                var badge = document.getElementById('cb-badge');
+                if (cbIsOpen) {
+                    win.classList.add('open');
+                    badge.style.display = 'none';
+                    document.getElementById('cb-input').focus();
+                } else {
+                    win.classList.remove('open');
+                }
+            }
+
+            function cbScroll() {
+                var m = document.getElementById('cb-msgs');
+                m.scrollTop = m.scrollHeight;
+            }
+
+            function cbAddMsg(role, html) {
+                var msgs   = document.getElementById('cb-msgs');
+                var row    = document.createElement('div');
+                row.className = 'cb-row ' + role;
+
+                var av = document.createElement('div');
+                av.className = 'cb-av';
+                av.innerHTML = role === 'bot'
+                    ? '<i class="ti ti-robot"    style="color:var(--cyber-accent);font-size:11px;"></i>'
+                    : '<i class="ti ti-user"     style="color:var(--cyber-accent2);font-size:11px;"></i>';
+
+                var bubble = document.createElement('div');
+                bubble.className = 'cb-bubble';
+                bubble.innerHTML = html;
+
+                row.appendChild(av);
+                row.appendChild(bubble);
+                msgs.appendChild(row);
+                cbScroll();
+                return row;
+            }
+
+            function cbShowTyping() {
+                var row = cbAddMsg('bot',
+                    '<div class="cb-dots">' +
+                    '<span></span><span></span><span></span>' +
+                    '</div>');
+                row.id = 'cb-typing';
+            }
+
+            function cbFmt(t) {
+                return t
+                    .replace(/&/g,  '&amp;')
+                    .replace(/</g,  '&lt;')
+                    .replace(/>/g,  '&gt;')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/`([^`]+)`/g, '<code style="background:rgba(0,212,255,0.1);padding:1px 4px;border-radius:3px;font-size:11px;color:var(--cyber-accent)">' + '$1' + '</code>')
+                    .replace(/^[\*\-] (.+)$/gm, '<div style="margin:2px 0 2px 6px">&bull; $1</div>')
+                    .replace(/\n\n/g, '<br /><br />')
+                    .replace(/\n/g,  '<br />');
+            }
+
+            function cbGuestBlocked() {
+                if (cbLoggedIn) return false;
+                var count = parseInt(sessionStorage.getItem('cb_guest_count') || '0', 10);
+                return count >= cbGuestLimit;
+            }
+
+            function cbShowGuestLimit() {
+                cbAddMsg('bot',
+                    '<span style="color:var(--cyber-amber)">' +
+                    '&#9888; You have used your 3 free questions.</span><br />' +
+                    'Please <a href="Login.aspx" ' +
+                    'style="color:var(--cyber-accent);text-decoration:underline;">Log In</a> or ' +
+                    '<a href="Register.aspx" ' +
+                    'style="color:var(--cyber-accent2);text-decoration:underline;">Register</a> ' +
+                    'to continue chatting.');
+                var inp  = document.getElementById('cb-input');
+                var send = document.getElementById('cb-send');
+                inp.disabled  = true;
+                send.disabled = true;
+                inp.placeholder = 'Login or register to continue...';
+            }
+
+            function cbHideChips() {
+                var c = document.getElementById('cb-chips');
+                if (c) c.style.display = 'none';
+            }
+
+            function cbChip(btn) {
+                document.getElementById('cb-input').value = btn.textContent || btn.innerText;
+                cbHideChips();
+                cbSend();
+            }
+
+            function cbSend() {
+                if (cbIsBusy) return;
+                var input = document.getElementById('cb-input');
+                var msg   = input.value.replace(/^\s+|\s+$/g, '');
+                if (!msg) return;
+
+                if (cbGuestBlocked()) { cbShowGuestLimit(); return; }
+
+                cbHideChips();
+                input.value = '';
+                cbIsBusy    = true;
+                cbHadChat   = true;
+                document.getElementById('cb-send').disabled = true;
+
+                if (!cbLoggedIn) {
+                    var count = parseInt(sessionStorage.getItem('cb_guest_count') || '0', 10);
+                    sessionStorage.setItem('cb_guest_count', count + 1);
+                }
+
+                cbAddMsg('user', cbFmt(msg));
+                cbShowTyping();
+
+                fetch('ChatbotHandler.ashx', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ message: msg })
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    var t = document.getElementById('cb-typing');
+                    if (t) t.parentNode.removeChild(t);
+                    if (data.success) {
+                        cbAddMsg('bot', cbFmt(data.reply));
+                    } else {
+                        cbAddMsg('bot', '&#9888; ' + (data.error || data.reply || 'Something went wrong.'));
+                    }
+                    if (!cbIsOpen) {
+                        document.getElementById('cb-badge').style.display = 'block';
+                    }
+                })
+                .catch(function() {
+                    var t = document.getElementById('cb-typing');
+                    if (t) t.parentNode.removeChild(t);
+                    cbAddMsg('bot', '&#9888; Could not reach the server. Please try again.');
+                })
+                ['finally'](function() {
+                    cbIsBusy = false;
+                    document.getElementById('cb-send').disabled = false;
+                    document.getElementById('cb-input').focus();
+                });
+            }
+        </script>
+        <!-- =============================================
+             END FLOATING CHATBOT
+        ============================================= -->
 
     </form><!-- end form1 -->
 </body>

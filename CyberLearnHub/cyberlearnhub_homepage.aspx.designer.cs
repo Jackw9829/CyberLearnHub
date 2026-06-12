@@ -30,16 +30,19 @@ namespace CyberLearnHub
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlGuestButtons;
+
         protected global::System.Web.UI.WebControls.Button btnLogin;
 
-        /// <summary>
-        /// btnRegister control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnRegister;
+
+        protected global::System.Web.UI.WebControls.Panel pnlUserButtons;
+
+        protected global::System.Web.UI.WebControls.Label lblNavUsername;
+
+        protected global::System.Web.UI.WebControls.HyperLink hlProfile;
+
+        protected global::System.Web.UI.WebControls.Button btnLogout;
 
         /// <summary>
         /// btnBrowseCourses control.

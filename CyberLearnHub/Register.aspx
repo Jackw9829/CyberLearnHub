@@ -96,6 +96,31 @@
 
         .btn-submit:hover { background: #33ffb3; }
 
+        .pw-wrap {
+            position: relative;
+        }
+
+        .pw-wrap .form-control {
+            padding-right: 42px;
+        }
+
+        .pw-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--cyber-muted);
+            font-size: 16px;
+            line-height: 1;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .pw-toggle:hover { color: var(--cyber-accent); }
+
         .auth-footer {
             text-align: center;
             margin-top: 24px;
@@ -180,8 +205,13 @@
             <%-- Password --%>
             <div class="form-group">
                 <label class="form-label" for="txtPassword">Password</label>
-                <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control"
-                    placeholder="********" TextMode="Password" MaxLength="100" />
+                <div class="pw-wrap">
+                    <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control"
+                        placeholder="********" TextMode="Password" MaxLength="100" />
+                    <button type="button" class="pw-toggle" onclick="togglePw('<%= txtPassword.ClientID %>', this)" tabindex="-1" aria-label="Show password">
+                        <i class="ti ti-eye"></i>
+                    </button>
+                </div>
                 <asp:RequiredFieldValidator ID="rfvPassword" runat="server"
                     ControlToValidate="txtPassword"
                     CssClass="form-error"
@@ -199,8 +229,13 @@
             <%-- Confirm Password --%>
             <div class="form-group">
                 <label class="form-label" for="txtConfirmPassword">Confirm Password</label>
-                <asp:TextBox ID="txtConfirmPassword" runat="server" CssClass="form-control"
-                    placeholder="********" TextMode="Password" MaxLength="100" />
+                <div class="pw-wrap">
+                    <asp:TextBox ID="txtConfirmPassword" runat="server" CssClass="form-control"
+                        placeholder="********" TextMode="Password" MaxLength="100" />
+                    <button type="button" class="pw-toggle" onclick="togglePw('<%= txtConfirmPassword.ClientID %>', this)" tabindex="-1" aria-label="Show password">
+                        <i class="ti ti-eye"></i>
+                    </button>
+                </div>
                 <asp:RequiredFieldValidator ID="rfvConfirm" runat="server"
                     ControlToValidate="txtConfirmPassword"
                     CssClass="form-error"
@@ -227,5 +262,15 @@
 
         </div>
     </div>
+
+    <script type="text/javascript">
+        function togglePw(clientId, btn) {
+            var box = document.getElementById(clientId);
+            if (!box) return;
+            var showing = box.type === 'text';
+            box.type = showing ? 'password' : 'text';
+            btn.querySelector('i').className = showing ? 'ti ti-eye' : 'ti ti-eye-off';
+        }
+    </script>
 
 </asp:Content>

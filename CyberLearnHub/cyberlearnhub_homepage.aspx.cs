@@ -10,13 +10,26 @@ namespace CyberLearnHub
         // =============================================
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Redirect logged-in users away from homepage if needed
-            // Example: if (Session["UserID"] != null) Response.Redirect("Dashboard.aspx");
+            if (!IsPostBack)
+                ApplyNavState();
         }
+
+        private void ApplyNavState()
+        {
+            bool loggedIn = Session["UserID"] != null;
+
+            pnlGuestButtons.Visible = !loggedIn;
+            pnlUserButtons.Visible  = loggedIn;
+
+            if (loggedIn)
+                lblNavUsername.Text = Session["Username"] as string ?? "user";
+        }
+
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
-            Response.Redirect("~Login.aspx");
+            Session.Abandon();
+            Response.Redirect("~/cyberlearnhub_homepage.aspx");
         }
 
         // =============================================s

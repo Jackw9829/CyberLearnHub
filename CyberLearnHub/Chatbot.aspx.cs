@@ -1,9 +1,13 @@
 using System;
+using System.Web.UI;
 
-public partial class Chatbot : System.Web.UI.Page
+namespace CyberLearnHub
 {
-    protected void Page_Load(object sender, EventArgs e)
+    public partial class Chatbot : Page
     {
-        // Page loads normally — chatbot runs via JavaScript + ChatbotHandler.ashx
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            // Chatbot runs entirely via JavaScript + ChatbotHandler.ashx
+        }
     }
 }

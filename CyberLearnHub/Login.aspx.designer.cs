@@ -8,6 +8,7 @@ namespace CyberLearnHub
 {
     public partial class Login
     {
+        protected global::System.Web.UI.WebControls.Panel pnlLoginOuter;
         protected global::System.Web.UI.WebControls.Panel pnlAlert;
         protected global::System.Web.UI.WebControls.Label lblAlert;
         protected global::System.Web.UI.WebControls.TextBox txtEmail;
