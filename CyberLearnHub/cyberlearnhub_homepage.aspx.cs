@@ -13,8 +13,13 @@ namespace CyberLearnHub
             // Redirect logged-in users away from homepage if needed
             // Example: if (Session["UserID"] != null) Response.Redirect("Dashboard.aspx");
         }
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("~Login.aspx");
+        }
 
-        // =============================================
+        // =============================================s
         // NAVIGATION BUTTONS
         // =============================================
         protected void btnLogin_Click(object sender, EventArgs e)
