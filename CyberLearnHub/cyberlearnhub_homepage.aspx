@@ -914,9 +914,12 @@
 
             <ul class="nav-links">
                 <li><a href="CourseListing.aspx">Courses</a></li>
-                <li><a href="Quizzes.aspx">Quizzes</a></li>
+                <li><a href="Quiz.aspx">Quizzes</a></li>
                 <li><a href="Progress.aspx">Progress</a></li>
                 <li><a href="About.aspx">About</a></li>
+                <asp:PlaceHolder ID="pnlAdminNav" runat="server" Visible="false">
+                    <li><a href="Admin/Default.aspx" style="color:var(--cyber-accent);">Admin</a></li>
+                </asp:PlaceHolder>
             </ul>
 
             <div class="nav-buttons">
@@ -1045,12 +1048,14 @@
                 <!-- Course Card 2 — Intermediate -->
                 <div class="course-card card-blue">
                     <div class="course-level level-intermediate">&#9670; Intermediate</div>
-                    <div class="course-title">TBC</div>
-                    <div class="course-desc">
-                        TBC</div>
+                    <div class="course-title">Network Security Basics</div>
+                    <div class="course-desc">Firewalls, VPNs and securing network traffic.</div>
                     <div class="course-meta">
                         <span class="meta-item">
-                            h m quizzes
+                            <i class="ti ti-clock" style="font-size:13px;" aria-hidden="true"></i> 9h 15m
+                        </span>
+                        <span class="meta-item">
+                            <i class="ti ti-list-check" style="font-size:13px;" aria-hidden="true"></i> 10 quizzes
                         </span>
                     </div>
                     <asp:Button ID="btnEnroll2" runat="server" Text="Enroll Now"
@@ -1061,12 +1066,15 @@
                 <!-- Course Card 3 — Advanced -->
                 <div class="course-card card-red">
                     <div class="course-level level-advanced">&#9650; Advanced</div>
-                    <div class="course-title">TBC</div>
-                    <div class="course-desc">
-                        TBC</div>
+                    <div class="course-title">Cryptography Essentials</div>
+                    <div class="course-desc">Encryption, hashing and digital signatures.</div>
                     <div class="course-meta">
                         <span class="meta-item">
-                            h m&nbsp; quizzes </span>
+                            <i class="ti ti-clock" style="font-size:13px;" aria-hidden="true"></i> 12h 15m
+                        </span>
+                        <span class="meta-item">
+                            <i class="ti ti-list-check" style="font-size:13px;" aria-hidden="true"></i> 12 quizzes
+                        </span>
                     </div>
                     <asp:Button ID="btnEnroll3" runat="server" Text="Enroll Now"
                         CssClass="btn-enroll" OnClick="btnEnroll3_Click"

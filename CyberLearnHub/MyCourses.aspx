@@ -1,0 +1,171 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="MyCourses.aspx.cs"
+         Inherits="CyberLearnHub.MyCourses" MasterPageFile="~/Site.Master" %>
+
+<asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
+    <title>My Courses — CyberLearn Hub</title>
+    <style>
+        .mc-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px 60px; }
+
+        .page-header { margin-bottom: 32px; }
+        .page-tag {
+            font-family: 'Share Tech Mono', monospace; font-size: 11px;
+            color: var(--cyber-accent); letter-spacing: 3px; margin-bottom: 6px;
+        }
+        .page-title {
+            font-family: 'Rajdhani', sans-serif; font-size: 32px;
+            font-weight: 700; color: var(--cyber-heading);
+        }
+
+        .mc-filters {
+            display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap;
+        }
+        .filter-btn {
+            font-family: 'Share Tech Mono', monospace; font-size: 10px;
+            letter-spacing: 1px; padding: 7px 16px; border-radius: 20px;
+            border: 1px solid var(--cyber-border); background: transparent;
+            color: var(--cyber-muted); cursor: pointer; transition: all 0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--cyber-accent); color: var(--cyber-accent);
+            background: rgba(0,212,255,0.06);
+        }
+
+        .mc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .mc-card {
+            background: var(--cyber-card); border: 1px solid var(--cyber-border);
+            border-radius: 12px; overflow: hidden;
+            display: flex; flex-direction: column;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .mc-card:hover { border-color: rgba(0,212,255,0.3); transform: translateY(-2px); }
+        .mc-card-thumb {
+            height: 140px; background: rgba(0,212,255,0.05);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        .mc-card-thumb img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        .mc-card-thumb .thumb-icon {
+            font-size: 48px; color: rgba(0,212,255,0.2);
+        }
+        .mc-card-body { padding: 18px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .mc-card-title {
+            font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700;
+            color: var(--cyber-heading); line-height: 1.3;
+        }
+        .mc-card-meta {
+            display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+        }
+        .badge-diff {
+            font-family: 'Share Tech Mono', monospace; font-size: 9px;
+            padding: 2px 8px; border-radius: 20px; letter-spacing: 1px;
+        }
+        .badge-beg { background: rgba(0,255,157,0.1);  color: var(--cyber-accent2); border: 1px solid rgba(0,255,157,0.2); }
+        .badge-int { background: rgba(250,199,117,0.1); color: var(--cyber-amber);   border: 1px solid rgba(250,199,117,0.2);}
+        .badge-adv { background: rgba(255,59,92,0.1);  color: var(--cyber-danger);   border: 1px solid rgba(255,59,92,0.2); }
+        .badge-cat { background: rgba(0,212,255,0.08); color: var(--cyber-accent);   border: 1px solid rgba(0,212,255,0.15);}
+
+        .quiz-status-badge {
+            font-family: 'Share Tech Mono', monospace; font-size: 9px;
+            padding: 3px 10px; border-radius: 20px; letter-spacing: 1px;
+            text-transform: uppercase; display: inline-block;
+        }
+        .qs-none   { background: rgba(90,122,153,0.15); color: var(--cyber-muted);   border: 1px solid var(--cyber-border); }
+        .qs-passed { background: rgba(0,255,157,0.1);   color: var(--cyber-accent2); border: 1px solid rgba(0,255,157,0.3); }
+        .qs-failed { background: rgba(255,59,92,0.1);   color: var(--cyber-danger);  border: 1px solid rgba(255,59,92,0.3); }
+
+        .mc-card-score {
+            font-family: 'Share Tech Mono', monospace; font-size: 11px;
+            color: var(--cyber-muted); margin-top: 2px;
+        }
+        .mc-card-score span { color: var(--cyber-accent2); font-size: 13px; }
+
+        .mc-card-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 8px; }
+        .btn-sm {
+            font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 700;
+            letter-spacing: 1px; padding: 7px 14px; border-radius: 5px;
+            text-transform: uppercase; text-decoration: none;
+            transition: background 0.2s, color 0.2s; display: inline-flex; align-items: center; gap: 4px;
+        }
+        .btn-sm-outline { border: 1px solid var(--cyber-border); color: var(--cyber-muted); background: transparent; }
+        .btn-sm-outline:hover { border-color: var(--cyber-accent); color: var(--cyber-accent); }
+        .btn-sm-accent  { border: 1px solid var(--cyber-accent); color: var(--cyber-accent); background: rgba(0,212,255,0.05); }
+        .btn-sm-accent:hover { background: rgba(0,212,255,0.12); }
+        .btn-sm-green   { border: 1px solid var(--cyber-accent2); color: var(--cyber-accent2); background: rgba(0,255,157,0.05); }
+        .btn-sm-green:hover { background: rgba(0,255,157,0.12); }
+
+        .mc-empty {
+            grid-column: 1 / -1; text-align: center; padding: 60px 20px;
+            color: var(--cyber-muted); font-family: 'Share Tech Mono', monospace; font-size: 12px;
+            letter-spacing: 1px;
+        }
+        .mc-empty i { font-size: 40px; display: block; margin-bottom: 14px; color: var(--cyber-border); }
+
+        .mc-count {
+            font-family: 'Share Tech Mono', monospace; font-size: 11px;
+            color: var(--cyber-muted); letter-spacing: 1px; margin-bottom: 20px;
+        }
+        .mc-count span { color: var(--cyber-accent); }
+    </style>
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="mc-wrap">
+
+        <div class="page-header">
+            <div class="page-tag">// student</div>
+            <div class="page-title">My Courses</div>
+        </div>
+
+        <div class="mc-count">
+            Enrolled in <span><asp:Label ID="lblCount" runat="server" Text="0" /></span> course(s)
+        </div>
+
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="mc-grid">
+                <div class="mc-empty">
+                    <i class="ti ti-book-off"></i>
+                    &gt; You haven't enrolled in any courses yet.<br />
+                    <a href="CourseListing.aspx" style="color:var(--cyber-accent);text-decoration:none;margin-top:12px;display:inline-block;">
+                        Browse courses &rarr;
+                    </a>
+                </div>
+            </div>
+        </asp:Panel>
+
+        <div class="mc-grid">
+            <asp:Repeater ID="rptCourses" runat="server">
+                <ItemTemplate>
+                    <div class="mc-card">
+                        <div class="mc-card-thumb">
+                            <%# GetThumbHtml(Eval("ImageUrl") as string) %>
+                        </div>
+                        <div class="mc-card-body">
+                            <div class="mc-card-title"><%# Server.HtmlEncode(Eval("Title") as string) %></div>
+                            <div class="mc-card-meta">
+                                <%# GetDiffBadge(Eval("Difficulty") as string) %>
+                                <%# GetCatBadge(Eval("Category") as string) %>
+                                <%# GetQuizBadge(Eval("QuizStatus") as string) %>
+                            </div>
+                            <%# GetBestScore(Eval("BestScore"), Eval("QuizStatus") as string) %>
+                            <div class="mc-card-actions">
+                                <a href="CourseDetail.aspx?id=<%# Eval("CourseID") %>" class="btn-sm btn-sm-outline">
+                                    <i class="ti ti-book"></i> Content
+                                </a>
+                                <a href="Quiz.aspx?courseId=<%# Eval("CourseID") %>" class="btn-sm btn-sm-accent">
+                                    <i class="ti ti-help-circle"></i> <%# (string)Eval("QuizStatus") == "None" ? "Take Quiz" : "Retake" %>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        </div>
+
+    </div>
+</asp:Content>

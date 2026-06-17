@@ -1,0 +1,367 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.Master.cs" Inherits="CyberLearnHub.Admin.AdminMaster" %>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --cyber-bg:      #080d14;
+            --cyber-surface: #0d1520;
+            --cyber-card:    #111c2b;
+            --cyber-border:  #1a3050;
+            --cyber-accent:  #00d4ff;
+            --cyber-accent2: #00ff9d;
+            --cyber-danger:  #ff3b5c;
+            --cyber-amber:   #fac775;
+            --cyber-text:    #c8dff0;
+            --cyber-muted:   #5a7a99;
+            --cyber-heading: #e8f4ff;
+            --sidebar-w:     220px;
+        }
+        body {
+            background: var(--cyber-bg);
+            font-family: 'Inter', sans-serif;
+            color: var(--cyber-text);
+            min-height: 100vh;
+            display: flex;
+        }
+        a { text-decoration: none; }
+
+        /* Sidebar */
+        .admin-sidebar {
+            width: var(--sidebar-w);
+            min-height: 100vh;
+            background: var(--cyber-surface);
+            border-right: 1px solid var(--cyber-border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            z-index: 100;
+        }
+        .sidebar-brand {
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid var(--cyber-border);
+        }
+        .sidebar-brand-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--cyber-accent);
+            letter-spacing: 1px;
+        }
+        .sidebar-brand-sub {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            color: var(--cyber-muted);
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+        .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+        .sidebar-section-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            color: var(--cyber-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 10px 20px 4px;
+        }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 20px;
+            color: var(--cyber-muted);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            transition: color 0.2s, background 0.2s;
+            border-left: 2px solid transparent;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            color: var(--cyber-accent);
+            background: rgba(0,212,255,0.05);
+            border-left-color: var(--cyber-accent);
+        }
+        .sidebar-link i { font-size: 16px; flex-shrink: 0; }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--cyber-border);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .sidebar-user {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-muted);
+            letter-spacing: 1px;
+        }
+        .sidebar-user span { color: var(--cyber-accent2); }
+        .btn-logout-sidebar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            background: rgba(255,59,92,0.08);
+            border: 1px solid rgba(255,59,92,0.25);
+            color: var(--cyber-danger);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        .btn-logout-sidebar:hover { background: rgba(255,59,92,0.15); }
+
+        /* Main area */
+        .admin-main {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .admin-topbar {
+            background: var(--cyber-surface);
+            border-bottom: 1px solid var(--cyber-border);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .admin-topbar-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--cyber-heading);
+        }
+        .admin-content { padding: 28px; flex: 1; }
+
+        /* Shared admin UI utilities */
+        .admin-card {
+            background: var(--cyber-card);
+            border: 1px solid var(--cyber-border);
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .admin-card-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--cyber-heading);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .admin-card-title i { color: var(--cyber-accent); }
+
+        /* Admin tables */
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 0 14px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--cyber-border);
+        }
+        .admin-table td {
+            padding: 11px 14px;
+            font-size: 13px;
+            color: var(--cyber-text);
+            border-bottom: 1px solid rgba(26,48,80,0.5);
+            vertical-align: middle;
+        }
+        .admin-table tr:last-child td { border-bottom: none; }
+        .admin-table tr:hover td { background: rgba(0,212,255,0.03); }
+
+        /* Admin buttons */
+        .btn-admin-primary {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px;
+            background: var(--cyber-accent);
+            color: #080d14;
+            border: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px; font-weight: 700; letter-spacing: 1px;
+            border-radius: 5px; cursor: pointer; text-transform: uppercase;
+            transition: background 0.2s; text-decoration: none;
+        }
+        .btn-admin-primary:hover { background: #33ddff; color: #080d14; }
+        .btn-admin-sm {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 5px 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+            border-radius: 4px; cursor: pointer; text-transform: uppercase;
+            transition: background 0.2s, color 0.2s; text-decoration: none;
+            border: 1px solid;
+        }
+        .btn-edit   { color: var(--cyber-accent);  border-color: rgba(0,212,255,0.4);  background: rgba(0,212,255,0.06); }
+        .btn-edit:hover   { background: rgba(0,212,255,0.15); }
+        .btn-delete { color: var(--cyber-danger);  border-color: rgba(255,59,92,0.4);  background: rgba(255,59,92,0.06); }
+        .btn-delete:hover { background: rgba(255,59,92,0.15); }
+        .btn-view   { color: var(--cyber-accent2); border-color: rgba(0,255,157,0.4);  background: rgba(0,255,157,0.06); }
+        .btn-view:hover   { background: rgba(0,255,157,0.15); }
+        .btn-secondary {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px;
+            background: transparent;
+            color: var(--cyber-muted);
+            border: 1px solid var(--cyber-border);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px; font-weight: 700; letter-spacing: 1px;
+            border-radius: 5px; cursor: pointer; text-transform: uppercase;
+            transition: color 0.2s, border-color 0.2s; text-decoration: none;
+        }
+        .btn-secondary:hover { color: var(--cyber-text); border-color: var(--cyber-text); }
+
+        /* Alert */
+        .admin-alert {
+            padding: 11px 16px; border-radius: 6px;
+            font-size: 13px; margin-bottom: 16px;
+            font-family: 'Share Tech Mono', monospace; letter-spacing: 0.5px;
+        }
+        .admin-alert.success { background: rgba(0,255,157,0.08); border: 1px solid rgba(0,255,157,0.3); color: var(--cyber-accent2); }
+        .admin-alert.error   { background: rgba(255,59,92,0.08);  border: 1px solid rgba(255,59,92,0.3);  color: var(--cyber-danger); }
+
+        /* Form fields */
+        .form-group { margin-bottom: 20px; }
+        .form-label {
+            display: block;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .form-control {
+            width: 100%;
+            background: rgba(8,13,20,0.6);
+            border: 1px solid var(--cyber-border);
+            border-radius: 6px;
+            padding: 10px 13px;
+            color: var(--cyber-text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+        .form-control:focus {
+            border-color: var(--cyber-accent);
+            box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+        }
+        textarea.form-control { resize: vertical; min-height: 90px; }
+        select.form-control { cursor: pointer; appearance: none; }
+        .form-error {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyber-danger);
+            margin-top: 5px;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+        .form-hint {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-muted);
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        /* Badges */
+        .badge {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px; letter-spacing: 1px;
+            padding: 3px 8px; border-radius: 20px; text-transform: uppercase;
+        }
+        .badge-pub   { background: rgba(0,255,157,0.1);  color: var(--cyber-accent2); border: 1px solid rgba(0,255,157,0.25); }
+        .badge-draft { background: rgba(90,122,153,0.15); color: var(--cyber-muted);   border: 1px solid var(--cyber-border); }
+        .badge-admin { background: rgba(255,59,92,0.1);  color: var(--cyber-danger);  border: 1px solid rgba(255,59,92,0.25); }
+        .badge-member{ background: rgba(0,212,255,0.1);  color: var(--cyber-accent);  border: 1px solid rgba(0,212,255,0.25); }
+    </style>
+</head>
+<body>
+<form id="adminForm" runat="server">
+
+    <div class="admin-sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-name">CyberLearn Hub</div>
+            <div class="sidebar-brand-sub">// Admin Panel</div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Overview</div>
+            <a href="<%= ResolveUrl("~/Admin/Default.aspx") %>" class="sidebar-link <%= CurrentPage("Default") %>">
+                <i class="ti ti-dashboard"></i> Dashboard
+            </a>
+            <a href="<%= ResolveUrl("~/Admin/Reports.aspx") %>" class="sidebar-link <%= CurrentPage("Reports") %>">
+                <i class="ti ti-chart-bar"></i> Reports
+            </a>
+
+            <div class="sidebar-section-label">Courses</div>
+            <a href="<%= ResolveUrl("~/Admin/ManageCourses.aspx") %>" class="sidebar-link <%= CurrentPage("ManageCourses") %>">
+                <i class="ti ti-book"></i> Courses
+            </a>
+            <a href="<%= ResolveUrl("~/Admin/ManageQuizzes.aspx") %>" class="sidebar-link <%= CurrentPage("ManageQuizzes") + " " + CurrentPage("QuizForm") %>">
+                <i class="ti ti-help-circle"></i> Quizzes
+            </a>
+            <a href="<%= ResolveUrl("~/Admin/ManageLearningMaterials.aspx") %>" class="sidebar-link <%= CurrentPage("ManageLearningMaterials") + " " + CurrentPage("LearningMaterialForm") %>">
+                <i class="ti ti-file-text"></i> Materials
+            </a>
+
+            <div class="sidebar-section-label">Users</div>
+            <a href="<%= ResolveUrl("~/Admin/ManageUsers.aspx") %>" class="sidebar-link <%= CurrentPage("ManageUsers") %>">
+                <i class="ti ti-users"></i> Users
+            </a>
+
+            <div class="sidebar-section-label">Content</div>
+            <a href="<%= ResolveUrl("~/Admin/ManageContent.aspx") %>" class="sidebar-link <%= CurrentPage("ManageContent") %>">
+                <i class="ti ti-layout"></i> Website Content
+            </a>
+
+            <div class="sidebar-section-label">Site</div>
+            <a href="<%= ResolveUrl("~/cyberlearnhub_homepage.aspx") %>" class="sidebar-link">
+                <i class="ti ti-home"></i> View Site
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">Logged in as <span><%= Session["Username"] %></span></div>
+            <asp:Button ID="btnLogout" runat="server" Text="Log Out"
+                CssClass="btn-logout-sidebar" OnClick="btnLogout_Click" CausesValidation="false" />
+        </div>
+    </div>
+
+    <div class="admin-main">
+        <div class="admin-topbar">
+            <i class="ti ti-shield-lock" style="color:var(--cyber-accent);font-size:18px;"></i>
+            <div class="admin-topbar-title">
+                <asp:ContentPlaceHolder ID="PageTitle" runat="server">Admin</asp:ContentPlaceHolder>
+            </div>
+        </div>
+        <div class="admin-content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+        </div>
+    </div>
+
+</form>
+</body>
+</html>
