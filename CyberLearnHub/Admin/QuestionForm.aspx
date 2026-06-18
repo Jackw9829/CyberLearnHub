@@ -208,7 +208,7 @@
             <label class="form-label">Answer Explanation <span style="color:var(--cyber-muted);font-weight:400;">(optional)</span></label>
             <asp:TextBox ID="txtExplanation" runat="server" CssClass="form-control"
                 TextMode="MultiLine" Rows="3" MaxLength="1000"
-                placeholder="Explain why this answer is correct — shown to students after the quiz" />
+                placeholder="Explain why this answer is correct - shown to students after the quiz" />
             <span class="form-hint">&gt; Students see this in the answer review</span>
         </div>
 

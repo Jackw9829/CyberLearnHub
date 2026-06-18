@@ -1,7 +1,7 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ManageQuestions.aspx.cs"
          Inherits="CyberLearnHub.Admin.ManageQuestions" MasterPageFile="~/Admin/Admin.Master" %>
 
-<asp:Content ID="PageTitle" ContentPlaceHolderID="PageTitle" runat="server">Questions —
+<asp:Content ID="PageTitle" ContentPlaceHolderID="PageTitle" runat="server">Questions -
     <asp:Literal ID="litCourseName" runat="server" />
 </asp:Content>
 
