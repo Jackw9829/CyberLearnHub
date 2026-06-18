@@ -73,6 +73,12 @@ namespace CyberLearnHub
             hlRetake.NavigateUrl = "~/Quiz.aspx?courseId=" + courseId;
             hlBack.NavigateUrl   = "~/CourseDetail.aspx?id=" + courseId;
 
+            if (Request.QueryString["expired"] == "1")
+            {
+                pnlScore.Controls.AddAt(0, new System.Web.UI.LiteralControl(
+                    "<div style=\"background:rgba(255,59,92,0.1);border:1px solid rgba(255,59,92,0.3);color:var(--cyber-danger);font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px 16px;border-radius:6px;margin-bottom:16px;\">&gt; Time expired - quiz auto-submitted.</div>"));
+            }
+
             LoadReview(quizId);
         }
 

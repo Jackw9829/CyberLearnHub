@@ -95,6 +95,25 @@
             border-radius:6px; font-size:13px; margin-bottom:20px;
             font-family:'Share Tech Mono',monospace; letter-spacing:0.5px;
         }
+        .quiz-timer-wrap {
+            display: flex; align-items: center; gap: 12px;
+            background: rgba(250,199,117,0.06); border: 1px solid rgba(250,199,117,0.25);
+            border-radius: 8px; padding: 10px 16px; margin-bottom: 20px;
+        }
+        .quiz-timer-icon { color: var(--cyber-amber); font-size: 18px; }
+        .quiz-timer-label {
+            font-family: 'Share Tech Mono', monospace; font-size: 11px;
+            color: var(--cyber-muted); letter-spacing: 1px;
+        }
+        .quiz-timer-display {
+            font-family: 'Share Tech Mono', monospace; font-size: 20px;
+            font-weight: 700; color: var(--cyber-amber); letter-spacing: 2px;
+            margin-left: auto;
+        }
+        .quiz-timer-display.danger { color: var(--cyber-danger); animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0.4; } }
+        .timer-bar-wrap { background: var(--cyber-border); border-radius: 2px; height: 3px; margin-top: 6px; }
+        .timer-bar { height: 3px; border-radius: 2px; background: var(--cyber-amber); transition: width 1s linear; }
     </style>
 </asp:Content>
 
@@ -111,6 +130,15 @@
         </div>
         <div class="quiz-progress-label">
             <asp:Label ID="lblProgress" runat="server" />
+        </div>
+
+        <div id="timerPanel" style="display:none;">
+            <div class="quiz-timer-wrap">
+                <i class="ti ti-clock quiz-timer-icon"></i>
+                <span class="quiz-timer-label">TIME REMAINING</span>
+                <span id="timerDisplay" class="quiz-timer-display">--:--</span>
+            </div>
+            <div class="timer-bar-wrap"><div id="timerBar" class="timer-bar" style="width:100%"></div></div>
         </div>
 
         <asp:Panel ID="pnlAlert" runat="server" Visible="false">
@@ -201,5 +229,30 @@
         }
         return true;
     }
+
+    (function() {
+        var limitSeconds = parseInt('<%: ViewState["TimeLimitMinutes"] ?? 0 %>') * 60;
+        if (!limitSeconds) return;
+        document.getElementById('timerPanel').style.display = 'block';
+        var remaining = limitSeconds;
+        var display   = document.getElementById('timerDisplay');
+        var bar       = document.getElementById('timerBar');
+        var submitBtn = document.getElementById('<%= btnSubmit.ClientID %>');
+        function tick() {
+            if (remaining <= 0) {
+                display.textContent = '00:00';
+                submitBtn.click();
+                return;
+            }
+            var m = Math.floor(remaining / 60);
+            var s = remaining % 60;
+            display.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+            bar.style.width = (remaining / limitSeconds * 100) + '%';
+            if (remaining <= 60) display.classList.add('danger');
+            remaining--;
+            setTimeout(tick, 1000);
+        }
+        tick();
+    })();
 </script>
 </asp:Content>

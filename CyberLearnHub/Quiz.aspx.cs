@@ -51,34 +51,76 @@ namespace CyberLearnHub
                     lblCourseName.Text = Server.HtmlEncode(result.ToString());
                 }
 
-                using (SqlCommand cmd = new SqlCommand(
-                    "SELECT TOP 1 QuizID FROM dbo.Quizzes WHERE CourseID = @cid", conn))
+                int timeLimitMinutes = 0;
+                int maxAttempts      = 0;
+                bool randomize       = false;
+
+                using (SqlCommand cmd = new SqlCommand(@"
+                    SELECT TOP 1 QuizID, ISNULL(TimeLimitMinutes,0), ISNULL(MaxAttempts,0), ISNULL(RandomizeQuestions,0)
+                    FROM dbo.Quizzes WHERE CourseID = @cid", conn))
                 {
                     cmd.Parameters.AddWithValue("@cid", _courseId);
-                    object result = cmd.ExecuteScalar();
-                    if (result == null)
+                    using (SqlDataReader r = cmd.ExecuteReader())
                     {
-                        pnlQuiz.Visible  = false;
-                        pnlAlert.Visible = true;
-                        lblAlert.Text    = "&gt; No quiz available for this course yet.";
-                        return;
+                        if (!r.Read())
+                        {
+                            pnlQuiz.Visible  = false;
+                            pnlAlert.Visible = true;
+                            lblAlert.Text    = "&gt; No quiz available for this course yet.";
+                            return;
+                        }
+                        _quizId          = r.GetInt32(0);
+                        timeLimitMinutes = r.GetInt32(1);
+                        maxAttempts      = r.GetInt32(2);
+                        randomize        = r.GetBoolean(3);
+                        ViewState["QuizID"] = _quizId;
                     }
-                    _quizId = (int)result;
-                    ViewState["QuizID"] = _quizId;
+                }
+
+                // Max attempts check
+                if (maxAttempts > 0)
+                {
+                    using (SqlCommand cmd = new SqlCommand(
+                        "SELECT COUNT(*) FROM dbo.QuizResults WHERE UserID=@uid AND QuizID=@qid", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@uid", uid);
+                        cmd.Parameters.AddWithValue("@qid", _quizId);
+                        int attempts = (int)cmd.ExecuteScalar();
+                        if (attempts >= maxAttempts)
+                        {
+                            object bestObj;
+                            using (SqlCommand bc = new SqlCommand(
+                                "SELECT MAX(Percentage) FROM dbo.QuizResults WHERE UserID=@uid AND QuizID=@qid", conn))
+                            {
+                                bc.Parameters.AddWithValue("@uid", uid);
+                                bc.Parameters.AddWithValue("@qid", _quizId);
+                                bestObj = bc.ExecuteScalar();
+                            }
+                            string best = bestObj != DBNull.Value && bestObj != null
+                                ? Convert.ToInt32(bestObj) + "%" : "N/A";
+                            pnlQuiz.Visible  = false;
+                            pnlAlert.Visible = true;
+                            lblAlert.Text    = string.Format(
+                                "&gt; Maximum attempts reached ({0}/{0}). Your best score: {1}",
+                                maxAttempts, best);
+                            return;
+                        }
+                    }
                 }
             }
 
+            string orderBy = randomize ? "NEWID()" : "QuestionID";
             DataTable dt = new DataTable();
-            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
-            using (SqlCommand cmd = new SqlCommand(@"
+            using (SqlConnection conn2 = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(string.Format(@"
                 SELECT QuestionID, QuestionText, QuestionType,
-                       OptionA, OptionB, OptionC, OptionD, CorrectOption
+                       OptionA, OptionB, OptionC, OptionD, CorrectOption, Difficulty
                 FROM   dbo.QuizQuestions
                 WHERE  QuizID = @qid
-                ORDER  BY QuestionID", conn))
+                ORDER  BY {0}", orderBy), conn2))
             {
                 cmd.Parameters.AddWithValue("@qid", _quizId);
-                conn.Open();
+                conn2.Open();
                 using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                     da.Fill(dt);
             }
@@ -94,6 +136,7 @@ namespace CyberLearnHub
             // Store grading data in ViewState — never sent to client
             var correctAnswers = new Dictionary<int, string>(); // qid → CorrectOption or answer text
             var questionTypes  = new Dictionary<int, string>(); // qid → QuestionType
+            var difficulties   = new Dictionary<int, string>(); // qid → Difficulty
 
             foreach (DataRow row in dt.Rows)
             {
@@ -102,6 +145,7 @@ namespace CyberLearnHub
                 string correct = row["CorrectOption"] as string ?? "A";
 
                 questionTypes[qid] = qType;
+                difficulties[qid]  = row["Difficulty"] as string ?? "Medium";
 
                 // For FillBlank, store the actual answer text (OptionA)
                 correctAnswers[qid] = qType == "FillBlank"
@@ -111,10 +155,20 @@ namespace CyberLearnHub
 
             ViewState["CorrectAnswers"] = correctAnswers;
             ViewState["QuestionTypes"]  = questionTypes;
+            ViewState["Difficulties"]   = difficulties;
             ViewState["CourseID"]       = _courseId;
+
+            // Timer
+            if (timeLimitMinutes > 0)
+            {
+                Session["QuizStartTime_" + _quizId]  = DateTime.Now;
+                Session["QuizTimeLimit_"  + _quizId] = timeLimitMinutes;
+                ViewState["TimeLimitMinutes"] = timeLimitMinutes;
+            }
 
             // Remove grading columns before binding (don't expose answers)
             dt.Columns.Remove("CorrectOption");
+            dt.Columns.Remove("Difficulty");
 
             rptQuestions.DataSource = dt;
             rptQuestions.DataBind();
@@ -141,6 +195,26 @@ namespace CyberLearnHub
             int courseId       = ViewState["CourseID"] != null ? (int)ViewState["CourseID"] : _courseId;
             int quizId         = ViewState["QuizID"]   != null ? (int)ViewState["QuizID"]   : 0;
             int uid            = (int)Session["UserID"];
+
+            // Timer validation
+            int timeLimitMinutes = ViewState["TimeLimitMinutes"] != null ? (int)ViewState["TimeLimitMinutes"] : 0;
+            if (timeLimitMinutes > 0)
+            {
+                var startKey = "QuizStartTime_" + quizId;
+                if (Session[startKey] is DateTime startTime)
+                {
+                    double elapsed = (DateTime.Now - startTime).TotalSeconds;
+                    double allowed = timeLimitMinutes * 60 + 30; // 30s grace
+                    if (elapsed > allowed)
+                    {
+                        int resultId = SaveResult(uid, quizId, 0, correctAnswers != null ? correctAnswers.Count : 0, 0, false);
+                        Session.Remove(startKey);
+                        Response.Redirect("~/QuizResult.aspx?attemptId=" + resultId + "&expired=1");
+                        return;
+                    }
+                }
+                Session.Remove("QuizStartTime_" + quizId);
+            }
 
             if (correctAnswers == null || correctAnswers.Count == 0 || quizId == 0) return;
 
@@ -183,6 +257,7 @@ namespace CyberLearnHub
             }
 
             int resultId = SaveResult(uid, quizId, correct, total, percentage, passed);
+            Session.Remove("QuizStartTime_" + quizId);
             Response.Redirect("~/QuizResult.aspx?attemptId=" + resultId);
         }
 
