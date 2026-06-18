@@ -23,6 +23,7 @@ namespace CyberLearnHub
         {
             lblUsername.Text = Server.HtmlEncode(Session["Username"] as string ?? "");
             LoadStats(uid);
+            LoadXPStreak(uid);
             LoadMyCourses(uid);
             LoadActivity(uid);
         }
@@ -132,6 +133,35 @@ namespace CyberLearnHub
             pnlActivity.Visible    = true;
             rptActivity.DataSource = dt;
             rptActivity.DataBind();
+        }
+
+        private void LoadXPStreak(int uid)
+        {
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                SELECT x.TotalXP, x.Level,
+                       CASE WHEN s.LastPassDate IS NULL THEN 0
+                            WHEN s.LastPassDate >= CAST(DATEADD(day,-1,GETDATE()) AS DATE) THEN ISNULL(s.CurrentStreak,0)
+                            ELSE 0 END AS DisplayStreak
+                FROM   (SELECT @uid AS UserID) base
+                LEFT JOIN dbo.UserXP      x ON x.UserID = @uid
+                LEFT JOIN dbo.UserStreaks  s ON s.UserID = @uid", conn))
+            {
+                cmd.Parameters.AddWithValue("@uid", uid);
+                conn.Open();
+                using (SqlDataReader r = cmd.ExecuteReader())
+                {
+                    if (r.Read())
+                    {
+                        int xp     = r.IsDBNull(0) ? 0 : r.GetInt32(0);
+                        int level  = r.IsDBNull(1) ? 1 : r.GetInt32(1);
+                        int streak = r.IsDBNull(2) ? 0 : r.GetInt32(2);
+                        lblXP.Text     = xp + " XP";
+                        lblLevel.Text  = "LVL " + level;
+                        lblStreak.Text = streak > 0 ? streak + "-day streak" : "No active streak";
+                    }
+                }
+            }
         }
 
         protected string GetQuizStatusBadge(string status)

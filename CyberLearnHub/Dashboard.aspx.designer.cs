@@ -12,5 +12,8 @@ namespace CyberLearnHub
         protected global::System.Web.UI.WebControls.Panel pnlNoActivity;
         protected global::System.Web.UI.WebControls.Panel pnlActivity;
         protected global::System.Web.UI.WebControls.Repeater rptActivity;
+        protected global::System.Web.UI.WebControls.Label lblXP;
+        protected global::System.Web.UI.WebControls.Label lblLevel;
+        protected global::System.Web.UI.WebControls.Label lblStreak;
     }
 }

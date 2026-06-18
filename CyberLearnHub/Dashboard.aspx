@@ -231,6 +231,36 @@
             </div>
         </div>
 
+        <div class="stats-grid" style="margin-bottom:28px;">
+            <div class="stat-card">
+                <div class="stat-icon" style="background:rgba(250,199,117,0.1);color:var(--cyber-amber);">
+                    <i class="ti ti-star"></i>
+                </div>
+                <div>
+                    <div class="stat-value"><asp:Label ID="lblXP" runat="server" Text="0 XP" /></div>
+                    <div class="stat-label">Total XP</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:rgba(0,212,255,0.1);color:var(--cyber-accent);">
+                    <i class="ti ti-shield-star"></i>
+                </div>
+                <div>
+                    <div class="stat-value"><asp:Label ID="lblLevel" runat="server" Text="LVL 1" /></div>
+                    <div class="stat-label">Level</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:rgba(255,59,92,0.1);color:var(--cyber-danger);">
+                    <i class="ti ti-flame"></i>
+                </div>
+                <div>
+                    <div class="stat-value"><asp:Label ID="lblStreak" runat="server" Text="No streak" /></div>
+                    <div class="stat-label">Pass Streak</div>
+                </div>
+            </div>
+        </div>
+
         <!-- My Courses -->
         <div class="section-header">
             <div class="section-title">// My Courses</div>

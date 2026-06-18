@@ -258,6 +258,8 @@ namespace CyberLearnHub
 
             int resultId = SaveResult(uid, quizId, correct, total, percentage, passed);
             SaveAnswers(resultId, correctAnswers, questionTypes);
+            AwardXP(uid, quizId, correctAnswers, questionTypes, passed);
+            if (passed) UpdateStreak(uid);
             Session.Remove("QuizStartTime_" + quizId);
             Response.Redirect("~/QuizResult.aspx?attemptId=" + resultId);
         }
@@ -310,6 +312,81 @@ namespace CyberLearnHub
                         cmd.ExecuteNonQuery();
                     }
                 }
+            }
+        }
+
+        private void AwardXP(int uid, int quizId, Dictionary<int, string> correctAnswers,
+                             Dictionary<int, string> questionTypes, bool passed)
+        {
+            var diffMap = ViewState["Difficulties"] as Dictionary<int, string>
+                       ?? new Dictionary<int, string>();
+
+            int xpEarned = 0;
+            foreach (var kvp in correctAnswers)
+            {
+                int    qid   = kvp.Key;
+                string qType = questionTypes != null && questionTypes.ContainsKey(qid)
+                               ? questionTypes[qid] : "MultipleChoice";
+                string submitted = qType == "FillBlank"
+                    ? (Request.Form["fb_" + qid] ?? "")
+                    : (Request.Form["q_"  + qid] ?? "");
+                bool isCorrect = qType == "FillBlank"
+                    ? string.Equals(submitted.Trim(), kvp.Value.Trim(), StringComparison.OrdinalIgnoreCase)
+                    : string.Equals(submitted, kvp.Value, StringComparison.OrdinalIgnoreCase);
+
+                if (isCorrect)
+                {
+                    string diff = diffMap.ContainsKey(qid) ? diffMap[qid] : "Medium";
+                    xpEarned += diff == "Easy" ? 10 : diff == "Hard" ? 30 : 20;
+                }
+            }
+            if (passed) xpEarned += 50;
+            if (xpEarned == 0) return;
+
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                MERGE dbo.UserXP AS target
+                USING (SELECT @uid AS UserID) AS source ON target.UserID = source.UserID
+                WHEN MATCHED THEN
+                    UPDATE SET TotalXP = target.TotalXP + @xp,
+                               Level   = (target.TotalXP + @xp) / 500 + 1,
+                               UpdatedAt = GETDATE()
+                WHEN NOT MATCHED THEN
+                    INSERT (UserID, TotalXP, Level, UpdatedAt)
+                    VALUES (@uid, @xp, @xp / 500 + 1, GETDATE());", conn))
+            {
+                cmd.Parameters.AddWithValue("@uid", uid);
+                cmd.Parameters.AddWithValue("@xp",  xpEarned);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        private static void UpdateStreak(int uid)
+        {
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                MERGE dbo.UserStreaks AS target
+                USING (SELECT @uid AS UserID) AS source ON target.UserID = source.UserID
+                WHEN MATCHED THEN UPDATE SET
+                    CurrentStreak = CASE
+                        WHEN target.LastPassDate = CAST(GETDATE() AS DATE) THEN target.CurrentStreak
+                        WHEN target.LastPassDate = CAST(DATEADD(day,-1,GETDATE()) AS DATE) THEN target.CurrentStreak + 1
+                        ELSE 1 END,
+                    LongestStreak = CASE
+                        WHEN target.LastPassDate = CAST(GETDATE() AS DATE) THEN target.LongestStreak
+                        WHEN target.LastPassDate = CAST(DATEADD(day,-1,GETDATE()) AS DATE)
+                            THEN CASE WHEN target.CurrentStreak + 1 > target.LongestStreak
+                                      THEN target.CurrentStreak + 1 ELSE target.LongestStreak END
+                        ELSE CASE WHEN 1 > target.LongestStreak THEN 1 ELSE target.LongestStreak END END,
+                    LastPassDate = CAST(GETDATE() AS DATE)
+                WHEN NOT MATCHED THEN
+                    INSERT (UserID, CurrentStreak, LongestStreak, LastPassDate)
+                    VALUES (@uid, 1, 1, CAST(GETDATE() AS DATE));", conn))
+            {
+                cmd.Parameters.AddWithValue("@uid", uid);
+                conn.Open();
+                cmd.ExecuteNonQuery();
             }
         }
 
