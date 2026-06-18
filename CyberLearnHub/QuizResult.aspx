@@ -136,6 +136,14 @@
         .review-answer.your-correct { color: var(--cyber-accent2); }
         .review-answer.your-wrong   { color: var(--cyber-danger); }
         .review-answer.correct-ans  { color: var(--cyber-accent); margin-top: 4px; }
+        .review-explanation {
+            margin-top: 8px; padding: 8px 12px;
+            background: rgba(250,199,117,0.06);
+            border-left: 3px solid var(--cyber-amber);
+            font-size: 12px; color: var(--cyber-amber);
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 0.5px; line-height: 1.6;
+        }
     </style>
 </asp:Content>
 
@@ -159,12 +167,16 @@
         <div class="review-title">// Answer Review</div>
         <asp:Repeater ID="rptReview" runat="server">
             <ItemTemplate>
-                <div class="review-item">
-                    <div class="review-q-num">Q<%# Container.ItemIndex + 1 %></div>
-                    <div class="review-q-text"><%# Server.HtmlEncode(Eval("QuestionText") as string) %></div>
-                    <div class="review-answer correct-ans">
-                        Correct answer: <%# Server.HtmlEncode(Eval("CorrectText") as string ?? "") %>
+                <div class="review-item <%# (bool)Eval("IsCorrect") ? "correct" : "wrong" %>">
+                    <div class="review-q-num">
+                        Q<%# Container.ItemIndex + 1 %> &mdash; <%# (bool)Eval("IsCorrect") ? "CORRECT" : "INCORRECT" %>
                     </div>
+                    <div class="review-q-text"><%# Server.HtmlEncode(Eval("QuestionText") as string) %></div>
+                    <div class="review-answer <%# (bool)Eval("IsCorrect") ? "your-correct" : "your-wrong" %>">
+                        Your answer: <%# Server.HtmlEncode(Eval("YourAnswer") as string ?? "Not answered") %>
+                    </div>
+                    <%# !(bool)Eval("IsCorrect") ? "<div class=\"review-answer correct-ans\">Correct answer: " + Server.HtmlEncode(Eval("CorrectText") as string ?? "") + "</div>" : "" %>
+                    <%# !string.IsNullOrEmpty(Eval("Explanation") as string) ? "<div class=\"review-explanation\">&gt; " + Server.HtmlEncode(Eval("Explanation") as string) + "</div>" : "" %>
                 </div>
             </ItemTemplate>
         </asp:Repeater>

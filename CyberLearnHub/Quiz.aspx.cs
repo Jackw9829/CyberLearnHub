@@ -257,6 +257,7 @@ namespace CyberLearnHub
             }
 
             int resultId = SaveResult(uid, quizId, correct, total, percentage, passed);
+            SaveAnswers(resultId, correctAnswers, questionTypes);
             Session.Remove("QuizStartTime_" + quizId);
             Response.Redirect("~/QuizResult.aspx?attemptId=" + resultId);
         }
@@ -277,6 +278,38 @@ namespace CyberLearnHub
                 cmd.Parameters.AddWithValue("@passed", passed ? 1 : 0);
                 conn.Open();
                 return (int)cmd.ExecuteScalar();
+            }
+        }
+
+        private void SaveAnswers(int resultId, Dictionary<int, string> correctAnswers, Dictionary<int, string> questionTypes)
+        {
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            {
+                conn.Open();
+                foreach (var kvp in correctAnswers)
+                {
+                    int    qid    = kvp.Key;
+                    string answer = kvp.Value;
+                    string qType  = questionTypes != null && questionTypes.ContainsKey(qid)
+                                    ? questionTypes[qid] : "MultipleChoice";
+                    string submitted = qType == "FillBlank"
+                        ? (Request.Form["fb_" + qid] ?? "")
+                        : (Request.Form["q_"  + qid] ?? "");
+                    bool isCorrect = qType == "FillBlank"
+                        ? string.Equals(submitted.Trim(), answer.Trim(), StringComparison.OrdinalIgnoreCase)
+                        : string.Equals(submitted, answer, StringComparison.OrdinalIgnoreCase);
+
+                    using (SqlCommand cmd = new SqlCommand(@"
+                        INSERT INTO dbo.QuizAnswers (ResultID, QuestionID, SubmittedAnswer, IsCorrect)
+                        VALUES (@rid, @qid, @ans, @ok)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@rid", resultId);
+                        cmd.Parameters.AddWithValue("@qid", qid);
+                        cmd.Parameters.AddWithValue("@ans", submitted);
+                        cmd.Parameters.AddWithValue("@ok",  isCorrect);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
             }
         }
 
