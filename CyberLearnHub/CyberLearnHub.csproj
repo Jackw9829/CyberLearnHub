@@ -102,6 +102,7 @@
     <Content Include="Uploads\Certificates\.gitkeep" />
     <Compile Include="App_Code\CertificateHelper.cs" />
     <Content Include="MyCourses.aspx" />
+    <Content Include="MyProgress.aspx" />
     <Content Include="Error.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Profile.aspx" />
@@ -267,6 +268,13 @@
     </Compile>
     <Compile Include="MyCourses.aspx.designer.cs">
       <DependentUpon>MyCourses.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MyProgress.aspx.cs">
+      <DependentUpon>MyProgress.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MyProgress.aspx.designer.cs">
+      <DependentUpon>MyProgress.aspx</DependentUpon>
     </Compile>
     <Compile Include="Profile.aspx.cs">
       <DependentUpon>Profile.aspx</DependentUpon>
