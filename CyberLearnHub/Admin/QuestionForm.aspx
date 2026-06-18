@@ -161,10 +161,10 @@
             <div class="form-group" style="max-width:220px;">
                 <label class="form-label">Correct Answer *</label>
                 <asp:DropDownList ID="ddlCorrect" runat="server" CssClass="form-control">
-                    <asp:ListItem Value="A">A — Option A</asp:ListItem>
-                    <asp:ListItem Value="B">B — Option B</asp:ListItem>
-                    <asp:ListItem Value="C">C — Option C</asp:ListItem>
-                    <asp:ListItem Value="D">D — Option D</asp:ListItem>
+                    <asp:ListItem Value="A">A - Option A</asp:ListItem>
+                    <asp:ListItem Value="B">B - Option B</asp:ListItem>
+                    <asp:ListItem Value="C">C - Option C</asp:ListItem>
+                    <asp:ListItem Value="D">D - Option D</asp:ListItem>
                 </asp:DropDownList>
             </div>
         </div>
