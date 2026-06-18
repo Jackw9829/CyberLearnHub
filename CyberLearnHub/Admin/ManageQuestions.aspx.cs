@@ -70,7 +70,7 @@ namespace CyberLearnHub.Admin
             DataTable dt = new DataTable();
             using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
             using (SqlCommand cmd = new SqlCommand(@"
-                SELECT QuestionID, QuizID, QuestionText, QuestionType, OptionA, CorrectOption
+                SELECT QuestionID, QuizID, QuestionText, QuestionType, OptionA, CorrectOption, Difficulty, Topic
                 FROM   dbo.QuizQuestions
                 WHERE  QuizID = @qid
                 ORDER  BY QuestionID", conn))
@@ -101,6 +101,16 @@ namespace CyberLearnHub.Admin
                     return "<span class=\"badge\" style=\"background:rgba(250,199,117,0.1);color:var(--cyber-amber);border:1px solid rgba(250,199,117,0.25);\">FILL</span>";
                 default:
                     return "<span class=\"badge badge-member\">MCQ</span>";
+            }
+        }
+
+        protected string GetDiffBadge(string diff)
+        {
+            switch (diff)
+            {
+                case "Easy": return "<span class=\"badge\" style=\"background:rgba(0,255,157,0.1);color:var(--cyber-accent2);border:1px solid rgba(0,255,157,0.25);\">EASY</span>";
+                case "Hard": return "<span class=\"badge\" style=\"background:rgba(255,59,92,0.1);color:var(--cyber-danger);border:1px solid rgba(255,59,92,0.25);\">HARD</span>";
+                default:     return "<span class=\"badge\" style=\"background:rgba(250,199,117,0.1);color:var(--cyber-amber);border:1px solid rgba(250,199,117,0.25);\">MED</span>";
             }
         }
 

@@ -35,6 +35,8 @@
                 <thead><tr>
                     <th>#</th>
                     <th>Type</th>
+                    <th>Difficulty</th>
+                    <th>Topic</th>
                     <th>Question</th>
                     <th>Answer</th>
                     <th>Actions</th>
@@ -46,6 +48,10 @@
                     <td style="color:var(--cyber-muted);font-family:'Share Tech Mono',monospace;font-size:11px;"><%# Container.ItemIndex + 1 %></td>
                     <td>
                         <%# GetTypeBadge(Eval("QuestionType") as string) %>
+                    </td>
+                    <td><%# GetDiffBadge(Eval("Difficulty") as string) %></td>
+                    <td style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyber-muted);">
+                        <%# Server.HtmlEncode(Eval("Topic") as string ?? "") %>
                     </td>
                     <td style="max-width:360px;color:var(--cyber-text);"><%# Server.HtmlEncode(Eval("QuestionText") as string) %></td>
                     <td>

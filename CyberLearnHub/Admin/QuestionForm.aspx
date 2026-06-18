@@ -97,6 +97,36 @@
             </div>
         </div>
 
+        <!-- Difficulty -->
+        <asp:HiddenField ID="hdnDifficulty" runat="server" Value="Medium" />
+        <div class="form-group">
+            <label class="form-label">Difficulty</label>
+            <div class="qtype-selector">
+                <button type="button" class="qtype-btn" id="btnDiffEasy" onclick="setDiff('Easy')">
+                    <i class="ti ti-plant"></i>
+                    <span class="qtype-label">Easy</span>
+                    <span class="qtype-desc">+10 XP</span>
+                </button>
+                <button type="button" class="qtype-btn active" id="btnDiffMedium" onclick="setDiff('Medium')">
+                    <i class="ti ti-flame"></i>
+                    <span class="qtype-label">Medium</span>
+                    <span class="qtype-desc">+20 XP</span>
+                </button>
+                <button type="button" class="qtype-btn" id="btnDiffHard" onclick="setDiff('Hard')">
+                    <i class="ti ti-skull"></i>
+                    <span class="qtype-label">Hard</span>
+                    <span class="qtype-desc">+30 XP</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Topic -->
+        <div class="form-group">
+            <label class="form-label">Topic <span style="color:var(--cyber-muted);font-weight:400;">(optional)</span></label>
+            <asp:TextBox ID="txtTopic" runat="server" CssClass="form-control" MaxLength="100"
+                placeholder="e.g. Network Security" />
+        </div>
+
         <!-- Question Text (shared across all types) -->
         <div class="form-group">
             <label class="form-label">Question Text *</label>
@@ -173,6 +203,15 @@
             </div>
         </div>
 
+        <!-- Explanation -->
+        <div class="form-group" style="margin-top:8px;">
+            <label class="form-label">Answer Explanation <span style="color:var(--cyber-muted);font-weight:400;">(optional)</span></label>
+            <asp:TextBox ID="txtExplanation" runat="server" CssClass="form-control"
+                TextMode="MultiLine" Rows="3" MaxLength="1000"
+                placeholder="Explain why this answer is correct — shown to students after the quiz" />
+            <span class="form-hint">&gt; Students see this in the answer review</span>
+        </div>
+
         <div style="display:flex;gap:12px;margin-top:8px;padding-top:16px;border-top:1px solid var(--cyber-border);">
             <asp:Button ID="btnSave" runat="server" Text="Save Question"
                 CssClass="btn-admin-primary" OnClick="btnSave_Click" />
@@ -201,6 +240,18 @@
     // Init on page load
     window.addEventListener('DOMContentLoaded', function() {
         setQType(currentType);
+    });
+
+    function setDiff(diff) {
+        document.getElementById('<%= hdnDifficulty.ClientID %>').value = diff;
+        var map = { 'Easy': 'btnDiffEasy', 'Medium': 'btnDiffMedium', 'Hard': 'btnDiffHard' };
+        ['btnDiffEasy','btnDiffMedium','btnDiffHard'].forEach(function(id) {
+            document.getElementById(id).classList.remove('active');
+        });
+        document.getElementById(map[diff]).classList.add('active');
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+        setDiff('<%= hdnDifficulty.Value %>');
     });
 </script>
 </asp:Content>

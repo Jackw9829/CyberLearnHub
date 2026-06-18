@@ -51,7 +51,8 @@ namespace CyberLearnHub.Admin
         {
             using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
             using (SqlCommand cmd = new SqlCommand(@"
-                SELECT QuestionText, QuestionType, OptionA, OptionB, OptionC, OptionD, CorrectOption
+                SELECT QuestionText, QuestionType, OptionA, OptionB, OptionC, OptionD, CorrectOption,
+                       Difficulty, Topic, Explanation
                 FROM   dbo.QuizQuestions WHERE QuestionID = @id", conn))
             {
                 cmd.Parameters.AddWithValue("@id", id);
@@ -62,6 +63,9 @@ namespace CyberLearnHub.Admin
                     string qType = r["QuestionType"] as string ?? "MultipleChoice";
                     hdnQuestionType.Value = qType;
                     txtQuestion.Text      = r["QuestionText"] as string ?? "";
+                    hdnDifficulty.Value   = r["Difficulty"] as string ?? "Medium";
+                    txtTopic.Text         = r["Topic"] as string ?? "";
+                    txtExplanation.Text   = r["Explanation"] as string ?? "";
 
                     if (qType == "TrueFalse")
                     {
@@ -90,6 +94,10 @@ namespace CyberLearnHub.Admin
 
             string qType   = hdnQuestionType.Value;
             string qText   = txtQuestion.Text.Trim();
+            string difficulty  = hdnDifficulty.Value;
+            if (difficulty != "Easy" && difficulty != "Medium" && difficulty != "Hard") difficulty = "Medium";
+            string topic       = txtTopic.Text.Trim();
+            string explanation = txtExplanation.Text.Trim();
             string optA, optB, optC, optD, correct;
 
             if (string.IsNullOrWhiteSpace(qText))
@@ -131,10 +139,14 @@ namespace CyberLearnHub.Admin
                 using (SqlCommand cmd = new SqlCommand(@"
                     UPDATE dbo.QuizQuestions
                     SET QuestionText=@q, QuestionType=@qt,
-                        OptionA=@a, OptionB=@b, OptionC=@c, OptionD=@d, CorrectOption=@ans
+                        OptionA=@a, OptionB=@b, OptionC=@c, OptionD=@d, CorrectOption=@ans,
+                        Difficulty=@diff, Topic=@topic, Explanation=@expl
                     WHERE QuestionID=@id", conn))
                 {
                     AddParams(cmd, qText, qType, optA, optB, optC, optD, correct);
+                    cmd.Parameters.AddWithValue("@diff",  difficulty);
+                    cmd.Parameters.AddWithValue("@topic", string.IsNullOrEmpty(topic) ? (object)DBNull.Value : topic);
+                    cmd.Parameters.AddWithValue("@expl",  string.IsNullOrEmpty(explanation) ? (object)DBNull.Value : explanation);
                     cmd.Parameters.AddWithValue("@id", _id);
                     conn.Open(); cmd.ExecuteNonQuery();
                 }
@@ -145,11 +157,16 @@ namespace CyberLearnHub.Admin
                 using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
                 using (SqlCommand cmd = new SqlCommand(@"
                     INSERT INTO dbo.QuizQuestions
-                           (QuizID, QuestionText, QuestionType, OptionA, OptionB, OptionC, OptionD, CorrectOption)
-                    VALUES (@qid, @q, @qt, @a, @b, @c, @d, @ans)", conn))
+                           (QuizID, QuestionText, QuestionType, OptionA, OptionB, OptionC, OptionD, CorrectOption,
+                            Difficulty, Topic, Explanation)
+                    VALUES (@qid, @q, @qt, @a, @b, @c, @d, @ans,
+                            @diff, @topic, @expl)", conn))
                 {
                     cmd.Parameters.AddWithValue("@qid", qid);
                     AddParams(cmd, qText, qType, optA, optB, optC, optD, correct);
+                    cmd.Parameters.AddWithValue("@diff",  difficulty);
+                    cmd.Parameters.AddWithValue("@topic", string.IsNullOrEmpty(topic) ? (object)DBNull.Value : topic);
+                    cmd.Parameters.AddWithValue("@expl",  string.IsNullOrEmpty(explanation) ? (object)DBNull.Value : explanation);
                     conn.Open(); cmd.ExecuteNonQuery();
                 }
             }

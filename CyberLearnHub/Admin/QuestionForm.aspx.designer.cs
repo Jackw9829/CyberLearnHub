@@ -18,6 +18,11 @@ namespace CyberLearnHub.Admin
         protected global::System.Web.UI.WebControls.DropDownList ddlTFCorrect;
         // Fill in the Blank
         protected global::System.Web.UI.WebControls.TextBox txtFillAnswer;
+        // Difficulty / Topic / Explanation
+        protected global::System.Web.UI.WebControls.HiddenField hdnDifficulty;
+        protected global::System.Web.UI.WebControls.TextBox txtTopic;
+        protected global::System.Web.UI.WebControls.Literal litTopics;
+        protected global::System.Web.UI.WebControls.TextBox txtExplanation;
         // Actions
         protected global::System.Web.UI.WebControls.Button btnSave;
         protected global::System.Web.UI.WebControls.HyperLink hlBack;
