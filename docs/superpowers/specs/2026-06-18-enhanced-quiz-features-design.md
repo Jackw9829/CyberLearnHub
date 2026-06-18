@@ -46,8 +46,9 @@ Level      INT NOT NULL DEFAULT 1
 UpdatedAt  DATETIME NOT NULL DEFAULT GETDATE()
 ```
 **XP formula:**
-- Correct answer: Easy = +10, Medium = +20, Hard = +30
-- Passing bonus: +50
+- Correct answer XP is driven by `Difficulty` (independent of `Marks`): Easy = +10, Medium = +20, Hard = +30
+- `Marks` continues to drive quiz scoring (Score / TotalQuestions) as before
+- Passing bonus: +50 XP
 - Level = `FLOOR(TotalXP / 500) + 1`
 
 ### New table `dbo.UserStreaks`
