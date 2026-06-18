@@ -29,6 +29,7 @@
             color: var(--cyber-text);
             min-height: 100vh;
             display: flex;
+            width: 100%;
         }
         a { text-decoration: none; }
 
@@ -126,7 +127,7 @@
         /* Main area */
         .admin-main {
             margin-left: var(--sidebar-w);
-            flex: 1;
+            width: calc(100% - var(--sidebar-w));
             min-height: 100vh;
             display: flex;
             flex-direction: column;
