@@ -100,7 +100,7 @@
     <Content Include="ExportResults.ashx" />
     <Content Include="ExportQuestionStats.ashx" />
     <Content Include="Uploads\Certificates\.gitkeep" />
-    <Content Include="App_Code\CertificateHelper.cs" />
+    <Compile Include="App_Code\CertificateHelper.cs" />
     <Content Include="MyCourses.aspx" />
     <Content Include="Error.aspx" />
     <Content Include="Login.aspx" />

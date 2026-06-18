@@ -38,6 +38,10 @@ namespace CyberLearnHub
 
         private void LoadQuiz(int uid)
         {
+            int timeLimitMinutes = 0;
+            int maxAttempts      = 0;
+            bool randomize       = false;
+
             using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
             {
                 conn.Open();
@@ -50,10 +54,6 @@ namespace CyberLearnHub
                     if (result == null) { Response.Redirect("~/Error.aspx"); return; }
                     lblCourseName.Text = Server.HtmlEncode(result.ToString());
                 }
-
-                int timeLimitMinutes = 0;
-                int maxAttempts      = 0;
-                bool randomize       = false;
 
                 using (SqlCommand cmd = new SqlCommand(@"
                     SELECT TOP 1 QuizID, ISNULL(TimeLimitMinutes,0), ISNULL(MaxAttempts,0), ISNULL(RandomizeQuestions,0)
@@ -207,9 +207,9 @@ namespace CyberLearnHub
                     double allowed = timeLimitMinutes * 60 + 30; // 30s grace
                     if (elapsed > allowed)
                     {
-                        int resultId = SaveResult(uid, quizId, 0, correctAnswers != null ? correctAnswers.Count : 0, 0, false);
+                        int expiredResultId = SaveResult(uid, quizId, 0, correctAnswers != null ? correctAnswers.Count : 0, 0, false);
                         Session.Remove(startKey);
-                        Response.Redirect("~/QuizResult.aspx?attemptId=" + resultId + "&expired=1");
+                        Response.Redirect("~/QuizResult.aspx?attemptId=" + expiredResultId + "&expired=1");
                         return;
                     }
                 }
