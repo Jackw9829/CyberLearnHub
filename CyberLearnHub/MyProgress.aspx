@@ -231,9 +231,9 @@
                         <tr>
                             <td><a href='<%# "~/CourseDetail.aspx?id=" + Eval("CourseID") %>' runat="server" style="color:var(--cyber-accent);text-decoration:none;"><%# Server.HtmlEncode(Eval("Title") as string) %></a></td>
                             <td><%# GetStatusBadge(Eval("QuizStatus") as string) %></td>
-                            <td><span class='<%# (int)Eval("BestPct") >= 70 ? "score-hi" : "score-lo" %>'><%# (int)Eval("BestPct") > 0 ? Eval("BestPct") + "%" : "-" %></span></td>
+                            <td><span class='<%# Convert.ToInt32(Eval("BestPct")) >= 70 ? "score-hi" : "score-lo" %>'><%# Convert.ToInt32(Eval("BestPct")) > 0 ? Eval("BestPct") + "%" : "-" %></span></td>
                             <td style="color:var(--cyber-muted);"><%# Eval("Attempts") %></td>
-                            <td><%# GetCertLink((int)Eval("CourseID"), (int)Eval("CertID")) %></td>
+                            <td><%# GetCertLink(Convert.ToInt32(Eval("CourseID")), Convert.ToInt32(Eval("CertID"))) %></td>
                         </tr>
                     </ItemTemplate>
                 </asp:Repeater>
