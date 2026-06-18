@@ -954,6 +954,7 @@
                         <li><a href="~/Dashboard.aspx"  runat="server">Dashboard</a></li>
                         <li><a href="~/MyCourses.aspx"  runat="server">My Courses</a></li>
                         <li><a href="~/MyProgress.aspx" runat="server">Progress</a></li>
+                        <li><a href="~/Leaderboard.aspx" runat="server">Leaderboard</a></li>
                     </asp:PlaceHolder>
 
                     <asp:PlaceHolder ID="pnlAdminNav" runat="server" Visible="false">

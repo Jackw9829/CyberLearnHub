@@ -80,6 +80,7 @@ namespace CyberLearnHub
             }
 
             LoadReview(quizId, resultId);
+            LoadQuizLeaderboard(quizId, uid);
         }
 
         private void LoadReview(int quizId, int resultId)
@@ -144,6 +145,68 @@ namespace CyberLearnHub
 
             rptReview.DataSource = items;
             rptReview.DataBind();
+        }
+
+        private void LoadQuizLeaderboard(int quizId, int currentUid)
+        {
+            var sb = new StringBuilder();
+            sb.Append("<table style=\"width:100%;border-collapse:collapse;\">");
+            sb.Append("<thead><tr>");
+            string thStyle = "font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyber-muted);letter-spacing:1.5px;text-transform:uppercase;padding:0 12px 8px;text-align:left;border-bottom:1px solid var(--cyber-border);";
+            sb.AppendFormat("<th style=\"{0}\">#</th>", thStyle);
+            sb.AppendFormat("<th style=\"{0}\">Student</th>", thStyle);
+            sb.AppendFormat("<th style=\"{0}\">Best Score</th>", thStyle);
+            sb.AppendFormat("<th style=\"{0}\">Attempts</th>", thStyle);
+            sb.Append("</tr></thead><tbody>");
+
+            bool hasRows = false;
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                SELECT TOP 5
+                    ROW_NUMBER() OVER (ORDER BY MAX(qr.Percentage) DESC) AS Rank,
+                    u.UserID, u.FullName,
+                    MAX(qr.Percentage) AS BestPct,
+                    COUNT(*) AS Attempts
+                FROM dbo.QuizResults qr
+                JOIN dbo.Users u ON u.UserID = qr.UserID
+                WHERE qr.QuizID = @qid
+                GROUP BY u.UserID, u.FullName
+                ORDER BY BestPct DESC", conn))
+            {
+                cmd.Parameters.AddWithValue("@qid", quizId);
+                conn.Open();
+                using (SqlDataReader r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        hasRows = true;
+                        int    uid      = r.GetInt32(1);
+                        int    rank     = (int)r.GetInt64(0);
+                        string name     = Server.HtmlEncode(r.GetString(2));
+                        int    bestPct  = Convert.ToInt32(r["BestPct"]);
+                        int    attempts = r.GetInt32(4);
+                        bool   isMe     = uid == currentUid;
+                        string rowStyle = isMe ? "background:rgba(0,212,255,0.06);" : "";
+                        string tdStyle  = "padding:10px 12px;font-size:13px;color:var(--cyber-text);border-bottom:1px solid rgba(26,48,80,0.4);";
+
+                        sb.AppendFormat(
+                            "<tr style=\"{0}\"><td style=\"{1}\">{2}</td><td style=\"{1}\">{3}{4}</td>" +
+                            "<td style=\"padding:10px 12px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--cyber-accent2);border-bottom:1px solid rgba(26,48,80,0.4);\">{5}%</td>" +
+                            "<td style=\"padding:10px 12px;font-size:13px;color:var(--cyber-muted);border-bottom:1px solid rgba(26,48,80,0.4);\">{6}</td></tr>",
+                            rowStyle, tdStyle, rank, name,
+                            isMe ? " <span style=\"font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--cyber-accent);\">YOU</span>" : "",
+                            bestPct, attempts);
+                    }
+                }
+            }
+
+            sb.Append("</tbody></table>");
+
+            if (hasRows)
+            {
+                litLeaderboard.Text    = sb.ToString();
+                pnlLeaderboard.Visible = true;
+            }
         }
 
         private class ReviewItem

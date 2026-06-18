@@ -163,6 +163,12 @@
             </asp:HyperLink>
         </div>
 
+        <!-- Per-quiz leaderboard -->
+        <asp:Panel ID="pnlLeaderboard" runat="server" Visible="false">
+            <div class="review-title" style="margin-top:8px;">// Quiz Leaderboard — Top 5</div>
+            <asp:Literal ID="litLeaderboard" runat="server" />
+        </asp:Panel>
+
         <!-- Question review -->
         <div class="review-title">// Answer Review</div>
         <asp:Repeater ID="rptReview" runat="server">

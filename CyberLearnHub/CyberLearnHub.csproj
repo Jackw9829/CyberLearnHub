@@ -92,6 +92,7 @@
     <Content Include="CourseDetail.aspx" />
     <Content Include="cyberlearnhub_homepage.aspx" />
     <Content Include="Dashboard.aspx" />
+    <Content Include="Leaderboard.aspx" />
     <Content Include="MyCourses.aspx" />
     <Content Include="Error.aspx" />
     <Content Include="Login.aspx" />
@@ -235,6 +236,13 @@
     </Compile>
     <Compile Include="Dashboard.aspx.designer.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Leaderboard.aspx.cs">
+      <DependentUpon>Leaderboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Leaderboard.aspx.designer.cs">
+      <DependentUpon>Leaderboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="MyCourses.aspx.cs">
       <DependentUpon>MyCourses.aspx</DependentUpon>
