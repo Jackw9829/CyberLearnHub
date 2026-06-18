@@ -26,7 +26,7 @@ namespace CyberLearnHub.Admin
         {
             using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
             using (SqlCommand cmd = new SqlCommand(
-                "SELECT Title, Description, PassingScore FROM dbo.Quizzes WHERE QuizID = @id", conn))
+                "SELECT Title, Description, PassingScore, TimeLimitMinutes, MaxAttempts, RandomizeQuestions FROM dbo.Quizzes WHERE QuizID = @id", conn))
             {
                 cmd.Parameters.AddWithValue("@id", id);
                 conn.Open();
@@ -36,6 +36,9 @@ namespace CyberLearnHub.Admin
                     txtTitle.Text        = r["Title"] as string ?? "";
                     txtDescription.Text  = r["Description"] as string ?? "";
                     txtPassingScore.Text = r["PassingScore"]?.ToString() ?? "70";
+                    txtTimeLimit.Text    = r["TimeLimitMinutes"] == DBNull.Value ? "" : r["TimeLimitMinutes"].ToString();
+                    txtMaxAttempts.Text  = r["MaxAttempts"]      == DBNull.Value ? "" : r["MaxAttempts"].ToString();
+                    chkRandomize.Checked = r["RandomizeQuestions"] != DBNull.Value && (bool)r["RandomizeQuestions"];
                 }
             }
         }
@@ -49,33 +52,44 @@ namespace CyberLearnHub.Admin
 
             string title = txtTitle.Text.Trim();
             string desc  = txtDescription.Text.Trim();
+            int?   timeLimit   = string.IsNullOrWhiteSpace(txtTimeLimit.Text)   ? (int?)null : int.Parse(txtTimeLimit.Text.Trim());
+            int?   maxAttempts = string.IsNullOrWhiteSpace(txtMaxAttempts.Text) ? (int?)null : int.Parse(txtMaxAttempts.Text.Trim());
+            bool   randomize   = chkRandomize.Checked;
 
             if (_id > 0)
             {
                 using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
-                using (SqlCommand cmd = new SqlCommand(
-                    "UPDATE dbo.Quizzes SET Title=@t, Description=@d, PassingScore=@s WHERE QuizID=@id", conn))
+                using (SqlCommand cmd = new SqlCommand(@"
+                    UPDATE dbo.Quizzes
+                    SET Title=@t, Description=@d, PassingScore=@s,
+                        TimeLimitMinutes=@tl, MaxAttempts=@ma, RandomizeQuestions=@rnd
+                    WHERE QuizID=@id", conn))
                 {
-                    cmd.Parameters.AddWithValue("@t",  title);
-                    cmd.Parameters.AddWithValue("@d",  desc);
-                    cmd.Parameters.AddWithValue("@s",  score);
-                    cmd.Parameters.AddWithValue("@id", _id);
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.AddWithValue("@t",   title);
+                    cmd.Parameters.AddWithValue("@d",   desc);
+                    cmd.Parameters.AddWithValue("@s",   score);
+                    cmd.Parameters.AddWithValue("@tl",  (object)timeLimit   ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ma",  (object)maxAttempts ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@rnd", randomize);
+                    cmd.Parameters.AddWithValue("@id",  _id);
+                    conn.Open(); cmd.ExecuteNonQuery();
                 }
             }
             else
             {
                 using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
-                using (SqlCommand cmd = new SqlCommand(
-                    "INSERT INTO dbo.Quizzes (CourseID, Title, Description, PassingScore) VALUES (@cid, @t, @d, @s)", conn))
+                using (SqlCommand cmd = new SqlCommand(@"
+                    INSERT INTO dbo.Quizzes (CourseID,Title,Description,PassingScore,TimeLimitMinutes,MaxAttempts,RandomizeQuestions)
+                    VALUES (@cid,@t,@d,@s,@tl,@ma,@rnd)", conn))
                 {
                     cmd.Parameters.AddWithValue("@cid", _courseId);
                     cmd.Parameters.AddWithValue("@t",   title);
                     cmd.Parameters.AddWithValue("@d",   desc);
                     cmd.Parameters.AddWithValue("@s",   score);
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.AddWithValue("@tl",  (object)timeLimit   ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ma",  (object)maxAttempts ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@rnd", randomize);
+                    conn.Open(); cmd.ExecuteNonQuery();
                 }
             }
 

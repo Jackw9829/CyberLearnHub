@@ -40,6 +40,26 @@
             <span class="form-hint">Minimum percentage to pass (1&ndash;100)</span>
         </div>
 
+        <div class="form-row">
+            <div class="form-group" style="max-width:180px;">
+                <label class="form-label">Time Limit (minutes)</label>
+                <asp:TextBox ID="txtTimeLimit" runat="server" CssClass="form-control" MaxLength="3" placeholder="e.g. 30" />
+                <span class="form-hint">Leave empty for untimed</span>
+            </div>
+            <div class="form-group" style="max-width:180px;">
+                <label class="form-label">Max Attempts</label>
+                <asp:TextBox ID="txtMaxAttempts" runat="server" CssClass="form-control" MaxLength="3" placeholder="e.g. 3" />
+                <span class="form-hint">Leave empty for unlimited</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+                <asp:CheckBox ID="chkRandomize" runat="server" />
+                Randomize question order each attempt
+            </label>
+        </div>
+
         <div style="display:flex;gap:12px;margin-top:8px;padding-top:16px;border-top:1px solid var(--cyber-border);">
             <asp:Button ID="btnSave" runat="server" Text="Save Quiz"
                 CssClass="btn-admin-primary" OnClick="btnSave_Click" />
