@@ -163,6 +163,16 @@
             </asp:HyperLink>
         </div>
 
+        <!-- Certificate download -->
+        <asp:Panel ID="pnlCertBtn" runat="server" Visible="false">
+            <div style="text-align:center;margin-bottom:28px;">
+                <asp:HyperLink ID="hlCert" runat="server"
+                    style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.4);color:var(--cyber-accent2);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;border-radius:6px;text-transform:uppercase;text-decoration:none;">
+                    <i class="ti ti-certificate"></i> Download Certificate
+                </asp:HyperLink>
+            </div>
+        </asp:Panel>
+
         <!-- Per-quiz leaderboard -->
         <asp:Panel ID="pnlLeaderboard" runat="server" Visible="false">
             <div class="review-title" style="margin-top:8px;">// Quiz Leaderboard — Top 5</div>

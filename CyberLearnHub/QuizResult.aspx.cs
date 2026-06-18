@@ -81,6 +81,16 @@ namespace CyberLearnHub
 
             LoadReview(quizId, resultId);
             LoadQuizLeaderboard(quizId, uid);
+
+            if (passed)
+            {
+                int certId = IssueCertificate(uid, courseId, quizId, resultId, pct, courseName);
+                if (certId > 0)
+                {
+                    hlCert.NavigateUrl = "~/GetCertificate.ashx?id=" + certId;
+                    pnlCertBtn.Visible = true;
+                }
+            }
         }
 
         private void LoadReview(int quizId, int resultId)
@@ -206,6 +216,45 @@ namespace CyberLearnHub
             {
                 litLeaderboard.Text    = sb.ToString();
                 pnlLeaderboard.Visible = true;
+            }
+        }
+
+        private int IssueCertificate(int uid, int courseId, int quizId, int resultId,
+                                      int percentage, string courseName)
+        {
+            try
+            {
+                string userName = Session["FullName"] as string
+                               ?? Session["Username"] as string
+                               ?? "Student";
+                string dir     = Server.MapPath("~/Uploads/Certificates/");
+                string appPath = CertificateHelper.Generate(
+                    userName, courseName, percentage, DateTime.Now, dir);
+
+                using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+                using (SqlCommand cmd = new SqlCommand(@"
+                    MERGE dbo.Certificates AS target
+                    USING (SELECT @uid AS UserID, @cid AS CourseID) AS source
+                        ON target.UserID=source.UserID AND target.CourseID=source.CourseID
+                    WHEN MATCHED THEN
+                        UPDATE SET QuizID=@qid, ResultID=@rid, FilePath=@fp, IssuedDate=GETDATE()
+                    WHEN NOT MATCHED THEN
+                        INSERT (UserID,CourseID,QuizID,ResultID,FilePath)
+                        VALUES (@uid,@cid,@qid,@rid,@fp);
+                    SELECT CertificateID FROM dbo.Certificates WHERE UserID=@uid AND CourseID=@cid;", conn))
+                {
+                    cmd.Parameters.AddWithValue("@uid", uid);
+                    cmd.Parameters.AddWithValue("@cid", courseId);
+                    cmd.Parameters.AddWithValue("@qid", quizId);
+                    cmd.Parameters.AddWithValue("@rid", resultId);
+                    cmd.Parameters.AddWithValue("@fp",  appPath);
+                    conn.Open();
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+            catch
+            {
+                return 0;
             }
         }
 
