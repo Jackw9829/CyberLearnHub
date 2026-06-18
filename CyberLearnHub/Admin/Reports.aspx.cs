@@ -14,6 +14,8 @@ namespace CyberLearnHub.Admin
                 LoadCoursePerformance();
                 LoadRecentActivity();
                 LoadUserProgress();
+                LoadFailStats();
+                LoadScoreDistribution();
             }
         }
 
@@ -127,6 +129,104 @@ namespace CyberLearnHub.Admin
         {
             using (SqlCommand cmd = new SqlCommand(sql, conn))
                 return cmd.ExecuteScalar()?.ToString() ?? "0";
+        }
+
+        private void LoadFailStats()
+        {
+            System.Data.DataTable dt = new System.Data.DataTable();
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                SELECT qq.QuestionID, qq.QuestionText, qq.QuestionType, qq.Difficulty,
+                       qz.Title AS QuizTitle, c.CourseID,
+                       COUNT(*) AS Attempts,
+                       SUM(CASE WHEN qa.IsCorrect=0 THEN 1 ELSE 0 END) * 100 / COUNT(*) AS FailRate
+                FROM dbo.QuizAnswers qa
+                JOIN dbo.QuizQuestions qq ON qq.QuestionID = qa.QuestionID
+                JOIN dbo.Quizzes qz       ON qz.QuizID = qq.QuizID
+                JOIN dbo.Courses c        ON c.CourseID = qz.CourseID
+                GROUP BY qq.QuestionID, qq.QuestionText, qq.QuestionType, qq.Difficulty,
+                         qz.Title, c.CourseID
+                HAVING COUNT(*) >= 5
+                ORDER BY FailRate DESC", conn))
+            {
+                conn.Open();
+                using (var da = new System.Data.SqlClient.SqlDataAdapter(cmd))
+                    da.Fill(dt);
+            }
+
+            if (dt.Rows.Count == 0) { pnlNoFailStats.Visible = true; return; }
+            pnlFailStats.Visible    = true;
+            rptFailStats.DataSource = dt;
+            rptFailStats.DataBind();
+        }
+
+        private void LoadScoreDistribution()
+        {
+            var rows = new System.Collections.Generic.List<DistRow>();
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                SELECT qz.QuizID, qz.Title,
+                       SUM(CASE WHEN qr.Percentage <  50 THEN 1 ELSE 0 END) AS B0,
+                       SUM(CASE WHEN qr.Percentage >= 50 AND qr.Percentage < 70 THEN 1 ELSE 0 END) AS B50,
+                       SUM(CASE WHEN qr.Percentage >= 70 AND qr.Percentage < 90 THEN 1 ELSE 0 END) AS B70,
+                       SUM(CASE WHEN qr.Percentage >= 90 THEN 1 ELSE 0 END) AS B90,
+                       COUNT(*) AS Total
+                FROM dbo.QuizResults qr
+                JOIN dbo.Quizzes qz ON qz.QuizID = qr.QuizID
+                GROUP BY qz.QuizID, qz.Title
+                HAVING COUNT(*) > 0
+                ORDER BY qz.Title", conn))
+            {
+                conn.Open();
+                using (SqlDataReader r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        int total = r.GetInt32(6);
+                        rows.Add(new DistRow
+                        {
+                            QuizTitle     = r.GetString(1),
+                            TotalAttempts = total,
+                            BarsHtml      = BuildBars(r.GetInt32(2), r.GetInt32(3), r.GetInt32(4), r.GetInt32(5), total)
+                        });
+                    }
+                }
+            }
+            rptDistribution.DataSource = rows;
+            rptDistribution.DataBind();
+        }
+
+        private static string BuildBars(int b0, int b50, int b70, int b90, int total)
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.Append("<div style=\"display:flex;flex-direction:column;gap:6px;\">");
+            AppendBar(sb, "0-49%",   b0,  total, "var(--cyber-danger)");
+            AppendBar(sb, "50-69%",  b50, total, "var(--cyber-amber)");
+            AppendBar(sb, "70-89%",  b70, total, "var(--cyber-accent)");
+            AppendBar(sb, "90-100%", b90, total, "var(--cyber-accent2)");
+            sb.Append("</div>");
+            return sb.ToString();
+        }
+
+        private static void AppendBar(System.Text.StringBuilder sb,
+            string label, int count, int total, string color)
+        {
+            int pct = total > 0 ? count * 100 / total : 0;
+            sb.AppendFormat(
+                "<div style=\"display:flex;align-items:center;gap:10px;\">" +
+                "<span style=\"font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--cyber-muted);width:48px;text-align:right;\">{0}</span>" +
+                "<div style=\"flex:1;background:var(--cyber-border);border-radius:2px;height:16px;overflow:hidden;\">" +
+                "<div style=\"width:{1}%;background:{2};height:100%;border-radius:2px;\"></div></div>" +
+                "<span style=\"font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyber-muted);width:24px;\">{3}</span>" +
+                "</div>",
+                label, pct, color, count);
+        }
+
+        private class DistRow
+        {
+            public string QuizTitle     { get; set; }
+            public int    TotalAttempts { get; set; }
+            public string BarsHtml      { get; set; }
         }
     }
 }

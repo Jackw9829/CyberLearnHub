@@ -148,4 +148,62 @@
         </asp:Repeater>
     </div>
 
+        <!-- CSV Export buttons -->
+        <div style="display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap;">
+            <a href="../ExportResults.ashx" class="btn-admin-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+                <i class="ti ti-download"></i> Export Results CSV
+            </a>
+            <a href="../ExportQuestionStats.ashx" class="btn-secondary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+                <i class="ti ti-download"></i> Export Question Stats CSV
+            </a>
+        </div>
+
+        <!-- Worst performing questions -->
+        <div class="admin-section-title" style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--cyber-heading);margin-bottom:14px;">
+            // Worst Performing Questions
+            <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyber-muted);font-weight:400;margin-left:10px;">(min. 5 attempts)</span>
+        </div>
+        <asp:Panel ID="pnlNoFailStats" runat="server" Visible="false">
+            <p style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--cyber-muted);">&gt; Not enough data yet (need 5+ attempts per question).</p>
+        </asp:Panel>
+        <asp:Panel ID="pnlFailStats" runat="server" Visible="false">
+            <div style="overflow-x:auto;margin-bottom:32px;">
+            <table class="admin-table">
+                <thead><tr>
+                    <th>Question</th><th>Quiz</th><th>Type</th><th>Difficulty</th><th>Fail Rate</th><th>Attempts</th>
+                </tr></thead>
+                <tbody>
+                    <asp:Repeater ID="rptFailStats" runat="server">
+                        <ItemTemplate>
+                            <tr>
+                                <td style="max-width:300px;"><%# Server.HtmlEncode(((string)Eval("QuestionText")).Length > 60 ? ((string)Eval("QuestionText")).Substring(0,60) + "..." : (string)Eval("QuestionText")) %></td>
+                                <td><%# Server.HtmlEncode(Eval("QuizTitle") as string) %></td>
+                                <td><%# Eval("QuestionType") %></td>
+                                <td><%# Eval("Difficulty") %></td>
+                                <td style="color:var(--cyber-danger);font-weight:700;"><%# Eval("FailRate") %>%</td>
+                                <td style="color:var(--cyber-muted);"><%# Eval("Attempts") %></td>
+                            </tr>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                </tbody>
+            </table>
+            </div>
+        </asp:Panel>
+
+        <!-- Score distribution -->
+        <div class="admin-section-title" style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--cyber-heading);margin-bottom:14px;">
+            // Score Distribution
+        </div>
+        <asp:Repeater ID="rptDistribution" runat="server">
+            <ItemTemplate>
+                <div style="margin-bottom:20px;">
+                    <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--cyber-heading);margin-bottom:8px;">
+                        <%# Server.HtmlEncode(Eval("QuizTitle") as string) %>
+                        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyber-muted);font-weight:400;margin-left:8px;"><%# Eval("TotalAttempts") %> attempts</span>
+                    </div>
+                    <%# Eval("BarsHtml") %>
+                </div>
+            </ItemTemplate>
+        </asp:Repeater>
+
 </asp:Content>

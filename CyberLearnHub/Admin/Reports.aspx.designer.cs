@@ -10,5 +10,9 @@ namespace CyberLearnHub.Admin
         protected global::System.Web.UI.WebControls.Repeater rptCourses;
         protected global::System.Web.UI.WebControls.Repeater rptActivity;
         protected global::System.Web.UI.WebControls.Repeater rptUserProgress;
+        protected global::System.Web.UI.WebControls.Panel pnlNoFailStats;
+        protected global::System.Web.UI.WebControls.Panel pnlFailStats;
+        protected global::System.Web.UI.WebControls.Repeater rptFailStats;
+        protected global::System.Web.UI.WebControls.Repeater rptDistribution;
     }
 }

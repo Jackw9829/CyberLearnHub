@@ -97,6 +97,8 @@
     <Content Include="Dashboard.aspx" />
     <Content Include="Leaderboard.aspx" />
     <Content Include="GetCertificate.ashx" />
+    <Content Include="ExportResults.ashx" />
+    <Content Include="ExportQuestionStats.ashx" />
     <Content Include="Uploads\Certificates\.gitkeep" />
     <Content Include="App_Code\CertificateHelper.cs" />
     <Content Include="MyCourses.aspx" />
@@ -252,6 +254,12 @@
     </Compile>
     <Compile Include="GetCertificate.ashx.cs">
       <DependentUpon>GetCertificate.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ExportResults.ashx.cs">
+      <DependentUpon>ExportResults.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ExportQuestionStats.ashx.cs">
+      <DependentUpon>ExportQuestionStats.ashx</DependentUpon>
     </Compile>
     <Compile Include="MyCourses.aspx.cs">
       <DependentUpon>MyCourses.aspx</DependentUpon>
