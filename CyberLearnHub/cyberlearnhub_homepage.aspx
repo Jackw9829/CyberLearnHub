@@ -915,7 +915,7 @@
             <ul class="nav-links">
                 <li><a href="CourseListing.aspx">Courses</a></li>
                 <li><a href="Quiz.aspx">Quizzes</a></li>
-                <li><a href="Progress.aspx">Progress</a></li>
+                <li><a href="MyProgress.aspx">Progress</a></li>
                 <li><a href="About.aspx">About</a></li>
                 <asp:PlaceHolder ID="pnlAdminNav" runat="server" Visible="false">
                     <li><a href="Admin/Default.aspx" style="color:var(--cyber-accent);">Admin</a></li>
@@ -953,7 +953,7 @@
             <h1>Master <span class="accent">Cybersecurity</span><br />from the Ground Up</h1>
 
             <p>
-                Interactive courses, auto-graded quizzes, and real-time progress tracking —
+                Interactive courses, auto-graded quizzes, and real-time progress tracking -
                 designed for students and beginners entering the world of digital defence.
             </p>
 
