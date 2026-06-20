@@ -104,6 +104,7 @@
     <Content Include="MyCourses.aspx" />
     <Content Include="MyProgress.aspx" />
     <Content Include="Error.aspx" />
+    <Content Include="Global.asax" />
     <Content Include="Login.aspx" />
     <Content Include="Profile.aspx" />
     <Content Include="Quiz.aspx" />
@@ -275,6 +276,9 @@
     </Compile>
     <Compile Include="MyProgress.aspx.designer.cs">
       <DependentUpon>MyProgress.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Profile.aspx.cs">
       <DependentUpon>Profile.aspx</DependentUpon>

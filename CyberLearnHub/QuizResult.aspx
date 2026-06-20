@@ -175,7 +175,7 @@
 
         <!-- Per-quiz leaderboard -->
         <asp:Panel ID="pnlLeaderboard" runat="server" Visible="false">
-            <div class="review-title" style="margin-top:8px;">// Quiz Leaderboard — Top 5</div>
+            <div class="review-title" style="margin-top:8px;">// Quiz Leaderboard - Top 5</div>
             <asp:Literal ID="litLeaderboard" runat="server" />
         </asp:Panel>
 
