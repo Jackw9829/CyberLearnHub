@@ -249,11 +249,17 @@ namespace CyberLearnHub
                     cmd.Parameters.AddWithValue("@rid", resultId);
                     cmd.Parameters.AddWithValue("@fp",  appPath);
                     conn.Open();
-                    return Convert.ToInt32(cmd.ExecuteScalar());
+                    object scalar = cmd.ExecuteScalar();
+                    if (scalar == null || scalar == DBNull.Value) return 0;
+                    return Convert.ToInt32(scalar);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                pnlScore.Controls.Add(new System.Web.UI.LiteralControl(
+                    "<div style=\"background:rgba(255,59,92,0.1);border:1px solid rgba(255,59,92,0.4);color:var(--cyber-danger);font-family:'Share Tech Mono',monospace;font-size:11px;padding:12px 16px;border-radius:6px;margin-top:12px;word-break:break-all;\">" +
+                    "&gt; Certificate error: " + System.Web.HttpUtility.HtmlEncode(ex.GetType().Name + ": " + ex.Message) +
+                    "</div>"));
                 return 0;
             }
         }
