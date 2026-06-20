@@ -84,11 +84,24 @@ namespace CyberLearnHub
 
             if (passed)
             {
-                int certId = IssueCertificate(uid, courseId, quizId, resultId, pct, courseName);
-                if (certId > 0)
+                // Check whether the student has now passed every quiz in the course
+                if (AllQuizzesPassed(uid, courseId))
                 {
-                    hlCert.NavigateUrl = "~/GetCertificate.ashx?id=" + certId;
-                    pnlCertBtn.Visible = true;
+                    int certId = IssueCertificate(uid, courseId, quizId, resultId, pct, courseName);
+                    if (certId > 0)
+                    {
+                        hlCert.NavigateUrl = "~/GetCertificate.ashx?id=" + certId;
+                        pnlCertBtn.Visible = true;
+                    }
+                }
+                else
+                {
+                    // Show how many quizzes remain
+                    int[] progress = QuizProgress(uid, courseId);
+                    pnlScore.Controls.Add(new System.Web.UI.LiteralControl(string.Format(
+                        "<div style=\"background:rgba(250,199,117,0.08);border:1px solid rgba(250,199,117,0.3);color:var(--cyber-amber);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 16px;border-radius:6px;margin-top:12px;\">" +
+                        "&gt; Certificate unlocks when you pass all quizzes in this course. Progress: {0} / {1} passed." +
+                        "</div>", progress[0], progress[1])));
                 }
             }
         }
@@ -217,6 +230,56 @@ namespace CyberLearnHub
                 litLeaderboard.Text    = sb.ToString();
                 pnlLeaderboard.Visible = true;
             }
+        }
+
+        private bool AllQuizzesPassed(int uid, int courseId)
+        {
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                SELECT
+                    (SELECT COUNT(*) FROM dbo.Quizzes WHERE CourseID = @cid) AS Total,
+                    (SELECT COUNT(DISTINCT qr.QuizID)
+                     FROM dbo.QuizResults qr
+                     JOIN dbo.Quizzes qz ON qz.QuizID = qr.QuizID
+                     WHERE qr.UserID = @uid AND qz.CourseID = @cid AND qr.Passed = 1) AS Passed", conn))
+            {
+                cmd.Parameters.AddWithValue("@uid", uid);
+                cmd.Parameters.AddWithValue("@cid", courseId);
+                conn.Open();
+                using (SqlDataReader r = cmd.ExecuteReader())
+                {
+                    if (r.Read())
+                    {
+                        int total  = r.GetInt32(0);
+                        int passed = r.GetInt32(1);
+                        return total > 0 && passed >= total;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private int[] QuizProgress(int uid, int courseId)
+        {
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                SELECT
+                    (SELECT COUNT(*) FROM dbo.Quizzes WHERE CourseID = @cid),
+                    (SELECT COUNT(DISTINCT qr.QuizID)
+                     FROM dbo.QuizResults qr
+                     JOIN dbo.Quizzes qz ON qz.QuizID = qr.QuizID
+                     WHERE qr.UserID = @uid AND qz.CourseID = @cid AND qr.Passed = 1)", conn))
+            {
+                cmd.Parameters.AddWithValue("@uid", uid);
+                cmd.Parameters.AddWithValue("@cid", courseId);
+                conn.Open();
+                using (SqlDataReader r = cmd.ExecuteReader())
+                {
+                    if (r.Read())
+                        return new[] { r.GetInt32(1), r.GetInt32(0) };
+                }
+            }
+            return new[] { 0, 0 };
         }
 
         private int IssueCertificate(int uid, int courseId, int quizId, int resultId,
