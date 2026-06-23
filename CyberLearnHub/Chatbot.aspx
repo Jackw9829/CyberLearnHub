@@ -274,8 +274,8 @@
         <!-- Input -->
         <div class="chat-input-bar">
             <input id="chatInput" type="text" placeholder="Ask a cybersecurity question..."
-                   autocomplete="off" onkeydown="if(event.key==='Enter'){chatSend();return false;}" />
-            <button id="chatSend" onclick="chatSend()" type="button">
+                   autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();chatSend();}" />
+            <button id="btnChatSend" onclick="chatSend()" type="button">
                 <i class="ti ti-send"></i> Send
             </button>
         </div>
@@ -360,7 +360,7 @@
                 'style="color:var(--cyber-accent2);text-decoration:underline;">Register</a> ' +
                 'to continue chatting.');
             var inp  = document.getElementById('chatInput');
-            var send = document.getElementById('chatSend');
+            var send = document.getElementById('btnChatSend');
             inp.disabled  = true;
             send.disabled = true;
             inp.placeholder = 'Login or register to continue...';
@@ -377,7 +377,7 @@
             chatHideSuggestions();
             input.value = '';
             chatBusy    = true;
-            document.getElementById('chatSend').disabled = true;
+            document.getElementById('btnChatSend').disabled = true;
 
             if (!chatLoggedIn) {
                 var count = parseInt(sessionStorage.getItem('cb_guest_count') || '0', 10);
@@ -407,7 +407,7 @@
             })
             ['finally'](function() {
                 chatBusy = false;
-                document.getElementById('chatSend').disabled = false;
+                document.getElementById('btnChatSend').disabled = false;
                 document.getElementById('chatInput').focus();
             });
         }
