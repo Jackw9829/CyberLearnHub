@@ -891,6 +891,76 @@
             background: rgba(0,212,255,0.18);
             border-color: var(--cyber-accent);
         }
+
+        /* =============================================
+           LOGOUT CONFIRMATION MODAL
+        ============================================= */
+        .logout-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: rgba(8,13,20,0.8);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-modal-overlay.open { display: flex; }
+
+        .logout-modal {
+            background: var(--cyber-card);
+            border: 1px solid var(--cyber-border);
+            border-top: 2px solid var(--cyber-danger);
+            border-radius: 12px;
+            padding: 30px 28px 24px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+            animation: cb-slide-up 0.25s ease;
+        }
+
+        .logout-modal-icon {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--cyber-danger);
+            background: rgba(255,59,92,0.1);
+            border: 1px solid rgba(255,59,92,0.4);
+        }
+
+        .logout-modal-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--cyber-heading);
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .logout-modal-text {
+            font-size: 13px;
+            color: var(--cyber-muted);
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .logout-modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .logout-modal-actions .btn-ghost,
+        .logout-modal-actions .btn-danger {
+            min-width: 110px;
+        }
     </style>
 </head>
 <body>
@@ -914,9 +984,13 @@
 
             <ul class="nav-links">
                 <li><a href="CourseListing.aspx">Courses</a></li>
-                <li><a href="Quiz.aspx">Quizzes</a></li>
-                <li><a href="MyProgress.aspx">Progress</a></li>
                 <li><a href="About.aspx">About</a></li>
+                <asp:PlaceHolder ID="pnlUserNav" runat="server" Visible="false">
+                    <li><a href="Dashboard.aspx">Dashboard</a></li>
+                    <li><a href="MyCourses.aspx">My Courses</a></li>
+                    <li><a href="MyProgress.aspx">Progress</a></li>
+                    <li><a href="Leaderboard.aspx">Leaderboard</a></li>
+                </asp:PlaceHolder>
                 <asp:PlaceHolder ID="pnlAdminNav" runat="server" Visible="false">
                     <li><a href="Admin/Default.aspx" style="color:var(--cyber-accent);">Admin</a></li>
                 </asp:PlaceHolder>
@@ -936,7 +1010,7 @@
                         <asp:Label ID="lblNavUsername" runat="server" CssClass="user-name" />
                     </span>
                     <asp:HyperLink ID="hlProfile" runat="server" NavigateUrl="~/Profile.aspx" CssClass="btn-ghost">Profile</asp:HyperLink>
-                    <asp:Button ID="btnLogout" runat="server" Text="Log Out" CssClass="btn-danger" OnClick="btnLogout_Click" CausesValidation="false" />
+                    <asp:Button ID="btnLogout" runat="server" Text="Log Out" CssClass="btn-danger" OnClick="btnLogout_Click" OnClientClick="return confirmLogout(this);" CausesValidation="false" />
                 </asp:Panel>
             </div>
         </nav>
@@ -1195,11 +1269,11 @@
 
         <!-- Chatbot Script -->
         <script type="text/javascript">
-            var cbIsOpen    = false;
-            var cbIsBusy    = false;
-            var cbHadChat   = false;
+            var cbIsOpen = false;
+            var cbIsBusy = false;
+            var cbHadChat = false;
             var cbGuestLimit = 3;
-            var cbLoggedIn   = <%= Session["UserID"] != null ? "true" : "false" %>;
+            var cbLoggedIn = <%= Session["UserID"] != null ? "true" : "false" %>;
 
             // ---- Drag logic ----
             (function () {
@@ -1401,6 +1475,44 @@
         <!-- =============================================
              END FLOATING CHATBOT
         ============================================= -->
+
+        <!-- =============================================
+             LOGOUT CONFIRMATION MODAL
+        ============================================= -->
+        <div id="logoutModal" class="logout-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle">
+            <div class="logout-modal">
+                <div class="logout-modal-icon" aria-hidden="true"><i class="ti ti-logout"></i></div>
+                <h3 id="logoutModalTitle" class="logout-modal-title">Confirm Logout</h3>
+                <p class="logout-modal-text">Are you sure you want to log out?</p>
+                <div class="logout-modal-actions">
+                    <button type="button" class="btn-ghost" onclick="logoutCancel()">Cancel</button>
+                    <button type="button" class="btn-danger" onclick="logoutYes()">Yes</button>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            var _logoutConfirmed = false;
+            var _logoutBtn = null;
+
+            function confirmLogout(btn) {
+                if (_logoutConfirmed) { _logoutConfirmed = false; return true; }
+                _logoutBtn = btn;
+                document.getElementById('logoutModal').classList.add('open');
+                return false;
+            }
+
+            function logoutYes() {
+                _logoutConfirmed = true;
+                document.getElementById('logoutModal').classList.remove('open');
+                if (_logoutBtn) _logoutBtn.click();
+            }
+
+            function logoutCancel() {
+                _logoutBtn = null;
+                document.getElementById('logoutModal').classList.remove('open');
+            }
+        </script>
 
     </form><!-- end form1 -->
 </body>

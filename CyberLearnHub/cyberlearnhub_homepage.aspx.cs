@@ -17,11 +17,12 @@ namespace CyberLearnHub
         private void ApplyNavState()
         {
             bool loggedIn = Session["UserID"] != null;
-            string role   = Session["Role"] as string ?? "";
+            string role = Session["Role"] as string ?? "";
 
             pnlGuestButtons.Visible = !loggedIn;
-            pnlUserButtons.Visible  = loggedIn;
-            pnlAdminNav.Visible     = loggedIn && role == "Admin";
+            pnlUserButtons.Visible = loggedIn;
+            pnlUserNav.Visible = loggedIn;
+            pnlAdminNav.Visible = loggedIn && role == "Admin";
 
             if (loggedIn)
                 lblNavUsername.Text = Session["Username"] as string ?? "user";
