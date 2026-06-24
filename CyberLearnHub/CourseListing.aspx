@@ -209,7 +209,7 @@
         </div>
 
         <!-- Filter bar -->
-        <div class="filter-bar">
+        <asp:Panel ID="pnlFilter" runat="server" CssClass="filter-bar" DefaultButton="btnFilter">
             <div class="filter-group">
                 <label>Category</label>
                 <asp:DropDownList ID="ddlCategory" runat="server" CssClass="form-control" />
@@ -229,7 +229,7 @@
             </div>
             <asp:Button ID="btnFilter" runat="server" Text="Filter" CssClass="btn-filter" OnClick="btnFilter_Click" />
             <asp:Button ID="btnReset"  runat="server" Text="Reset"  CssClass="btn-reset"  OnClick="btnReset_Click" CausesValidation="false" />
-        </div>
+        </asp:Panel>
 
         <!-- Results meta -->
         <div class="results-meta">

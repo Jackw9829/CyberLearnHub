@@ -2,6 +2,7 @@ namespace CyberLearnHub
 {
     public partial class Profile
     {
+        protected global::System.Web.UI.WebControls.Panel pnlAccountCard;
         protected global::System.Web.UI.WebControls.TextBox txtFullName;
         protected global::System.Web.UI.WebControls.TextBox txtEmail;
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFullName;
@@ -10,6 +11,7 @@ namespace CyberLearnHub
         protected global::System.Web.UI.WebControls.Label lblNameAlert;
         protected global::System.Web.UI.WebControls.Repeater rptCertificates;
         protected global::System.Web.UI.WebControls.Panel pnlNoCerts;
+        protected global::System.Web.UI.WebControls.Panel pnlPwCard;
         protected global::System.Web.UI.WebControls.TextBox txtCurrentPw;
         protected global::System.Web.UI.WebControls.TextBox txtNewPw;
         protected global::System.Web.UI.WebControls.TextBox txtConfirmPw;

@@ -140,7 +140,7 @@
         </div>
 
         <!-- Account info card -->
-        <div class="profile-card">
+        <asp:Panel ID="pnlAccountCard" runat="server" CssClass="profile-card" DefaultButton="btnSaveName">
             <div class="card-section-title"><i class="ti ti-user"></i> Account Information</div>
 
             <asp:Panel ID="pnlNameAlert" runat="server" Visible="false">
@@ -165,7 +165,7 @@
 
             <asp:Button ID="btnSaveName" runat="server" Text="Save Changes"
                 CssClass="btn-save" ValidationGroup="vgName" OnClick="btnSaveName_Click" />
-        </div>
+        </asp:Panel>
 
         <!-- Certificates card -->
         <div class="profile-card">
@@ -202,7 +202,7 @@
         </div>
 
         <!-- Change password card -->
-        <div class="profile-card">
+        <asp:Panel ID="pnlPwCard" runat="server" CssClass="profile-card" DefaultButton="btnChangePw">
             <div class="card-section-title"><i class="ti ti-key"></i> Change Password</div>
 
             <asp:Panel ID="pnlPwAlert" runat="server" Visible="false">
@@ -255,7 +255,7 @@
 
             <asp:Button ID="btnChangePw" runat="server" Text="Change Password"
                 CssClass="btn-save" ValidationGroup="vgPw" OnClick="btnChangePw_Click" />
-        </div>
+        </asp:Panel>
 
     </div>
 

@@ -2,6 +2,7 @@ namespace CyberLearnHub
 {
     public partial class CourseListing
     {
+        protected global::System.Web.UI.WebControls.Panel pnlFilter;
         protected global::System.Web.UI.WebControls.DropDownList ddlCategory;
         protected global::System.Web.UI.WebControls.DropDownList ddlDifficulty;
         protected global::System.Web.UI.WebControls.TextBox txtSearch;
