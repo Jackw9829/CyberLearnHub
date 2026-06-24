@@ -905,9 +905,7 @@
             align-items: center;
             justify-content: center;
         }
-
         .logout-modal-overlay.open { display: flex; }
-
         .logout-modal {
             background: var(--cyber-card);
             border: 1px solid var(--cyber-border);
@@ -920,43 +918,29 @@
             box-shadow: 0 12px 40px rgba(0,0,0,0.7);
             animation: cb-slide-up 0.25s ease;
         }
-
         .logout-modal-icon {
-            width: 52px;
-            height: 52px;
+            width: 52px; height: 52px;
             margin: 0 auto 16px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 24px;
             color: var(--cyber-danger);
             background: rgba(255,59,92,0.1);
             border: 1px solid rgba(255,59,92,0.4);
         }
-
         .logout-modal-title {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 20px; font-weight: 700;
             color: var(--cyber-heading);
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            letter-spacing: 0.5px; margin-bottom: 8px;
         }
-
         .logout-modal-text {
-            font-size: 13px;
-            color: var(--cyber-muted);
-            line-height: 1.6;
-            margin-bottom: 22px;
+            font-size: 13px; color: var(--cyber-muted);
+            line-height: 1.6; margin-bottom: 22px;
         }
-
         .logout-modal-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
+            display: flex; gap: 12px; justify-content: center;
         }
-
         .logout-modal-actions .btn-ghost,
         .logout-modal-actions .btn-danger {
             min-width: 110px;
@@ -1066,7 +1050,8 @@
         <!-- =============================================
              SEARCH BAR
         ============================================= -->
-        <div class="search-section" role="search" aria-label="Course search">
+        <asp:Panel ID="pnlSearch" runat="server" DefaultButton="btnSearch"
+            CssClass="search-section">
             <div class="search-wrapper">
                 <%-- TextBox renders as <input type="text"> --%>
                 <asp:TextBox ID="txtSearch" runat="server"
@@ -1083,7 +1068,7 @@
                 Style="display:block; text-align:center; margin-top:10px;
                        font-family:'Share Tech Mono',monospace; font-size:12px;
                        color:#5a7a99;" />
-        </div>
+        </asp:Panel>
 
         <!-- =============================================
              FEATURED COURSES
@@ -1494,20 +1479,17 @@
         <script type="text/javascript">
             var _logoutConfirmed = false;
             var _logoutBtn = null;
-
             function confirmLogout(btn) {
                 if (_logoutConfirmed) { _logoutConfirmed = false; return true; }
                 _logoutBtn = btn;
                 document.getElementById('logoutModal').classList.add('open');
                 return false;
             }
-
             function logoutYes() {
                 _logoutConfirmed = true;
                 document.getElementById('logoutModal').classList.remove('open');
                 if (_logoutBtn) _logoutBtn.click();
             }
-
             function logoutCancel() {
                 _logoutBtn = null;
                 document.getElementById('logoutModal').classList.remove('open');

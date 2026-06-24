@@ -81,6 +81,53 @@
             transition: color 0.2s;
         }
         .pw-toggle:hover { color: var(--cyber-accent); }
+
+        /* Certificates */
+        .cert-list { display: flex; flex-direction: column; gap: 12px; }
+        .cert-item {
+            display: flex; align-items: center; gap: 14px;
+            background: var(--cyber-surface);
+            border: 1px solid var(--cyber-border);
+            border-radius: 8px; padding: 14px 16px;
+            transition: border-color 0.2s;
+        }
+        .cert-item:hover { border-color: rgba(0,212,255,0.4); }
+        .cert-icon {
+            width: 40px; height: 40px; flex-shrink: 0;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: var(--cyber-amber);
+            background: rgba(250,199,117,0.1);
+            border: 1px solid rgba(250,199,117,0.35);
+        }
+        .cert-info { flex: 1; min-width: 0; }
+        .cert-course {
+            font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 600;
+            color: var(--cyber-heading);
+        }
+        .cert-date {
+            font-family: 'Share Tech Mono', monospace; font-size: 11px;
+            color: var(--cyber-muted); margin-top: 2px;
+        }
+        .cert-download {
+            flex-shrink: 0;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 14px;
+            background: rgba(0,212,255,0.08);
+            border: 1px solid rgba(0,212,255,0.3);
+            color: var(--cyber-accent);
+            font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 600;
+            letter-spacing: 0.5px; text-transform: uppercase;
+            border-radius: 5px; text-decoration: none;
+            transition: background 0.2s;
+        }
+        .cert-download:hover { background: rgba(0,212,255,0.18); }
+        .cert-empty {
+            display: flex; align-items: center; gap: 10px;
+            color: var(--cyber-muted); font-size: 13px;
+            font-family: 'Share Tech Mono', monospace; line-height: 1.5;
+        }
+        .cert-empty i { font-size: 18px; color: var(--cyber-accent); }
     </style>
 </asp:Content>
 
@@ -118,6 +165,40 @@
 
             <asp:Button ID="btnSaveName" runat="server" Text="Save Changes"
                 CssClass="btn-save" ValidationGroup="vgName" OnClick="btnSaveName_Click" />
+        </div>
+
+        <!-- Certificates card -->
+        <div class="profile-card">
+            <div class="card-section-title"><i class="ti ti-certificate"></i> My Certificates</div>
+
+            <asp:Repeater ID="rptCertificates" runat="server">
+                <HeaderTemplate>
+                    <div class="cert-list">
+                </HeaderTemplate>
+                <ItemTemplate>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="ti ti-award"></i></div>
+                        <div class="cert-info">
+                            <div class="cert-course"><%# Server.HtmlEncode(Eval("CourseTitle") as string) %></div>
+                            <div class="cert-date">Issued <%# Eval("IssuedDate", "{0:dd MMM yyyy}") %></div>
+                        </div>
+                        <a class="cert-download" target="_blank"
+                           href='<%# ResolveUrl("~/GetCertificate.ashx?id=" + Eval("CertificateID")) %>'>
+                            <i class="ti ti-download"></i> Download
+                        </a>
+                    </div>
+                </ItemTemplate>
+                <FooterTemplate>
+                    </div>
+                </FooterTemplate>
+            </asp:Repeater>
+
+            <asp:Panel ID="pnlNoCerts" runat="server" Visible="false">
+                <div class="cert-empty">
+                    <i class="ti ti-school"></i>
+                    <span>You haven&#39;t earned any certificates yet. Complete a course and pass its quiz to earn one.</span>
+                </div>
+            </asp:Panel>
         </div>
 
         <!-- Change password card -->

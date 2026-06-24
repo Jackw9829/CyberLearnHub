@@ -8,6 +8,8 @@ namespace CyberLearnHub
         protected global::System.Web.UI.WebControls.Button btnSaveName;
         protected global::System.Web.UI.WebControls.Panel pnlNameAlert;
         protected global::System.Web.UI.WebControls.Label lblNameAlert;
+        protected global::System.Web.UI.WebControls.Repeater rptCertificates;
+        protected global::System.Web.UI.WebControls.Panel pnlNoCerts;
         protected global::System.Web.UI.WebControls.TextBox txtCurrentPw;
         protected global::System.Web.UI.WebControls.TextBox txtNewPw;
         protected global::System.Web.UI.WebControls.TextBox txtConfirmPw;

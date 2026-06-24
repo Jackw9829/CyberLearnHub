@@ -15,7 +15,39 @@ namespace CyberLearnHub
             }
 
             if (!IsPostBack)
+            {
                 PopulateFields((int)Session["UserID"]);
+                LoadCertificates((int)Session["UserID"]);
+            }
+        }
+
+        private void LoadCertificates(int uid)
+        {
+            System.Data.DataTable dt = new System.Data.DataTable();
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                SELECT c.CertificateID, c.IssuedDate, co.Title AS CourseTitle
+                FROM dbo.Certificates c
+                INNER JOIN dbo.Courses co ON co.CourseID = c.CourseID
+                WHERE c.UserID = @uid
+                ORDER BY c.IssuedDate DESC", conn))
+            {
+                cmd.Parameters.AddWithValue("@uid", uid);
+                conn.Open();
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    da.Fill(dt);
+            }
+
+            if (dt.Rows.Count == 0)
+            {
+                rptCertificates.Visible = false;
+                pnlNoCerts.Visible = true;
+            }
+            else
+            {
+                rptCertificates.DataSource = dt;
+                rptCertificates.DataBind();
+            }
         }
 
         private void PopulateFields(int uid)
@@ -31,7 +63,7 @@ namespace CyberLearnHub
                     if (r.Read())
                     {
                         txtFullName.Text = r["FullName"] as string ?? "";
-                        txtEmail.Text    = r["Email"] as string ?? "";
+                        txtEmail.Text = r["Email"] as string ?? "";
                     }
                 }
             }
@@ -41,7 +73,7 @@ namespace CyberLearnHub
         {
             if (!Page.IsValid) return;
 
-            int uid  = (int)Session["UserID"];
+            int uid = (int)Session["UserID"];
             string name = txtFullName.Text.Trim();
 
             if (name.Length < 2)
@@ -55,7 +87,7 @@ namespace CyberLearnHub
                 "UPDATE dbo.Users SET FullName = @name WHERE UserID = @uid", conn))
             {
                 cmd.Parameters.AddWithValue("@name", name);
-                cmd.Parameters.AddWithValue("@uid",  uid);
+                cmd.Parameters.AddWithValue("@uid", uid);
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -86,13 +118,13 @@ namespace CyberLearnHub
                 "UPDATE dbo.Users SET PasswordHash = @hash WHERE UserID = @uid", conn))
             {
                 cmd.Parameters.AddWithValue("@hash", newHash);
-                cmd.Parameters.AddWithValue("@uid",  uid);
+                cmd.Parameters.AddWithValue("@uid", uid);
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
 
             txtCurrentPw.Text = "";
-            txtNewPw.Text     = "";
+            txtNewPw.Text = "";
             txtConfirmPw.Text = "";
             ShowPwAlert("&gt; Password changed successfully.", true);
         }
@@ -111,16 +143,16 @@ namespace CyberLearnHub
 
         private void ShowNameAlert(string msg, bool success)
         {
-            lblNameAlert.Text   = msg;
+            lblNameAlert.Text = msg;
             pnlNameAlert.CssClass = "alert-box " + (success ? "success" : "error");
-            pnlNameAlert.Visible  = true;
+            pnlNameAlert.Visible = true;
         }
 
         private void ShowPwAlert(string msg, bool success)
         {
-            lblPwAlert.Text   = msg;
+            lblPwAlert.Text = msg;
             pnlPwAlert.CssClass = "alert-box " + (success ? "success" : "error");
-            pnlPwAlert.Visible  = true;
+            pnlPwAlert.Visible = true;
         }
     }
 }
