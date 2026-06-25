@@ -365,6 +365,4 @@ FodyWeavers.xsd
 Web.config
 /CyberLearnHub/Web.config
 
-# Lab material uploads — stored on server, not in git
-**/LabMaterials/*
-!**/LabMaterials/.gitkeep
+# Lab material uploads — tracked via Git LFS
