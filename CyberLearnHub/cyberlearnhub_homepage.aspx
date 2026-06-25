@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="cyberlearnhub_homepage.aspx.cs" Inherits="CyberLearnHub.cyberlearnhub_homepage" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="cyberlearnhub_homepage.aspx.cs" Inherits="CyberLearnHub.cyberlearnhub_homepage" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -974,6 +974,7 @@
                     <li><a href="MyCourses.aspx">My Courses</a></li>
                     <li><a href="MyProgress.aspx">Progress</a></li>
                     <li><a href="Leaderboard.aspx">Leaderboard</a></li>
+                    <li><a href="Labs.aspx">Labs</a></li>
                 </asp:PlaceHolder>
                 <asp:PlaceHolder ID="pnlAdminNav" runat="server" Visible="false">
                     <li><a href="Admin/Default.aspx" style="color:var(--cyber-accent);">Admin</a></li>

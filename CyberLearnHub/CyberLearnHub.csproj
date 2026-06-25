@@ -89,11 +89,15 @@
     <Content Include="Admin\ManageContent.aspx" />
     <Content Include="Admin\ContentForm.aspx" />
     <Content Include="Admin\Reports.aspx" />
+    <Content Include="Admin\ManageLabs.aspx" />
     <Content Include="App_Data\Database1.mdf" />
     <Content Include="App_Data\Database1_log.ldf">
       <DependentUpon>Database1.mdf</DependentUpon>
     </Content>
     <Content Include="Chatbot.aspx" />
+    <Content Include="Labs.aspx" />
+    <Content Include="VPNConfigs\.gitkeep" />
+    <Content Include="LabMaterials\.gitkeep" />
     <Content Include="CourseListing.aspx" />
     <Content Include="CourseDetail.aspx" />
     <Content Include="cyberlearnhub_homepage.aspx" />
@@ -215,6 +219,13 @@
     <Compile Include="Admin\Reports.aspx.designer.cs">
       <DependentUpon>Reports.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\ManageLabs.aspx.cs">
+      <DependentUpon>ManageLabs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ManageLabs.aspx.designer.cs">
+      <DependentUpon>ManageLabs.aspx</DependentUpon>
+    </Compile>
     <Compile Include="About.aspx.cs">
       <DependentUpon>About.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -304,6 +315,13 @@
     <Compile Include="QuizResult.aspx.designer.cs">
       <DependentUpon>QuizResult.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Labs.aspx.cs">
+      <DependentUpon>Labs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Labs.aspx.designer.cs">
+      <DependentUpon>Labs.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Chatbot.aspx.cs">
       <DependentUpon>Chatbot.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -356,6 +374,7 @@
   <ItemGroup>
     <Content Include="ChatbotHandler.ashx" />
     <None Include="packages.config" />
+    <Content Include="VPNConfigs\student2.ovpn" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

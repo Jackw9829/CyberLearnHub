@@ -1,4 +1,4 @@
-<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="CyberLearnHub.Site" %>
+﻿﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="CyberLearnHub.Site" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -692,7 +692,7 @@
             display: none;
         }
 
-        /* Chat window — sits above the toggle inside the container */
+        /* Chat window â€” sits above the toggle inside the container */
         #cb-window {
             position: absolute;
             bottom: 64px;
@@ -1025,6 +1025,7 @@
                         <li><a href="~/MyCourses.aspx"  runat="server">My Courses</a></li>
                         <li><a href="~/MyProgress.aspx" runat="server">Progress</a></li>
                         <li><a href="~/Leaderboard.aspx" runat="server">Leaderboard</a></li>
+                        <li><a href="~/Labs.aspx"        runat="server">Labs</a></li>
                     </asp:PlaceHolder>
 
                     <asp:PlaceHolder ID="pnlAdminNav" runat="server" Visible="false">
@@ -1044,7 +1045,7 @@
                             <asp:Label ID="lblNavUsername" runat="server" CssClass="user-name" />
                         </span>
                         <asp:HyperLink ID="hlProfile" runat="server" NavigateUrl="~/Profile.aspx" CssClass="btn-ghost">Profile</asp:HyperLink>
-                        <asp:Button ID="btnLogout" runat="server" Text="Log Out" CssClass="btn-danger" OnClick="btnLogout_Click" OnClientClick="return confirmLogout(this);" CausesValidation="false" />
+                        <asp:Button ID="btnLogout" runat="server" Text="Log Out" CssClass="btn-danger" OnClick="btnLogout_Click" OnClientClick="return confirmLogout(this);" CausesValidation="false" UseSubmitBehavior="false" />
                     </asp:Panel>
                 </div>
 
@@ -1352,26 +1353,17 @@
         </div>
 
         <script type="text/javascript">
-            var _logoutConfirmed = false;
-            var _logoutBtn = null;
-
-            // Returns false to cancel the postback and show the modal.
-            // When the user clicks "Yes", we re-trigger the button so it posts back.
             function confirmLogout(btn) {
-                if (_logoutConfirmed) { _logoutConfirmed = false; return true; }
-                _logoutBtn = btn;
                 document.getElementById('logoutModal').classList.add('open');
                 return false;
             }
 
             function logoutYes() {
-                _logoutConfirmed = true;
                 document.getElementById('logoutModal').classList.remove('open');
-                if (_logoutBtn) _logoutBtn.click();
+                __doPostBack('<%= btnLogout.UniqueID %>', '');
             }
 
             function logoutCancel() {
-                _logoutBtn = null;
                 document.getElementById('logoutModal').classList.remove('open');
             }
         </script>
@@ -1380,3 +1372,5 @@
 
 </body>
 </html>
+
+

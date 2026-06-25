@@ -1,4 +1,4 @@
-<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.Master.cs" Inherits="CyberLearnHub.Admin.AdminMaster" %>
+﻿﻿﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.Master.cs" Inherits="CyberLearnHub.Admin.AdminMaster" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
@@ -29,7 +29,7 @@
             color: var(--cyber-text);
             min-height: 100vh;
         }
-        /* ASP.NET wraps everything in a <form> — make it fill the viewport */
+        /* ASP.NET wraps everything in a <form> â€” make it fill the viewport */
         #adminForm {
             display: flex;
             min-height: 100vh;
@@ -291,7 +291,7 @@
         }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-        /* ── Responsive ── */
+        /* â”€â”€ Responsive â”€â”€ */
         .sidebar-overlay {
             display: none;
             position: fixed; inset: 0;
@@ -462,6 +462,11 @@
                 <i class="ti ti-users"></i> Users
             </a>
 
+            <div class="sidebar-section-label">Labs</div>
+            <a href="<%= ResolveUrl("~/Admin/ManageLabs.aspx") %>" class="sidebar-link <%= CurrentPage("ManageLabs") %>">
+                <i class="ti ti-target"></i> Manage Labs
+            </a>
+
             <div class="sidebar-section-label">Content</div>
             <a href="<%= ResolveUrl("~/Admin/ManageContent.aspx") %>" class="sidebar-link <%= CurrentPage("ManageContent") %>">
                 <i class="ti ti-layout"></i> Website Content
@@ -476,7 +481,7 @@
         <div class="sidebar-footer">
             <div class="sidebar-user">Logged in as <span><%= Session["Username"] %></span></div>
             <asp:Button ID="btnLogout" runat="server" Text="Log Out"
-                CssClass="btn-logout-sidebar" OnClick="btnLogout_Click" OnClientClick="return confirmLogout(this);" CausesValidation="false" />
+                CssClass="btn-logout-sidebar" OnClick="btnLogout_Click" OnClientClick="return confirmLogout(this);" CausesValidation="false" UseSubmitBehavior="false" />
         </div>
     </div>
 
@@ -522,23 +527,19 @@
     }
 
     // Logout confirmation
-    var _logoutConfirmed = false;
-    var _logoutBtn = null;
     function confirmLogout(btn) {
-        if (_logoutConfirmed) { _logoutConfirmed = false; return true; }
-        _logoutBtn = btn;
         document.getElementById('logoutModal').classList.add('open');
         return false;
     }
     function logoutYes() {
-        _logoutConfirmed = true;
         document.getElementById('logoutModal').classList.remove('open');
-        if (_logoutBtn) _logoutBtn.click();
+        __doPostBack('<%= btnLogout.UniqueID %>', '');
     }
     function logoutCancel() {
-        _logoutBtn = null;
         document.getElementById('logoutModal').classList.remove('open');
     }
 </script>
 </body>
 </html>
+
+
