@@ -14,10 +14,23 @@ namespace CyberLearnHub
     {
         private string connStr = ConfigurationManager.ConnectionStrings["CyberLearnConnection"].ConnectionString;
 
+        // URL of the Guacamole browser-based attack box.
+        // Read from Web.config so it can be updated in one place whenever
+        // the Guacamole EC2 instance's public IP changes (it has no Elastic IP).
+        // Falls back to "#" if the key isn't set.
+        protected string AttackBoxUrl
+        {
+            get
+            {
+                string url = ConfigurationManager.AppSettings["GuacamoleUrl"];
+                return string.IsNullOrEmpty(url) ? "#" : url;
+            }
+        }
+
         // Holds the feedback message to re-apply after repeater rebind
-        private int    _msgLabId = 0;
-        private string _msgText  = "";
-        private string _msgCss   = "";
+        private int _msgLabId = 0;
+        private string _msgText = "";
+        private string _msgCss = "";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -68,7 +81,7 @@ namespace CyberLearnHub
             if (e.Item.ItemType != ListItemType.Item &&
                 e.Item.ItemType != ListItemType.AlternatingItem) return;
 
-            var row   = (DataRowView)e.Item.DataItem;
+            var row = (DataRowView)e.Item.DataItem;
             int labId = Convert.ToInt32(row["LabId"]);
 
             // Restore flag feedback message after rebind
@@ -77,7 +90,7 @@ namespace CyberLearnHub
                 var lbl = (Label)e.Item.FindControl("lblFlagMsg");
                 if (lbl != null)
                 {
-                    lbl.Text     = _msgText;
+                    lbl.Text = _msgText;
                     lbl.CssClass = _msgCss;
                 }
             }
@@ -127,9 +140,9 @@ namespace CyberLearnHub
             }
             else if (e.CommandName == "SubmitFlag")
             {
-                int labId       = Convert.ToInt32(e.CommandArgument);
+                int labId = Convert.ToInt32(e.CommandArgument);
                 TextBox txtFlag = (TextBox)e.Item.FindControl("txtFlag");
-                Label lblMsg    = (Label)e.Item.FindControl("lblFlagMsg");
+                Label lblMsg = (Label)e.Item.FindControl("lblFlagMsg");
 
                 SubmitFlag(labId, txtFlag.Text.Trim(), lblMsg);
             }
@@ -193,15 +206,15 @@ namespace CyberLearnHub
         {
             if (string.IsNullOrEmpty(submittedFlag))
             {
-                lblFlagMsg.Text     = "Please enter a flag.";
+                lblFlagMsg.Text = "Please enter a flag.";
                 lblFlagMsg.CssClass = "flag-msg error";
                 return;
             }
 
-            int    userId        = Convert.ToInt32(Session["UserID"]);
+            int userId = Convert.ToInt32(Session["UserID"]);
             string submittedHash = ComputeSha256(submittedFlag);
-            string correctHash   = "";
-            int    points        = 0;
+            string correctHash = "";
+            int points = 0;
 
             _msgLabId = labId;
 
@@ -218,7 +231,7 @@ namespace CyberLearnHub
                         if (r.Read())
                         {
                             correctHash = r["FlagHash"].ToString();
-                            points      = Convert.ToInt32(r["Points"]);
+                            points = Convert.ToInt32(r["Points"]);
                         }
                     }
                 }
@@ -226,21 +239,21 @@ namespace CyberLearnHub
                 bool isCorrect = string.Equals(submittedHash, correctHash,
                     StringComparison.OrdinalIgnoreCase);
 
-                int  existingProgressId = 0;
-                bool alreadySolved      = false;
+                int existingProgressId = 0;
+                bool alreadySolved = false;
 
                 using (SqlCommand cmd = new SqlCommand(
                     "SELECT ProgressId, IsSolved FROM dbo.UserLabProgress WHERE UserID = @UserID AND LabId = @LabId",
                     conn))
                 {
                     cmd.Parameters.AddWithValue("@UserID", userId);
-                    cmd.Parameters.AddWithValue("@LabId",  labId);
+                    cmd.Parameters.AddWithValue("@LabId", labId);
                     using (SqlDataReader r = cmd.ExecuteReader())
                     {
                         if (r.Read())
                         {
                             existingProgressId = Convert.ToInt32(r["ProgressId"]);
-                            alreadySolved      = Convert.ToBoolean(r["IsSolved"]);
+                            alreadySolved = Convert.ToBoolean(r["IsSolved"]);
                         }
                     }
                 }
@@ -251,9 +264,9 @@ namespace CyberLearnHub
                         INSERT INTO dbo.UserLabProgress (UserID, LabId, IsSolved, AttemptCount, SolvedDate)
                         VALUES (@UserID, @LabId, @IsSolved, 1, @SolvedDate)", conn))
                     {
-                        cmd.Parameters.AddWithValue("@UserID",    userId);
-                        cmd.Parameters.AddWithValue("@LabId",     labId);
-                        cmd.Parameters.AddWithValue("@IsSolved",  isCorrect);
+                        cmd.Parameters.AddWithValue("@UserID", userId);
+                        cmd.Parameters.AddWithValue("@LabId", labId);
+                        cmd.Parameters.AddWithValue("@IsSolved", isCorrect);
                         cmd.Parameters.AddWithValue("@SolvedDate",
                             isCorrect ? (object)DateTime.Now : DBNull.Value);
                         cmd.ExecuteNonQuery();
@@ -268,7 +281,7 @@ namespace CyberLearnHub
                             SolvedDate = CASE WHEN @IsCorrect = 1 AND IsSolved = 0 THEN @SolvedDate ELSE SolvedDate END
                         WHERE ProgressId = @ProgressId", conn))
                     {
-                        cmd.Parameters.AddWithValue("@IsCorrect",  isCorrect);
+                        cmd.Parameters.AddWithValue("@IsCorrect", isCorrect);
                         cmd.Parameters.AddWithValue("@SolvedDate", DateTime.Now);
                         cmd.Parameters.AddWithValue("@ProgressId", existingProgressId);
                         cmd.ExecuteNonQuery();
@@ -285,7 +298,7 @@ namespace CyberLearnHub
                 else
                 {
                     _msgText = "Incorrect flag. Try again.";
-                    _msgCss  = "flag-msg error";
+                    _msgCss = "flag-msg error";
                 }
             }
 

@@ -133,6 +133,22 @@
             background: rgba(0, 255, 200, 0.08);
         }
 
+        .btn-attackbox {
+            background: transparent;
+            border: 1px solid #f1c40f;
+            color: #f1c40f;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-attackbox:hover {
+            background: rgba(241, 196, 15, 0.08);
+        }
+
         .flag-row {
             display: flex;
             gap: 8px;
@@ -257,6 +273,9 @@
                         <asp:LinkButton ID="btnDownloadVpn" runat="server" CssClass="btn-vpn" CommandName="DownloadVpn">
                             <i class="ti ti-download"></i> Download VPN
                         </asp:LinkButton>
+                        <a class="btn-attackbox" href="<%= AttackBoxUrl %>" target="_blank" rel="noopener">
+                            <i class="ti ti-terminal-2"></i> Open Attack Box
+                        </a>
                     </div>
 
                     <div class="flag-row">
