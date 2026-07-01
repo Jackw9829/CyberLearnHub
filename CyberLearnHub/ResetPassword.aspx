@@ -243,7 +243,7 @@
                 CssClass="message"
                 EnableViewState="false" />
 
-            <a href="Login.aspx" class="back-link">← Back to login</a>
+            <a href="Login.aspx" class="back-link">&larr; Back to login</a>
         </div>
     </form>
 

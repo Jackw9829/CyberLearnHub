@@ -113,11 +113,11 @@ namespace CyberLearnHub
     Reset password
   </a>
   <p style='color:#8b949e;font-size:0.8rem;'>
-    If you didn't request this, you can safely ignore this email — your password won't change.
+    If you didn't request this, you can safely ignore this email &mdash; your password won't change.
   </p>
   <hr style='border:none;border-top:1px solid #30363d;margin:20px 0;'/>
   <p style='color:#484f58;font-size:0.75rem;'>
-    CyberLearnHub &nbsp;·&nbsp; Cybersecurity E-Learning Platform
+    CyberLearnHub &nbsp;&middot;&nbsp; Cybersecurity E-Learning Platform
   </p>
 </div>";
 
