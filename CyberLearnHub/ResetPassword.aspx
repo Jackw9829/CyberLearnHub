@@ -4,7 +4,7 @@
 <head runat="server">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reset Password – CyberLearnHub</title>
+    <title>Reset Password &ndash; CyberLearnHub</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -193,7 +193,7 @@
                     </svg>
                 </div>
                 <h1>Set a new password</h1>
-                <p class="subtitle">Choose something strong — at least 8 characters.</p>
+                <p class="subtitle">Choose something strong &mdash; at least 8 characters.</p>
             </div>
 
             <%-- Token-invalid / expired state is handled server-side; panel shown only when token is valid --%>
