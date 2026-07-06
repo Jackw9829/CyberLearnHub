@@ -139,4 +139,4 @@ CyberLearnHub/
 
 ## 📄 License
 
-This project is developed for academic purposes as part of the CT050-3-2-WAPP module at APU. Not intended for production use.
+This project is developed for academic purposes as part of the Web Applications module at APU. Not intended for production use.
