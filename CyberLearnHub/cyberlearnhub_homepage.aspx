@@ -1190,7 +1190,7 @@
             </span>
             <nav class="footer-links" aria-label="Footer navigation">
                 <a href="About.aspx">About</a>
-                <a href="Privacy.aspx">Privacy</a>
+                <%--<a href="Privacy.aspx">Privacy</a>--%>
                 <a href="Contact.aspx">Contact</a>
             </nav>
         </footer>
