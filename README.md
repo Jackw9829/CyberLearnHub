@@ -4,7 +4,7 @@
 
 CyberLearnHub helps beginners and students build cybersecurity knowledge through structured courses, quizzes, hands-on CTF-style labs, and a browser-based attack box — all wrapped in a dark, cybersecurity-themed interface.
 
-> Group Assignment for **CT050-3-2-WAPP (Web Applications)**, Asia Pacific University of Technology & Innovation.
+> Group Assignment for **Web Applications**, Asia Pacific University of Technology & Innovation.
 
 ---
 
