@@ -173,9 +173,10 @@ namespace CyberLearnHub
         protected string GetCertLink(int courseId, int certId)
         {
             if (certId <= 0) return "<span style=\"color:var(--cyber-muted);font-family:'Share Tech Mono',monospace;font-size:10px;\">-</span>";
+            string url = ResolveUrl("~/GetCertificate.ashx?id=" + certId);
             return string.Format(
-                "<a href=\"~/GetCertificate.ashx?id={0}\" runat=\"server\" style=\"font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyber-accent2);text-decoration:none;\"><i class=\"ti ti-file-certificate\" style=\"margin-right:4px;\"></i>Download</a>",
-                certId);
+                "<a href=\"{0}\" style=\"font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyber-accent2);text-decoration:none;\"><i class=\"ti ti-file-certificate\" style=\"margin-right:4px;\"></i>Download</a>",
+                url);
         }
     }
 }

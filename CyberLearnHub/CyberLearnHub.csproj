@@ -82,6 +82,7 @@
     <Content Include="Admin\CourseForm.aspx" />
     <Content Include="Admin\ManageQuestions.aspx" />
     <Content Include="Admin\QuestionForm.aspx" />
+    <Content Include="Admin\ContactMessages.aspx" />
     <Content Include="Admin\ManageUsers.aspx" />
     <Content Include="Admin\ManageQuizzes.aspx" />
     <Content Include="Admin\QuizForm.aspx" />
@@ -113,6 +114,7 @@
     <Content Include="MyProgress.aspx" />
     <Content Include="Error.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Contact.aspx" />
     <Content Include="ForgotPassword.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="ResetPassword.aspx" />
@@ -165,6 +167,13 @@
     </Compile>
     <Compile Include="Admin\QuestionForm.aspx.designer.cs">
       <DependentUpon>QuestionForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ContactMessages.aspx.cs">
+      <DependentUpon>ContactMessages.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ContactMessages.aspx.designer.cs">
+      <DependentUpon>ContactMessages.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\ManageUsers.aspx.cs">
       <DependentUpon>ManageUsers.aspx</DependentUpon>
@@ -345,6 +354,13 @@
     </Compile>
     <Compile Include="Error.aspx.designer.cs">
       <DependentUpon>Error.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Contact.aspx.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Contact.aspx.designer.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
     <Compile Include="ForgotPassword.aspx.cs">
       <DependentUpon>ForgotPassword.aspx</DependentUpon>

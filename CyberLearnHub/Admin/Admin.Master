@@ -472,6 +472,11 @@
                 <i class="ti ti-layout"></i> Website Content
             </a>
 
+            <div class="sidebar-section-label">Support</div>
+            <a href="<%= ResolveUrl("~/Admin/ContactMessages.aspx") %>" class="sidebar-link <%= CurrentPage("ContactMessages") %>">
+                <i class="ti ti-messages"></i> Contact Messages
+            </a>
+
             <div class="sidebar-section-label">Site</div>
             <a href="<%= ResolveUrl("~/cyberlearnhub_homepage.aspx") %>" class="sidebar-link">
                 <i class="ti ti-home"></i> View Site

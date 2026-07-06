@@ -19,22 +19,34 @@ namespace CyberLearnHub
         {
             if (!Page.IsValid) return;
 
-            string email = txtEmail.Text.Trim().ToLower();
+            string email    = txtEmail.Text.Trim().ToLower();
             string password = txtPassword.Text;
 
             try
             {
                 UserAccount user = GetUserByEmail(email);
 
-                if (user == null || !string.Equals(user.PasswordHash, HashPassword(password), StringComparison.OrdinalIgnoreCase))
+                if (user == null)
                 {
                     ShowAlert("&gt; Invalid email or password.");
                     return;
                 }
 
-                Session["UserID"] = user.UserID;
+                if (!user.IsActive)
+                {
+                    ShowAlert("&gt; This account has been deactivated. Contact an administrator for assistance.");
+                    return;
+                }
+
+                if (!string.Equals(user.PasswordHash, HashPassword(password), StringComparison.OrdinalIgnoreCase))
+                {
+                    ShowAlert("&gt; Invalid email or password.");
+                    return;
+                }
+
+                Session["UserID"]   = user.UserID;
                 Session["Username"] = user.FullName;
-                Session["Role"] = user.Role;
+                Session["Role"]     = user.Role;
 
                 RedirectAfterLogin();
             }
@@ -55,9 +67,9 @@ namespace CyberLearnHub
         private static UserAccount GetUserByEmail(string email)
         {
             string sql = @"
-                SELECT UserID, FullName, Email, PasswordHash, Role
+                SELECT UserID, FullName, Email, PasswordHash, Role, IsActive
                 FROM dbo.Users
-                WHERE Email = @Email AND IsActive = 1";
+                WHERE Email = @Email";
 
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             using (SqlCommand cmd = new SqlCommand(sql, conn))
@@ -72,11 +84,12 @@ namespace CyberLearnHub
 
                     return new UserAccount
                     {
-                        UserID = reader.GetInt32(0),
-                        FullName = reader.GetString(1),
-                        Email = reader.GetString(2),
+                        UserID       = reader.GetInt32(0),
+                        FullName     = reader.GetString(1),
+                        Email        = reader.GetString(2),
                         PasswordHash = reader.GetString(3),
-                        Role = reader.GetString(4)
+                        Role         = reader.GetString(4),
+                        IsActive     = reader.GetBoolean(5)
                     };
                 }
             }
@@ -114,11 +127,12 @@ namespace CyberLearnHub
 
         private sealed class UserAccount
         {
-            public int UserID { get; set; }
-            public string FullName { get; set; }
-            public string Email { get; set; }
+            public int    UserID       { get; set; }
+            public string FullName     { get; set; }
+            public string Email        { get; set; }
             public string PasswordHash { get; set; }
-            public string Role { get; set; }
+            public string Role         { get; set; }
+            public bool   IsActive     { get; set; }
         }
     }
 }
