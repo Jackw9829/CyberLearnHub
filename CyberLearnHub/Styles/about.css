@@ -1,0 +1,282 @@
+        .about-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 52px 40px 60px;
+        }
+
+        .page-header { margin-bottom: 48px; }
+        .page-header .badge { margin-bottom: 16px; }
+
+        /* ── Section ── */
+        .about-section { margin-bottom: 48px; }
+
+        .about-section-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--cyber-heading);
+            letter-spacing: 0.5px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .about-section-title i { color: var(--cyber-accent); font-size: 20px; }
+
+        .about-section p {
+            font-size: 14px;
+            line-height: 1.85;
+            color: var(--cyber-muted);
+            margin-bottom: 14px;
+        }
+
+        /* ── Intro highlight block ── */
+        .intro-block {
+            background: var(--cyber-card);
+            border: 1px solid var(--cyber-border);
+            border-left: 3px solid var(--cyber-accent);
+            border-radius: 8px;
+            padding: 28px 32px;
+            margin-bottom: 40px;
+        }
+
+        .intro-block p {
+            font-size: 15px;
+            line-height: 1.85;
+            color: var(--cyber-text);
+            margin: 0;
+        }
+
+        /* ── Mission / Vision cards ── */
+        .mv-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .mv-card {
+            background: var(--cyber-card);
+            border: 1px solid var(--cyber-border);
+            border-radius: 8px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mv-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+        }
+
+        .mv-mission::before { background: var(--cyber-accent); }
+        .mv-vision::before  { background: var(--cyber-accent2); }
+
+        .mv-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .mv-mission .mv-label { color: var(--cyber-accent); }
+        .mv-vision  .mv-label { color: var(--cyber-accent2); }
+
+        .mv-card p {
+            font-size: 13px;
+            line-height: 1.75;
+            color: var(--cyber-text);
+            margin: 0;
+        }
+
+        /* ── What we offer ── */
+        .offer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .offer-card {
+            background: var(--cyber-surface);
+            border: 1px solid var(--cyber-border);
+            border-radius: 8px;
+            padding: 22px 18px;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .offer-card:hover { border-color: rgba(0,212,255,0.3); }
+
+        .offer-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            font-size: 20px;
+            border: 1px solid;
+        }
+
+        .oi-cyan  { background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.3); color: var(--cyber-accent); }
+        .oi-green { background: rgba(0,255,157,0.08); border-color: rgba(0,255,157,0.3); color: var(--cyber-accent2); }
+        .oi-amber { background: rgba(250,199,117,0.08); border-color: rgba(250,199,117,0.3); color: var(--cyber-amber); }
+        .oi-red   { background: rgba(255,59,92,0.08); border-color: rgba(255,59,92,0.3); color: var(--cyber-danger); }
+
+        .offer-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--cyber-heading);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .offer-desc {
+            font-size: 12px;
+            color: var(--cyber-muted);
+            line-height: 1.65;
+        }
+
+        /* ── Timeline / history ── */
+        .timeline {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 6px;
+            bottom: 0;
+            width: 1px;
+            background: var(--cyber-border);
+        }
+
+        .tl-item {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--cyber-accent);
+            border: 2px solid var(--cyber-bg);
+            box-shadow: 0 0 0 1px var(--cyber-accent);
+        }
+
+        .tl-year {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-accent);
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+
+        .tl-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--cyber-heading);
+            margin-bottom: 4px;
+        }
+
+        .tl-desc {
+            font-size: 13px;
+            color: var(--cyber-muted);
+            line-height: 1.65;
+        }
+
+        /* ── Achievements ── */
+        .achieve-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .achieve-card {
+            background: var(--cyber-surface);
+            border: 1px solid var(--cyber-border);
+            border-radius: 8px;
+            padding: 20px 16px;
+            text-align: center;
+        }
+
+        .achieve-num {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 28px;
+            color: var(--cyber-accent);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .achieve-label {
+            font-size: 11px;
+            color: var(--cyber-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* ── Contact ── */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .contact-item {
+            background: var(--cyber-surface);
+            border: 1px solid var(--cyber-border);
+            border-radius: 8px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .contact-icon {
+            width: 38px;
+            height: 38px;
+            background: rgba(0,212,255,0.08);
+            border: 1px solid rgba(0,212,255,0.25);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--cyber-accent);
+            flex-shrink: 0;
+        }
+
+        .contact-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .contact-value {
+            font-size: 13px;
+            color: var(--cyber-text);
+        }
+
+        /* ── Divider ── */
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--cyber-border);
+            margin: 44px 0;
+        }

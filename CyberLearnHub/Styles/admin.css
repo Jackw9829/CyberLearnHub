@@ -1,0 +1,418 @@
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --cyber-bg:      #080d14;
+            --cyber-surface: #0d1520;
+            --cyber-card:    #111c2b;
+            --cyber-border:  #1a3050;
+            --cyber-accent:  #00d4ff;
+            --cyber-accent2: #00ff9d;
+            --cyber-danger:  #ff3b5c;
+            --cyber-amber:   #fac775;
+            --cyber-text:    #c8dff0;
+            --cyber-muted:   #5a7a99;
+            --cyber-heading: #e8f4ff;
+            --sidebar-w:     220px;
+        }
+        body {
+            background: var(--cyber-bg);
+            font-family: 'Inter', sans-serif;
+            color: var(--cyber-text);
+            min-height: 100vh;
+        }
+        /* ASP.NET wraps everything in a <form> - make it fill the viewport */
+        #adminForm {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+        a { text-decoration: none; }
+
+        /* Sidebar */
+        .admin-sidebar {
+            width: var(--sidebar-w);
+            min-height: 100vh;
+            background: var(--cyber-surface);
+            border-right: 1px solid var(--cyber-border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            z-index: 100;
+        }
+        .sidebar-brand {
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid var(--cyber-border);
+        }
+        .sidebar-brand-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--cyber-accent);
+            letter-spacing: 1px;
+        }
+        .sidebar-brand-sub {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            color: var(--cyber-muted);
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+        .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+        .sidebar-section-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            color: var(--cyber-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 10px 20px 4px;
+        }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 20px;
+            color: var(--cyber-muted);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            transition: color 0.2s, background 0.2s;
+            border-left: 2px solid transparent;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            color: var(--cyber-accent);
+            background: rgba(0,212,255,0.05);
+            border-left-color: var(--cyber-accent);
+        }
+        .sidebar-link i { font-size: 16px; flex-shrink: 0; }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--cyber-border);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .sidebar-user {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-muted);
+            letter-spacing: 1px;
+        }
+        .sidebar-user span { color: var(--cyber-accent2); }
+        .btn-logout-sidebar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            background: rgba(255,59,92,0.08);
+            border: 1px solid rgba(255,59,92,0.25);
+            color: var(--cyber-danger);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        .btn-logout-sidebar:hover { background: rgba(255,59,92,0.15); }
+
+        /* Main area */
+        .admin-main {
+            margin-left: var(--sidebar-w);
+            width: calc(100% - var(--sidebar-w));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .admin-topbar {
+            background: var(--cyber-surface);
+            border-bottom: 1px solid var(--cyber-border);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .admin-topbar-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--cyber-heading);
+        }
+        .admin-content { padding: 28px; flex: 1; }
+
+        /* Shared admin UI utilities */
+        .admin-card {
+            background: var(--cyber-card);
+            border: 1px solid var(--cyber-border);
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .admin-card-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--cyber-heading);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .admin-card-title i { color: var(--cyber-accent); }
+
+        /* Admin tables */
+        .admin-table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        .admin-table th {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 0 14px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--cyber-border);
+        }
+        .admin-table td {
+            padding: 11px 14px;
+            font-size: 13px;
+            color: var(--cyber-text);
+            border-bottom: 1px solid rgba(26,48,80,0.5);
+            vertical-align: middle;
+        }
+        .admin-table tr:last-child td { border-bottom: none; }
+        .admin-table tr:hover td { background: rgba(0,212,255,0.03); }
+
+        /* Admin buttons */
+        .btn-admin-primary {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px;
+            background: var(--cyber-accent);
+            color: #080d14;
+            border: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px; font-weight: 700; letter-spacing: 1px;
+            border-radius: 5px; cursor: pointer; text-transform: uppercase;
+            transition: background 0.2s; text-decoration: none;
+        }
+        .btn-admin-primary:hover { background: #33ddff; color: #080d14; }
+        .btn-admin-sm {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 5px 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+            border-radius: 4px; cursor: pointer; text-transform: uppercase;
+            transition: background 0.2s, color 0.2s; text-decoration: none;
+            border: 1px solid;
+        }
+        .btn-edit   { color: var(--cyber-accent);  border-color: rgba(0,212,255,0.4);  background: rgba(0,212,255,0.06); }
+        .btn-edit:hover   { background: rgba(0,212,255,0.15); }
+        .btn-delete { color: var(--cyber-danger);  border-color: rgba(255,59,92,0.4);  background: rgba(255,59,92,0.06); }
+        .btn-delete:hover { background: rgba(255,59,92,0.15); }
+        .btn-view   { color: var(--cyber-accent2); border-color: rgba(0,255,157,0.4);  background: rgba(0,255,157,0.06); }
+        .btn-view:hover   { background: rgba(0,255,157,0.15); }
+        .btn-secondary {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px;
+            background: transparent;
+            color: var(--cyber-muted);
+            border: 1px solid var(--cyber-border);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px; font-weight: 700; letter-spacing: 1px;
+            border-radius: 5px; cursor: pointer; text-transform: uppercase;
+            transition: color 0.2s, border-color 0.2s; text-decoration: none;
+        }
+        .btn-secondary:hover { color: var(--cyber-text); border-color: var(--cyber-text); }
+
+        /* Alert */
+        .admin-alert {
+            padding: 11px 16px; border-radius: 6px;
+            font-size: 13px; margin-bottom: 16px;
+            font-family: 'Share Tech Mono', monospace; letter-spacing: 0.5px;
+        }
+        .admin-alert.success { background: rgba(0,255,157,0.08); border: 1px solid rgba(0,255,157,0.3); color: var(--cyber-accent2); }
+        .admin-alert.error   { background: rgba(255,59,92,0.08);  border: 1px solid rgba(255,59,92,0.3);  color: var(--cyber-danger); }
+
+        /* Form fields */
+        .form-group { margin-bottom: 20px; }
+        .form-label {
+            display: block;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .form-control {
+            width: 100%;
+            background: rgba(8,13,20,0.6);
+            border: 1px solid var(--cyber-border);
+            border-radius: 6px;
+            padding: 10px 13px;
+            color: var(--cyber-text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+        .form-control:focus {
+            border-color: var(--cyber-accent);
+            box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+        }
+        textarea.form-control { resize: vertical; min-height: 90px; }
+        select.form-control { cursor: pointer; appearance: none; }
+        .form-error {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyber-danger);
+            margin-top: 5px;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+        .form-hint {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-muted);
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        /* Responsive */
+        .sidebar-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 99;
+        }
+        .btn-hamburger {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--cyber-border);
+            border-radius: 6px;
+            color: var(--cyber-muted);
+            font-size: 20px;
+            padding: 4px 8px;
+            cursor: pointer;
+            line-height: 1;
+            margin-right: 4px;
+        }
+        .btn-hamburger:hover { color: var(--cyber-accent); border-color: var(--cyber-accent); }
+
+        @media (max-width: 768px) {
+            :root { --sidebar-w: 0px; }
+
+            .admin-sidebar {
+                transform: translateX(-220px);
+                transition: transform 0.25s ease;
+                width: 220px;
+            }
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay.open { display: block; }
+
+            .admin-main { margin-left: 0; }
+
+            .btn-hamburger { display: inline-flex; align-items: center; }
+
+            .admin-content { padding: 16px; }
+
+            .admin-topbar { padding: 12px 16px; }
+
+            /* Make all admin tables scroll horizontally */
+            .admin-table-wrap,
+            .admin-card { overflow-x: auto; }
+
+            /* Form rows stack on small screens */
+            .form-row { grid-template-columns: 1fr; }
+
+            /* Stats grids collapse to 2 columns */
+            .stats-grid-2 { grid-template-columns: 1fr 1fr !important; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid-2 { grid-template-columns: 1fr !important; }
+            .admin-topbar-title { font-size: 15px; }
+        }
+
+        /* Badges */
+        .badge {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px; letter-spacing: 1px;
+            padding: 3px 8px; border-radius: 20px; text-transform: uppercase;
+        }
+        .badge-pub   { background: rgba(0,255,157,0.1);  color: var(--cyber-accent2); border: 1px solid rgba(0,255,157,0.25); }
+        .badge-draft { background: rgba(90,122,153,0.15); color: var(--cyber-muted);   border: 1px solid var(--cyber-border); }
+        .badge-admin { background: rgba(255,59,92,0.1);  color: var(--cyber-danger);  border: 1px solid rgba(255,59,92,0.25); }
+        .badge-member{ background: rgba(0,212,255,0.1);  color: var(--cyber-accent);  border: 1px solid rgba(0,212,255,0.25); }
+
+        /* Logout confirmation modal */
+        .logout-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: rgba(8,13,20,0.8);
+            align-items: center;
+            justify-content: center;
+        }
+        .logout-modal-overlay.open { display: flex; }
+        .logout-modal {
+            background: var(--cyber-card);
+            border: 1px solid var(--cyber-border);
+            border-top: 2px solid var(--cyber-danger);
+            border-radius: 12px;
+            padding: 30px 28px 24px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+        }
+        .logout-modal-icon {
+            width: 52px; height: 52px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            color: var(--cyber-danger);
+            background: rgba(255,59,92,0.1);
+            border: 1px solid rgba(255,59,92,0.4);
+        }
+        .logout-modal-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 20px; font-weight: 700;
+            color: var(--cyber-heading);
+            letter-spacing: 0.5px; margin-bottom: 8px;
+        }
+        .logout-modal-text {
+            font-size: 13px; color: var(--cyber-muted);
+            line-height: 1.6; margin-bottom: 22px;
+        }
+        .logout-modal-actions {
+            display: flex; gap: 12px; justify-content: center;
+        }
+        .logout-modal-btn {
+            min-width: 110px;
+            padding: 9px 18px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase;
+            border-radius: 4px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .logout-modal-btn.cancel {
+            background: transparent;
+            border: 1px solid var(--cyber-border);
+            color: var(--cyber-text);
+        }
+        .logout-modal-btn.cancel:hover { border-color: var(--cyber-accent); color: var(--cyber-accent); }
+        .logout-modal-btn.yes {
+            background: rgba(255,59,92,0.1);
+            border: 1px solid rgba(255,59,92,0.4);
+            color: var(--cyber-danger);
+        }
+        .logout-modal-btn.yes:hover { background: rgba(255,59,92,0.2); }

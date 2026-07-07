@@ -1,18 +1,10 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ManageContent.aspx.cs"
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ManageContent.aspx.cs"
          Inherits="CyberLearnHub.Admin.ManageContent" MasterPageFile="~/Admin/Admin.Master" %>
 
 <asp:Content ID="PageTitle" ContentPlaceHolderID="PageTitle" runat="server">Website Content</asp:Content>
 
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">
-    <style>
-        .content-body-preview {
-            max-width: 320px; overflow: hidden;
-            white-space: nowrap; text-overflow: ellipsis;
-            display: block; color: var(--cyber-muted); font-size: 12px;
-        }
-        .inline-edit-area { display: none; margin-top: 16px; }
-        .inline-edit-area.open { display: block; }
-    </style>
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Styles/admin-manage-content.css") %>" />
 
     <asp:Panel ID="pnlAlert" runat="server" Visible="false">
         <asp:Label ID="lblAlert" runat="server" />

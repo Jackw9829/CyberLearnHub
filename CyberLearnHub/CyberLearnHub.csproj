@@ -74,6 +74,36 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\site.css" />
+    <Content Include="Styles\admin.css" />
+    <Content Include="Styles\about.css" />
+    <Content Include="Styles\access-denied.css" />
+    <Content Include="Styles\contact.css" />
+    <Content Include="Styles\forgot-password.css" />
+    <Content Include="Styles\reset-password.css" />
+    <Content Include="Styles\login.css" />
+    <Content Include="Styles\register.css" />
+    <Content Include="Styles\error.css" />
+    <Content Include="Styles\dashboard.css" />
+    <Content Include="Styles\my-courses.css" />
+    <Content Include="Styles\my-progress.css" />
+    <Content Include="Styles\course-listing.css" />
+    <Content Include="Styles\course-detail.css" />
+    <Content Include="Styles\profile.css" />
+    <Content Include="Styles\quiz.css" />
+    <Content Include="Styles\quiz-result.css" />
+    <Content Include="Styles\chatbot.css" />
+    <Content Include="Styles\labs.css" />
+    <Content Include="Styles\leaderboard.css" />
+    <Content Include="Styles\admin-reports.css" />
+    <Content Include="Styles\admin-manage-content.css" />
+    <Content Include="Styles\admin-manage-labs.css" />
+    <Content Include="Styles\homepage.css" />
+    <Content Include="Styles\admin-course-form.css" />
+    <Content Include="Styles\admin-learning-material-form.css" />
+    <Content Include="Styles\admin-question-form.css" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="About.aspx" />
     <Content Include="AccessDenied.aspx" />
     <Content Include="Admin\Admin.Master" />

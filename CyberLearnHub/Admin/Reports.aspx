@@ -1,31 +1,10 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Reports.aspx.cs"
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Reports.aspx.cs"
          Inherits="CyberLearnHub.Admin.Reports" MasterPageFile="~/Admin/Admin.Master" %>
 
 <asp:Content ID="PageTitle" ContentPlaceHolderID="PageTitle" runat="server">Reports &amp; Analytics</asp:Content>
 
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">
-    <style>
-        .rpt-stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px; margin-bottom: 28px;
-        }
-        .rpt-stat {
-            background: var(--cyber-card);
-            border: 1px solid var(--cyber-border);
-            border-radius: 10px; padding: 18px 20px;
-        }
-        .rpt-stat-val {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 28px; font-weight: 700;
-            color: var(--cyber-heading); line-height: 1;
-        }
-        .rpt-stat-lbl {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 9px; color: var(--cyber-muted);
-            letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px;
-        }
-    </style>
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Styles/admin-reports.css") %>" />
 
     <!-- Platform stats -->
     <div class="rpt-stat-grid">

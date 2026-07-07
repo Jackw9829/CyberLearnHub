@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="LearningMaterialForm.aspx.cs"
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="LearningMaterialForm.aspx.cs"
          Inherits="CyberLearnHub.Admin.LearningMaterialForm" MasterPageFile="~/Admin/Admin.Master" %>
 
 <asp:Content ID="PageTitle" ContentPlaceHolderID="PageTitle" runat="server">
@@ -6,63 +6,7 @@
 </asp:Content>
 
 <asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
-<style>
-    .mtype-selector { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px; }
-    .mtype-btn {
-        flex:1; min-width:100px;
-        padding:12px 8px; border:1px solid var(--cyber-border); border-radius:8px;
-        background:transparent; color:var(--cyber-muted); cursor:pointer; text-align:center;
-        transition:border-color 0.2s, background 0.2s, color 0.2s;
-        font-family:'Rajdhani',sans-serif;
-    }
-    .mtype-btn i { font-size:20px; display:block; margin-bottom:4px; }
-    .mtype-btn span { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
-    .mtype-btn.active { border-color:var(--cyber-accent); background:rgba(0,212,255,0.06); color:var(--cyber-accent); }
-    .mtype-section { display:none; }
-    .mtype-section.active { display:block; }
-
-    .video-preview-wrap {
-        margin-top:14px; border:1px solid var(--cyber-border); border-radius:8px;
-        overflow:hidden; background:#000; position:relative;
-        padding-top:56.25%; /* 16:9 */ display:none;
-    }
-    .video-preview-wrap iframe {
-        position:absolute; top:0; left:0; width:100%; height:100%; border:none;
-    }
-    .video-no-preview {
-        border:1px dashed var(--cyber-border); border-radius:8px; padding:28px;
-        text-align:center; background:rgba(8,13,20,0.4);
-        font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--cyber-muted);
-        letter-spacing:1px;
-    }
-    .video-no-preview i { font-size:28px; display:block; margin-bottom:8px; opacity:0.4; }
-
-    .upload-zone {
-        border:1px dashed var(--cyber-border); border-radius:8px; padding:28px 16px;
-        text-align:center; cursor:pointer;
-        transition:border-color 0.2s, background 0.2s;
-        background:rgba(8,13,20,0.4);
-    }
-    .upload-zone:hover { border-color:var(--cyber-accent); background:rgba(0,212,255,0.03); }
-    .upload-zone i { font-size:28px; color:var(--cyber-muted); margin-bottom:8px; display:block; }
-    .upload-zone p { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--cyber-muted); letter-spacing:1px; margin:0; }
-    .upload-zone input[type=file] { display:none; }
-    .upload-file-info { margin-top:10px; font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--cyber-accent2); letter-spacing:0.5px; }
-
-    .pdf-preview-wrap {
-        margin-top:14px; border:1px solid var(--cyber-border); border-radius:8px;
-        overflow:hidden; height:300px; display:none;
-    }
-    .pdf-preview-wrap iframe { width:100%; height:100%; border:none; }
-
-    .img-preview-wrap {
-        margin-top:14px; border:1px dashed var(--cyber-border); border-radius:8px;
-        min-height:100px; display:flex; align-items:center; justify-content:center;
-        background:rgba(8,13,20,0.4);
-    }
-    .img-preview-wrap img { max-height:180px; max-width:100%; border-radius:6px; display:none; }
-    .img-preview-placeholder { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--cyber-muted); text-align:center; letter-spacing:1px; }
-</style>
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Styles/admin-learning-material-form.css") %>" />
 </asp:Content>
 
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">

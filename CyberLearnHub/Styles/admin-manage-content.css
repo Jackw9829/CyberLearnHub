@@ -1,0 +1,7 @@
+        .content-body-preview {
+            max-width: 320px; overflow: hidden;
+            white-space: nowrap; text-overflow: ellipsis;
+            display: block; color: var(--cyber-muted); font-size: 12px;
+        }
+        .inline-edit-area { display: none; margin-top: 16px; }
+        .inline-edit-area.open { display: block; }
