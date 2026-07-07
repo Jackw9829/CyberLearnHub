@@ -1,5 +1,6 @@
 using System;
 using System.Data.SqlClient;
+using System.IO;
 using System.Web.UI;
 
 namespace CyberLearnHub
@@ -54,7 +55,7 @@ namespace CyberLearnHub
         {
             using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
             using (SqlCommand cmd = new SqlCommand(
-                "SELECT FullName, Email FROM dbo.Users WHERE UserID = @uid", conn))
+                "SELECT FullName, Email, ProfileImage FROM dbo.Users WHERE UserID = @uid", conn))
             {
                 cmd.Parameters.AddWithValue("@uid", uid);
                 conn.Open();
@@ -63,10 +64,109 @@ namespace CyberLearnHub
                     if (r.Read())
                     {
                         txtFullName.Text = r["FullName"] as string ?? "";
-                        txtEmail.Text = r["Email"] as string ?? "";
+                        txtEmail.Text    = r["Email"] as string ?? "";
+                        string img = r["ProfileImage"] as string;
+                        if (!string.IsNullOrEmpty(img))
+                            imgAvatar.ImageUrl = ResolveUrl(img);
                     }
                 }
             }
+        }
+
+        protected void btnSaveAvatar_Click(object sender, EventArgs e)
+        {
+            if (!fuAvatar.HasFile)
+            {
+                ShowImgAlert("&gt; Please select an image first.", false);
+                return;
+            }
+
+            string ext = Path.GetExtension(fuAvatar.FileName).ToLower();
+            if (ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".gif" && ext != ".webp")
+            {
+                ShowImgAlert("&gt; Only JPG, PNG, GIF or WebP files are allowed.", false);
+                return;
+            }
+
+            if (fuAvatar.PostedFile.ContentLength > 2 * 1024 * 1024)
+            {
+                ShowImgAlert("&gt; File is too large. Maximum size is 2 MB.", false);
+                return;
+            }
+
+            int uid = (int)Session["UserID"];
+            string folder = Server.MapPath("~/Uploads/ProfileImages/");
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
+
+            // Delete old file if it exists
+            string oldPath = GetProfileImagePath(uid);
+            if (!string.IsNullOrEmpty(oldPath))
+            {
+                string oldFile = Server.MapPath(oldPath);
+                if (File.Exists(oldFile)) File.Delete(oldFile);
+            }
+
+            string fileName = "user_" + uid + ext;
+            string savePath = Path.Combine(folder, fileName);
+            fuAvatar.SaveAs(savePath);
+
+            string dbPath = "~/Uploads/ProfileImages/" + fileName;
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(
+                "UPDATE dbo.Users SET ProfileImage = @img WHERE UserID = @uid", conn))
+            {
+                cmd.Parameters.AddWithValue("@img", dbPath);
+                cmd.Parameters.AddWithValue("@uid", uid);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            imgAvatar.ImageUrl = ResolveUrl(dbPath);
+            ShowImgAlert("&gt; Profile photo updated.", true);
+        }
+
+        protected void lbRemoveAvatar_Click(object sender, EventArgs e)
+        {
+            int uid = (int)Session["UserID"];
+
+            string oldPath = GetProfileImagePath(uid);
+            if (!string.IsNullOrEmpty(oldPath))
+            {
+                string oldFile = Server.MapPath(oldPath);
+                if (File.Exists(oldFile)) File.Delete(oldFile);
+            }
+
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(
+                "UPDATE dbo.Users SET ProfileImage = NULL WHERE UserID = @uid", conn))
+            {
+                cmd.Parameters.AddWithValue("@uid", uid);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            imgAvatar.ImageUrl = "";
+            ShowImgAlert("&gt; Profile photo removed.", true);
+        }
+
+        private static string GetProfileImagePath(int uid)
+        {
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(
+                "SELECT ProfileImage FROM dbo.Users WHERE UserID = @uid", conn))
+            {
+                cmd.Parameters.AddWithValue("@uid", uid);
+                conn.Open();
+                return cmd.ExecuteScalar() as string;
+            }
+        }
+
+        private void ShowImgAlert(string msg, bool success)
+        {
+            lblImgAlert.Text = msg;
+            pnlImgAlert.CssClass = "alert-box " + (success ? "success" : "error");
+            pnlImgAlert.Visible = true;
         }
 
         protected void btnSaveName_Click(object sender, EventArgs e)

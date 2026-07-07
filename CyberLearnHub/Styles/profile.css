@@ -76,6 +76,128 @@
         }
         .pw-toggle:hover { color: var(--cyber-accent); }
 
+        /* Avatar card — two-column layout */
+        .avatar-card {
+            display: flex;
+            gap: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .avatar-card-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 32px 28px;
+            min-width: 180px;
+            background: rgba(0,212,255,0.04);
+            border-right: 1px solid var(--cyber-border);
+        }
+        .avatar-card-right {
+            flex: 1;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .avatar-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--cyber-heading);
+            text-align: center;
+        }
+        .avatar-username-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyber-accent);
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .avatar-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .avatar-wrap {
+            width: 110px; height: 110px;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+            border: 2px solid var(--cyber-border);
+            transition: border-color 0.2s;
+            overflow: hidden;
+        }
+        .avatar-wrap:hover { border-color: var(--cyber-accent); }
+        .avatar-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+        .avatar-initials {
+            width: 100%; height: 100%;
+            background: rgba(0,212,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--cyber-accent);
+            letter-spacing: 1px;
+        }
+        .avatar-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .avatar-overlay i { font-size: 20px; }
+        .avatar-wrap:hover .avatar-overlay { opacity: 1; }
+        .avatar-hint {
+            font-size: 13px;
+            color: var(--cyber-text);
+            margin-bottom: 4px;
+        }
+        .avatar-hint-sub {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyber-muted);
+            margin-bottom: 0;
+        }
+        .avatar-remove-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyber-muted);
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.2s;
+        }
+        .avatar-remove-link:hover { color: var(--cyber-danger); }
+
         /* Certificates */
         .cert-list { display: flex; flex-direction: column; gap: 12px; }
         .cert-item {

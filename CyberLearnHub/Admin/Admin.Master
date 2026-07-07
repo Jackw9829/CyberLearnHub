@@ -48,11 +48,6 @@
                 <i class="ti ti-target"></i> Manage Labs
             </a>
 
-            <div class="sidebar-section-label">Content</div>
-            <a href="<%= ResolveUrl("~/Admin/ManageContent.aspx") %>" class="sidebar-link <%= CurrentPage("ManageContent") %>">
-                <i class="ti ti-layout"></i> Website Content
-            </a>
-
             <div class="sidebar-section-label">Support</div>
             <a href="<%= ResolveUrl("~/Admin/ContactMessages.aspx") %>" class="sidebar-link <%= CurrentPage("ContactMessages") %>">
                 <i class="ti ti-messages"></i> Contact Messages

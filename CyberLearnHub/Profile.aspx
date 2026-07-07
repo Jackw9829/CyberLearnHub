@@ -3,7 +3,7 @@
 
 <asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
     <title>Profile — CyberLearn Hub</title>
-    <link rel="stylesheet" href="<%= ResolveUrl("~/Styles/profile.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Styles/profile.css") %>?v=2" />
 </asp:Content>
 
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -12,6 +12,39 @@
         <div class="profile-header">
             <div class="profile-tag">// account settings</div>
             <div class="profile-title">My Profile</div>
+        </div>
+
+        <!-- Profile image card -->
+        <div class="profile-card avatar-card">
+            <div class="avatar-card-left">
+                <div class="avatar-wrap" onclick="document.getElementById('<%= fuAvatar.ClientID %>').click()" title="Click to change photo">
+                    <asp:Image ID="imgAvatar" runat="server" CssClass="avatar-img" AlternateText="Profile photo" />
+                    <div class="avatar-initials" id="avatarInitials" style="display:none;"></div>
+                    <div class="avatar-overlay"><i class="ti ti-camera"></i><span>Change</span></div>
+                </div>
+                <div class="avatar-name" id="avatarName"></div>
+                <div class="avatar-username-tag" id="avatarTag"></div>
+            </div>
+            <div class="avatar-card-right">
+                <div class="card-section-title"><i class="ti ti-camera"></i> Profile Photo</div>
+
+                <asp:Panel ID="pnlImgAlert" runat="server" Visible="false">
+                    <asp:Label ID="lblImgAlert" runat="server" />
+                </asp:Panel>
+
+                <div class="avatar-hint">Click the photo to upload a new one.</div>
+                <div class="avatar-hint-sub">JPG, PNG or GIF &mdash; max 2 MB</div>
+                <asp:FileUpload ID="fuAvatar" runat="server" Style="display:none;" accept="image/*" onchange="previewAvatar(this)" />
+                <div class="avatar-actions">
+                    <asp:Button ID="btnSaveAvatar" runat="server" Text="Save Photo"
+                        CssClass="btn-save" OnClick="btnSaveAvatar_Click" CausesValidation="false" />
+                    <asp:LinkButton ID="lbRemoveAvatar" runat="server" CssClass="avatar-remove-link"
+                        OnClick="lbRemoveAvatar_Click" CausesValidation="false"
+                        OnClientClick="return confirm('Remove your profile photo?');">
+                        <i class="ti ti-trash"></i> Remove photo
+                    </asp:LinkButton>
+                </div>
+            </div>
         </div>
 
         <!-- Account info card -->
@@ -142,5 +175,50 @@
             box.type = showing ? 'password' : 'text';
             btn.querySelector('i').className = showing ? 'ti ti-eye' : 'ti ti-eye-off';
         }
+
+        function previewAvatar(input) {
+            if (!input.files || !input.files[0]) return;
+            var file = input.files[0];
+            if (file.size > 2 * 1024 * 1024) {
+                alert('File is too large. Maximum size is 2 MB.');
+                input.value = '';
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.getElementById('<%= imgAvatar.ClientID %>');
+                var initials = document.getElementById('avatarInitials');
+                if (img) { img.src = e.target.result; img.style.display = 'block'; }
+                if (initials) initials.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Show initials if no image loaded; populate name/tag in left panel
+        window.addEventListener('load', function() {
+            var img = document.getElementById('<%= imgAvatar.ClientID %>');
+            var initials = document.getElementById('avatarInitials');
+            var nameEl = document.getElementById('avatarName');
+            var tagEl  = document.getElementById('avatarTag');
+            var rawName = '<%= Server.HtmlEncode(Session["Username"] as string ?? "") %>';
+
+            if (nameEl) nameEl.textContent = rawName;
+            if (tagEl)  tagEl.textContent  = '// ' + rawName.toLowerCase().replace(/\s+/g, '_');
+
+            function showInitials() {
+                if (!img || !initials) return;
+                img.style.display = 'none';
+                initials.style.display = 'flex';
+                var parts = rawName.trim().split(' ');
+                initials.textContent = parts.length >= 2
+                    ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+                    : rawName.substring(0, 2).toUpperCase();
+            }
+
+            if (!img || !img.src || img.src === window.location.href) {
+                showInitials();
+            }
+            if (img) img.onerror = showInitials;
+        });
     </script>
 </asp:Content>
