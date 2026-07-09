@@ -74,7 +74,7 @@
                     <div class="forum-card-footer">
                         <div class="forum-card-author">
                             <%# RenderAvatar(Eval("AuthorImage") as string, Eval("AuthorName") as string) %>
-                            <span class="author-name"><%# Server.HtmlEncode(Eval("AuthorName") as string) %></span>
+                            <span class="author-name"><%# Server.HtmlEncode(ForumHelpers.FormatDisplayName(Eval("AuthorName") as string, (int)Eval("AuthorID"))) %></span>
                             <span class="post-time"><%# ForumHelpers.TimeAgo((DateTime)Eval("CreatedAt")) %></span>
                         </div>
                         <div class="forum-card-stats">

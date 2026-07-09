@@ -75,7 +75,7 @@ namespace CyberLearnHub.Forum
 
             // OP card
             litOpAvatar.Text  = RenderAvatar(forum.AuthorImage, forum.AuthorName, "md");
-            lblOpAuthor.Text   = Server.HtmlEncode(forum.AuthorName);
+            lblOpAuthor.Text   = Server.HtmlEncode(ForumHelpers.FormatDisplayName(forum.AuthorName, forum.AuthorID));
             lblOpTime.Text     = ForumHelpers.TimeAgo(forum.CreatedAt);
             lblOpTitle.Text    = Server.HtmlEncode(forum.Title);
             lblOpBody.Text     = Server.HtmlEncode(forum.Body).Replace("\n", "<br />");
@@ -134,7 +134,7 @@ namespace CyberLearnHub.Forum
                 {
                     pnlPinnedComment.Visible = true;
                     litPinnedAvatar.Text     = RenderAvatar(c.AuthorImage, c.AuthorName, "xs");
-                    lblPinnedAuthor.Text     = Server.HtmlEncode(c.AuthorName);
+                    lblPinnedAuthor.Text     = Server.HtmlEncode(ForumHelpers.FormatDisplayName(c.AuthorName, c.AuthorID));
                     lblPinnedTime.Text       = ForumHelpers.TimeAgo(c.CreatedAt);
                     lblPinnedBody.Text       = Server.HtmlEncode(c.Body).Replace("\n", "<br />");
                     break;

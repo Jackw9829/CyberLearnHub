@@ -147,7 +147,7 @@
                 <div class="comment-card <%# ((CommentRow)Container.DataItem).IsPinActive && !((CommentRow)Container.DataItem).IsDeleted ? "creator-pinned" : "" %>">
                     <div class="comment-header">
                         <%# RenderAvatar(Eval("AuthorImage") as string, Eval("AuthorName") as string, "xs") %>
-                        <span class="comment-author"><%# Server.HtmlEncode(Eval("AuthorName") as string) %></span>
+                        <span class="comment-author"><%# Server.HtmlEncode(ForumHelpers.FormatDisplayName(Eval("AuthorName") as string, (int)Eval("AuthorID"))) %></span>
                         <span class="comment-time"><%# ForumHelpers.TimeAgo((DateTime)Eval("CreatedAt")) %></span>
                         <%# ((CommentRow)Container.DataItem).IsPinActive && !((CommentRow)Container.DataItem).IsDeleted
                             ? "<span class=\"pin-label\"><i class=\"ti ti-pin\"></i></span>" : "" %>
@@ -231,7 +231,7 @@
                                 <div class="comment-card nested">
                                     <div class="comment-header">
                                         <%# RenderAvatar(Eval("AuthorImage") as string, Eval("AuthorName") as string, "xs") %>
-                                        <span class="comment-author"><%# Server.HtmlEncode(Eval("AuthorName") as string) %></span>
+                                        <span class="comment-author"><%# Server.HtmlEncode(ForumHelpers.FormatDisplayName(Eval("AuthorName") as string, (int)Eval("AuthorID"))) %></span>
                                         <span class="comment-time"><%# ForumHelpers.TimeAgo((DateTime)Eval("CreatedAt")) %></span>
                                     </div>
                                     <div class="comment-body">

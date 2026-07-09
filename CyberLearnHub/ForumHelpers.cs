@@ -2,6 +2,13 @@ using System;
 
 public static class ForumHelpers
 {
+    public static string FormatDisplayName(string displayName, int userId)
+    {
+        if (string.IsNullOrWhiteSpace(displayName))
+            displayName = "Unknown User";
+        return displayName + " #" + userId.ToString().PadLeft(4, '0');
+    }
+
     public static string TimeAgo(DateTime dt)
     {
         TimeSpan diff = DateTime.UtcNow - dt.ToUniversalTime();
