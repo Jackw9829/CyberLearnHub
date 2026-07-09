@@ -15,7 +15,7 @@
     <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet" />
 
     <link rel="stylesheet" href="~/Styles/site.css" runat="server" />
-
+
 
     <%-- Child pages inject extra <style> or <link> tags here --%>
     <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
@@ -47,10 +47,10 @@
                         <li><a href="~/MyProgress.aspx" runat="server">Progress</a></li>
                         <li><a href="~/Leaderboard.aspx" runat="server">Leaderboard</a></li>
                         <li><a href="~/Labs.aspx"        runat="server">Labs</a></li>
+                        <li><a href="~/Forum/Index.aspx" runat="server">Forums</a></li>
                     </asp:PlaceHolder>
 
                     <asp:PlaceHolder ID="pnlAdminNav" runat="server" Visible="false">
-                        <li><a href="~/Admin/Default.aspx" runat="server">Admin</a></li>
                     </asp:PlaceHolder>
                 </ul>
 
@@ -146,6 +146,13 @@
         </div>
 
         </div><!-- end cb-container -->
+
+        <!-- Floating Admin Button -->
+        <asp:Panel ID="pnlAdminFloat" runat="server" Visible="false">
+            <a href="<%= ResolveUrl("~/Admin/Default.aspx") %>" class="admin-float-btn" title="Admin Panel">
+                <i class="ti ti-shield-check"></i>
+            </a>
+        </asp:Panel>
 
         <!-- Chatbot Script -->
         <script type="text/javascript">

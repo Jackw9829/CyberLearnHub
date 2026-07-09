@@ -111,6 +111,103 @@ public static class DbHelper
                         FilePath      VARCHAR(500) NOT NULL,
                         CONSTRAINT UQ_Cert_UserCourse UNIQUE (UserID, CourseID)
                     )");
+
+                // MIGRATION: drop old 3-level forum tables if old schema is detected
+                Execute(conn, @"
+                    IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=OBJECT_ID('dbo.Forums') AND name='Name')
+                    BEGIN
+                        IF OBJECT_ID('dbo.DiscussionReports','U')  IS NOT NULL DROP TABLE dbo.DiscussionReports
+                        IF OBJECT_ID('dbo.CommentLikes','U')       IS NOT NULL DROP TABLE dbo.CommentLikes
+                        IF OBJECT_ID('dbo.DiscussionLikes','U')    IS NOT NULL DROP TABLE dbo.DiscussionLikes
+                        IF OBJECT_ID('dbo.DiscussionComments','U') IS NOT NULL DROP TABLE dbo.DiscussionComments
+                        IF OBJECT_ID('dbo.Discussions','U')        IS NOT NULL DROP TABLE dbo.Discussions
+                        IF OBJECT_ID('dbo.Forums','U')             IS NOT NULL DROP TABLE dbo.Forums
+                    END");
+
+                // 8. dbo.ForumCategories (lookup, seeded once)
+                Execute(conn, @"
+                    IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='ForumCategories')
+                    BEGIN
+                        CREATE TABLE dbo.ForumCategories (
+                            CategoryID INT IDENTITY(1,1) PRIMARY KEY,
+                            Name       NVARCHAR(100) NOT NULL,
+                            SortOrder  INT NOT NULL DEFAULT 0
+                        )
+                        INSERT INTO dbo.ForumCategories (Name, SortOrder) VALUES
+                            ('Networking',1),('Web Security',2),('Bug',3),('Other',4)
+                    END");
+
+                // 9. dbo.Forums — the post itself (2-level model)
+                Execute(conn, @"
+                    IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='Forums')
+                    CREATE TABLE dbo.Forums (
+                        ForumID          INT IDENTITY(1,1) PRIMARY KEY,
+                        Title            NVARCHAR(300) NOT NULL,
+                        Body             NVARCHAR(MAX) NOT NULL,
+                        AuthorID         INT NOT NULL,
+                        CategoryID       INT NULL,
+                        AttachmentPath   NVARCHAR(500) NULL,
+                        AttachmentType   VARCHAR(10) NULL,
+                        AdminPinnedUntil DATETIME NULL,
+                        CreatedAt        DATETIME NOT NULL DEFAULT GETDATE(),
+                        UpdatedAt        DATETIME NULL,
+                        IsDeleted        BIT NOT NULL DEFAULT 0
+                    )");
+
+                // 10. dbo.ForumComments
+                Execute(conn, @"
+                    IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='ForumComments')
+                    CREATE TABLE dbo.ForumComments (
+                        CommentID       INT IDENTITY(1,1) PRIMARY KEY,
+                        ForumID         INT NOT NULL,
+                        ParentCommentID INT NULL,
+                        AuthorID        INT NOT NULL,
+                        Body            NVARCHAR(MAX) NOT NULL,
+                        CreatedAt       DATETIME NOT NULL DEFAULT GETDATE(),
+                        UpdatedAt       DATETIME NULL,
+                        IsDeleted       BIT NOT NULL DEFAULT 0,
+                        PinnedByCreator BIT NOT NULL DEFAULT 0
+                    )");
+                // Add PinnedUntil to existing tables (idempotent)
+                Execute(conn, @"
+                    IF NOT EXISTS (SELECT 1 FROM sys.columns
+                                   WHERE object_id=OBJECT_ID('dbo.ForumComments') AND name='PinnedUntil')
+                        ALTER TABLE dbo.ForumComments ADD PinnedUntil DATETIME NULL");
+
+                // 11. dbo.ForumLikes
+                Execute(conn, @"
+                    IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='ForumLikes')
+                    CREATE TABLE dbo.ForumLikes (
+                        LikeID    INT IDENTITY(1,1) PRIMARY KEY,
+                        ForumID   INT NOT NULL,
+                        UserID    INT NOT NULL,
+                        CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+                        CONSTRAINT UQ_ForumLike UNIQUE (ForumID, UserID)
+                    )");
+
+                // 12. dbo.ForumCommentLikes
+                Execute(conn, @"
+                    IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='ForumCommentLikes')
+                    CREATE TABLE dbo.ForumCommentLikes (
+                        LikeID    INT IDENTITY(1,1) PRIMARY KEY,
+                        CommentID INT NOT NULL,
+                        UserID    INT NOT NULL,
+                        CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+                        CONSTRAINT UQ_ForumCommentLike UNIQUE (CommentID, UserID)
+                    )");
+
+                // 13. dbo.ForumReports
+                Execute(conn, @"
+                    IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='ForumReports')
+                    CREATE TABLE dbo.ForumReports (
+                        ReportID   INT IDENTITY(1,1) PRIMARY KEY,
+                        TargetType VARCHAR(20) NOT NULL,
+                        TargetID   INT NOT NULL,
+                        ReporterID INT NOT NULL,
+                        Reason     NVARCHAR(500) NOT NULL,
+                        CreatedAt  DATETIME NOT NULL DEFAULT GETDATE(),
+                        IsResolved BIT NOT NULL DEFAULT 0
+                    )");
             }
             _schemaReady = true;
         }

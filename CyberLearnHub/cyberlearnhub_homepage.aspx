@@ -43,9 +43,9 @@
                     <li><a href="MyProgress.aspx">Progress</a></li>
                     <li><a href="Leaderboard.aspx">Leaderboard</a></li>
                     <li><a href="Labs.aspx">Labs</a></li>
+                    <li><a href="~/Forum/Index.aspx" runat="server">Forums</a></li>
                 </asp:PlaceHolder>
                 <asp:PlaceHolder ID="pnlAdminNav" runat="server" Visible="false">
-                    <li><a href="Admin/Default.aspx" style="color:var(--cyber-accent);">Admin</a></li>
                 </asp:PlaceHolder>
             </ul>
 
@@ -320,6 +320,14 @@
         </div>
 
         </div><!-- end cb-container -->
+
+        <!-- Floating Admin Button -->
+        <% if (Session["UserID"] != null && (Session["Role"] as string) == "Admin") { %>
+        <a href="Admin/Default.aspx" title="Admin Panel"
+           style="position:fixed;top:80px;right:24px;width:44px;height:44px;border-radius:50%;background:#080d14;border:1.5px solid #00d4ff;color:#00d4ff;display:flex;align-items:center;justify-content:center;font-size:20px;text-decoration:none;z-index:9999;box-shadow:0 0 8px rgba(0,212,255,0.25);backdrop-filter:blur(6px);">
+            <i class="ti ti-shield-check"></i>
+        </a>
+        <% } %>
 
         <!-- Chatbot Script -->
         <script type="text/javascript">

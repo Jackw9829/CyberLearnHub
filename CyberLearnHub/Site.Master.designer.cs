@@ -50,6 +50,8 @@ namespace CyberLearnHub
         /// </remarks>
         protected global::System.Web.UI.WebControls.PlaceHolder pnlAdminNav;
 
+        protected global::System.Web.UI.WebControls.Panel pnlAdminFloat;
+
         /// <summary>
         /// pnlGuestButtons control.
         /// </summary>

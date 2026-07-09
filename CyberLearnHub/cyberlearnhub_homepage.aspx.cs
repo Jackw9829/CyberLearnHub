@@ -22,7 +22,7 @@ namespace CyberLearnHub
             pnlGuestButtons.Visible = !loggedIn;
             pnlUserButtons.Visible = loggedIn;
             pnlUserNav.Visible = loggedIn;
-            pnlAdminNav.Visible = loggedIn && role == "Admin";
+            pnlAdminNav.Visible   = loggedIn && role == "Admin";
 
             if (loggedIn)
                 lblNavUsername.Text = Session["Username"] as string ?? "user";

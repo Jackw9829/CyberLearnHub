@@ -127,6 +127,34 @@
         .nav-links li a:hover,
         .nav-links li a.active { color: var(--cyber-accent); }
 
+        /* Floating Admin Button — fixed below navbar, right side */
+        .admin-float-btn {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1.5px solid var(--cyber-accent);
+            background: rgba(8,13,20,0.92);
+            color: var(--cyber-accent);
+            font-size: 20px;
+            text-decoration: none;
+            box-shadow: 0 0 8px rgba(0,212,255,0.25);
+            backdrop-filter: blur(6px);
+            transition: background .2s, box-shadow .2s, transform .15s;
+        }
+        .admin-float-btn:hover {
+            background: rgba(0,212,255,0.12);
+            box-shadow: 0 0 16px rgba(0,212,255,0.45);
+            transform: scale(1.08);
+            color: var(--cyber-accent);
+        }
+
         .nav-buttons { display: flex; gap: 10px; align-items: center; }
 
         .nav-user-chip {

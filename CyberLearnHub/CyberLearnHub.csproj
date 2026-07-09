@@ -102,6 +102,10 @@
     <Content Include="Styles\admin-course-form.css" />
     <Content Include="Styles\admin-learning-material-form.css" />
     <Content Include="Styles\admin-question-form.css" />
+    <Content Include="Styles\forum-index.css" />
+    <Content Include="Styles\forum-detail.css" />
+    <Content Include="Styles\thread-detail.css" />
+    <Content Include="Styles\new-discussion.css" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
@@ -122,6 +126,9 @@
     <Content Include="Admin\ContentForm.aspx" />
     <Content Include="Admin\Reports.aspx" />
     <Content Include="Admin\ManageLabs.aspx" />
+    <Content Include="Admin\ManageForums.aspx" />
+    <Content Include="Forum\Index.aspx" />
+    <Content Include="Forum\ThreadDetail.aspx" />
     <Content Include="App_Data\Database1.mdf" />
     <Content Include="App_Data\Database1_log.ldf">
       <DependentUpon>Database1.mdf</DependentUpon>
@@ -267,6 +274,27 @@
     </Compile>
     <Compile Include="Admin\ManageLabs.aspx.designer.cs">
       <DependentUpon>ManageLabs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ManageForums.aspx.cs">
+      <DependentUpon>ManageForums.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ManageForums.aspx.designer.cs">
+      <DependentUpon>ManageForums.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forum\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forum\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Forum\ThreadDetail.aspx.cs">
+      <DependentUpon>ThreadDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forum\ThreadDetail.aspx.designer.cs">
+      <DependentUpon>ThreadDetail.aspx</DependentUpon>
     </Compile>
     <Compile Include="About.aspx.cs">
       <DependentUpon>About.aspx</DependentUpon>
@@ -432,6 +460,8 @@
     </Compile>
     <Compile Include="App_Code\AuthHelper.cs" />
     <Compile Include="App_Code\DbHelper.cs" />
+    <Compile Include="ForumDAL.cs" />
+    <Compile Include="ForumHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
