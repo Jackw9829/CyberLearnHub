@@ -325,7 +325,7 @@
         <% if (Session["UserID"] != null && (Session["Role"] as string) == "Admin") { %>
         <a href="Admin/Default.aspx" title="Admin Panel"
            style="position:fixed;top:80px;right:24px;width:44px;height:44px;border-radius:50%;background:#080d14;border:1.5px solid #00d4ff;color:#00d4ff;display:flex;align-items:center;justify-content:center;font-size:20px;text-decoration:none;z-index:9999;box-shadow:0 0 8px rgba(0,212,255,0.25);backdrop-filter:blur(6px);">
-            <i class="ti ti-shield-check"></i>
+            <i class="ti ti-user-cog"></i>
         </a>
         <% } %>
 

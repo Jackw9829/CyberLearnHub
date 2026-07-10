@@ -150,7 +150,7 @@
         <!-- Floating Admin Button -->
         <asp:Panel ID="pnlAdminFloat" runat="server" Visible="false">
             <a href="<%= ResolveUrl("~/Admin/Default.aspx") %>" class="admin-float-btn" title="Admin Panel">
-                <i class="ti ti-shield-check"></i>
+                <i class="ti ti-user-cog"></i>
             </a>
         </asp:Panel>
 
