@@ -26,9 +26,23 @@
             <asp:DropDownList ID="ddlCreateCategory" runat="server" CssClass="form-control" />
         </div>
         <div class="form-group">
-            <label class="form-label">Attachment (jpg/png/gif/webp &le;5MB · pdf/docx/doc/xlsx/pptx &le;20MB)</label>
-            <asp:FileUpload ID="fuCreateAttachment" runat="server" CssClass="form-control"
-                accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.docx,.doc,.xlsx,.pptx" />
+            <label class="form-label">Attachment <span class="muted">(optional)</span></label>
+            <div id="adminAttachDropZone" onclick="document.getElementById('<%= fuCreateAttachment.ClientID %>').click()"
+                 style="border:1.5px dashed var(--cyber-border);border-radius:8px;padding:24px 16px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--cyber-muted);font-family:'Share Tech Mono',monospace;font-size:12px;transition:border-color .2s;">
+                <i class="ti ti-upload" style="font-size:28px;"></i>
+                <div>Click to attach a file</div>
+                <div style="font-size:12px;opacity:.7;">Images: jpg/png/gif/webp &le;5MB &nbsp;&bull;&nbsp; Documents: pdf/docx/doc/xlsx/pptx &le;20MB</div>
+            </div>
+            <asp:FileUpload ID="fuCreateAttachment" runat="server" Style="display:none"
+                accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.docx,.doc,.xlsx,.pptx"
+                onchange="adminPreviewAttach(this)" />
+            <div id="adminAttachPreview" style="display:none;margin-top:8px;">
+                <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.25);border-radius:6px;padding:6px 12px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--cyber-text);">
+                    <i class="ti ti-paperclip"></i>
+                    <span id="adminAttachName"></span>
+                    <button type="button" onclick="adminClearAttach()" style="background:none;border:none;color:var(--cyber-muted);cursor:pointer;padding:0;font-size:14px;line-height:1;"><i class="ti ti-x"></i></button>
+                </div>
+            </div>
         </div>
         <asp:Button ID="btnCreate" runat="server" Text="Create Post" CssClass="btn-admin-primary" OnClick="btnCreate_Click" CausesValidation="false" />
     </div>
@@ -64,7 +78,7 @@
                         <%# Server.HtmlEncode(Eval("Title") as string) %>
                     </td>
                     <td style="color:var(--cyber-muted);font-size:12px;"><%# Server.HtmlEncode(Eval("AuthorName") as string) %></td>
-                    <td style="color:var(--cyber-muted);font-size:12px;"><%# Server.HtmlEncode(Eval("CategoryName") as string ?? "—") %></td>
+                    <td style="color:var(--cyber-muted);font-size:12px;"><%# Eval("CategoryName") != null ? Server.HtmlEncode(Eval("CategoryName") as string) : "&mdash;" %></td>
                     <td style="color:var(--cyber-muted);font-size:12px;"><%# Eval("CommentCount") %></td>
                     <td style="font-size:11px;">
                         <%# (bool)Eval("IsDeleted")
@@ -82,14 +96,14 @@
                                 : "" %>
 
                             <%# !(bool)Eval("IsDeleted")
-                                ? "<asp:LinkButton_Placeholder_Delete ForumID=\"" + Eval("ForumID") + "\"></asp:LinkButton_Placeholder_Delete>"
+                                ? "<button type=\"button\" class=\"btn-admin-sm btn-delete\" onclick=\"openConfirm('soft','" + Eval("ForumID") + "')\"><i class=\"ti ti-trash\"></i> Delete</button>"
                                 : "" %>
 
                             <%# !(bool)Eval("IsDeleted")
                                 ? ""
                                 : "<button type=\"button\" class=\"btn-admin-sm btn-restore\" onclick=\"submitCommand('Restore','" + Eval("ForumID") + "')\"><i class=\"ti ti-arrow-back-up\"></i> Restore</button>" %>
                             <%# (bool)Eval("IsDeleted")
-                                ? "<button type=\"button\" class=\"btn-admin-sm btn-delete\" onclick=\"if(confirm('Permanently delete? CANNOT be undone.')) submitCommand('HardDelete','" + Eval("ForumID") + "')\"><i class=\"ti ti-trash\"></i> Delete</button>"
+                                ? "<button type=\"button\" class=\"btn-admin-sm btn-delete\" onclick=\"openConfirm('hard','" + Eval("ForumID") + "')\"><i class=\"ti ti-trash\"></i> Permanent Delete</button>"
                                 : "" %>
                         </div>
                     </td>
@@ -134,6 +148,27 @@
         </div>
     </div>
 
+    <%-- Custom Delete Confirmation Modal --%>
+    <div id="confirmModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:2000;align-items:center;justify-content:center;">
+        <div style="background:#0d1520;border:1px solid #1a3050;border-radius:12px;padding:28px 28px 24px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(0,0,0,0.6);">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <div id="confirmIcon" style="width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;"></div>
+                <h3 id="confirmTitle" style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#e8f4ff;margin:0;"></h3>
+            </div>
+            <p id="confirmBody" style="font-size:13px;color:#5a7a99;line-height:1.6;margin:0 0 24px;padding-left:54px;"></p>
+            <div style="display:flex;gap:10px;justify-content:flex-end;">
+                <button type="button" onclick="closeConfirm()"
+                    style="padding:9px 20px;border-radius:7px;border:1px solid #1a3050;background:transparent;color:#5a7a99;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.5px;">
+                    CANCEL
+                </button>
+                <button type="button" id="confirmOkBtn"
+                    style="padding:9px 20px;border-radius:7px;border:none;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;">
+                    CONFIRM
+                </button>
+            </div>
+        </div>
+    </div>
+
     <style>
         .forum-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.75); display:flex; align-items:center; justify-content:center; z-index:1000; }
         .forum-modal         { background:var(--cyber-card,#0d1520); border:1px solid var(--cyber-border,#1a3050); border-radius:10px; padding:24px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; }
@@ -150,6 +185,47 @@
     </style>
 
     <script type="text/javascript">
+        var _confirmCallback = null;
+        function openConfirm(type, forumId) {
+            var modal  = document.getElementById('confirmModal');
+            var icon   = document.getElementById('confirmIcon');
+            var title  = document.getElementById('confirmTitle');
+            var body   = document.getElementById('confirmBody');
+            var okBtn  = document.getElementById('confirmOkBtn');
+            if (type === 'hard') {
+                icon.innerHTML  = '<i class="ti ti-alert-triangle"></i>';
+                icon.style.background = 'rgba(255,59,92,0.15)';
+                icon.style.color      = '#ff3b5c';
+                title.textContent = 'Permanently Delete?';
+                body.textContent  = 'This post will be erased forever and cannot be recovered. Are you sure?';
+                okBtn.style.background = '#ff3b5c';
+                okBtn.style.color      = '#fff';
+                _confirmCallback = function() { submitCommand('HardDelete', forumId); };
+            } else {
+                icon.innerHTML  = '<i class="ti ti-trash"></i>';
+                icon.style.background = 'rgba(255,59,92,0.12)';
+                icon.style.color      = '#ff3b5c';
+                title.textContent = 'Delete Post?';
+                body.textContent  = 'This post will be removed. You can restore it later from this panel.';
+                okBtn.style.background = '#ff3b5c';
+                okBtn.style.color      = '#fff';
+                _confirmCallback = function() { submitCommand('SoftDelete', forumId); };
+            }
+            modal.style.display = 'flex';
+        }
+        function closeConfirm() {
+            document.getElementById('confirmModal').style.display = 'none';
+            _confirmCallback = null;
+        }
+        document.getElementById('confirmOkBtn').addEventListener('click', function() {
+            var cb = _confirmCallback;
+            closeConfirm();
+            if (cb) cb();
+        });
+        document.getElementById('confirmModal').addEventListener('click', function(e) {
+            if (e.target === this) closeConfirm();
+        });
+
         function openEditModal(id, title) {
             document.getElementById('<%= hdnEditId.ClientID %>').value = id;
             document.getElementById('editModal').style.display = 'flex';
@@ -169,6 +245,19 @@
         <%if (ViewState["ShowEditModal"] != null && (bool)ViewState["ShowEditModal"]) { %>
         window.addEventListener('load', function() { openEditModal('', ''); });
         <%} %>
+
+        function adminPreviewAttach(input) {
+            if (!input.files || !input.files[0]) return;
+            document.getElementById('adminAttachName').textContent = input.files[0].name;
+            document.getElementById('adminAttachDropZone').style.display = 'none';
+            document.getElementById('adminAttachPreview').style.display = 'block';
+        }
+        function adminClearAttach() {
+            var fu = document.getElementById('<%= fuCreateAttachment.ClientID %>');
+            fu.value = '';
+            document.getElementById('adminAttachDropZone').style.display = '';
+            document.getElementById('adminAttachPreview').style.display = 'none';
+        }
     </script>
 
 </asp:Content>

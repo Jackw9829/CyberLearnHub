@@ -416,3 +416,46 @@
             color: var(--cyber-danger);
         }
         .logout-modal-btn.yes:hover { background: rgba(255,59,92,0.2); }
+
+        /* ── File upload drop zone ── */
+        .upload-drop-zone {
+            border: 1.5px dashed var(--cyber-border);
+            border-radius: 8px;
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: var(--cyber-muted);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+        }
+        .upload-drop-zone:hover { border-color: var(--cyber-accent); background: rgba(0,212,255,0.03); }
+        .upload-drop-zone i { font-size: 28px; color: var(--cyber-muted); }
+        .attach-hint { font-size: 11px; color: var(--cyber-muted); opacity: .7; }
+        .attach-preview { margin-top: 8px; }
+        .attach-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,212,255,0.07);
+            border: 1px solid rgba(0,212,255,0.25);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            color: var(--cyber-text);
+        }
+        .attach-chip button {
+            background: none;
+            border: none;
+            color: var(--cyber-muted);
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            font-size: 14px;
+        }
+        .attach-chip button:hover { color: var(--cyber-danger); }
