@@ -128,6 +128,7 @@ namespace CyberLearnHub.Forum
             ForumAuthorId = forumAuthorId;
             var comments = ForumDAL.GetComments(forumId);
 
+            pnlPinnedComment.Visible = false;
             foreach (var c in comments)
             {
                 if (c.IsPinActive && !c.IsDeleted)

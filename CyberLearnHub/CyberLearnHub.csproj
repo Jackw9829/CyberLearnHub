@@ -127,6 +127,7 @@
     <Content Include="Admin\Reports.aspx" />
     <Content Include="Admin\ManageLabs.aspx" />
     <Content Include="Admin\ManageForums.aspx" />
+    <Content Include="Admin\ManageForumReports.aspx" />
     <Content Include="Forum\Index.aspx" />
     <Content Include="Forum\ThreadDetail.aspx" />
     <Content Include="App_Data\Database1.mdf" />
@@ -281,6 +282,13 @@
     </Compile>
     <Compile Include="Admin\ManageForums.aspx.designer.cs">
       <DependentUpon>ManageForums.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ManageForumReports.aspx.cs">
+      <DependentUpon>ManageForumReports.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ManageForumReports.aspx.designer.cs">
+      <DependentUpon>ManageForumReports.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forum\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>

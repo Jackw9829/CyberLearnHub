@@ -62,6 +62,8 @@ public class CategoryRow
 // ─── DAL ─────────────────────────────────────────────────────────────────────
 public static class ForumDAL
 {
+    public static SqlConnection OpenConnection() => Open();
+
     private static SqlConnection Open()
     {
         DbHelper.EnsureSchema();

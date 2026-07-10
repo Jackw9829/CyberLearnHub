@@ -52,6 +52,9 @@
             <a href="<%= ResolveUrl("~/Admin/ManageForums.aspx") %>" class="sidebar-link <%= CurrentPage("ManageForums") %>">
                 <i class="ti ti-messages"></i> Forums
             </a>
+            <a href="<%= ResolveUrl("~/Admin/ManageForumReports.aspx") %>" class="sidebar-link <%= CurrentPage("ManageForumReports") %>">
+                <i class="ti ti-flag"></i> Forum Reports
+            </a>
 
             <div class="sidebar-section-label">Support</div>
             <a href="<%= ResolveUrl("~/Admin/ContactMessages.aspx") %>" class="sidebar-link <%= CurrentPage("ContactMessages") %>">
