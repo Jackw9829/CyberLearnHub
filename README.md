@@ -2,7 +2,7 @@
 
 **An interactive cybersecurity e-learning platform inspired by TryHackMe, built with ASP.NET Web Forms and SQL Server.**
 
-CyberLearnHub helps beginners and students build cybersecurity knowledge through structured courses, quizzes, hands-on CTF-style labs, and a browser-based attack box — all wrapped in a dark, cybersecurity-themed interface.
+CyberLearnHub helps beginners and students build cybersecurity knowledge through structured courses, quizzes, hands-on CTF-style labs, a discussion forum, and a browser-based attack box — all wrapped in a dark, cybersecurity-themed interface.
 
 > Group Assignment for **Web Applications**, Asia Pacific University of Technology & Innovation.
 
@@ -15,8 +15,8 @@ The platform serves three types of users:
 | Role | Capabilities |
 |---|---|
 | **Guest** | Browse courses, view labs, register an account |
-| **Registered Member** | Enroll in courses, complete quizzes, attempt CTF-style labs, track learning progress |
-| **Administrator** | Manage users, courses, quizzes, and lab content via CRUD operations |
+| **Registered Member** | Enroll in courses, complete quizzes, attempt CTF-style labs, join the discussion forum, track learning progress |
+| **Administrator** | Manage users, courses, quizzes, labs, learning materials, and forum content via CRUD operations |
 
 ---
 
@@ -24,11 +24,13 @@ The platform serves three types of users:
 
 - 🔐 **User Authentication** — Registration, login, session-based auth, and forgot/reset password via email
 - 📚 **Course Modules** — Structured cybersecurity learning content with progress tracking
-- 📝 **Quizzes** — Auto-marking quiz system to test understanding of concepts
+- 📝 **Quizzes** — Auto-marking quiz system with a bank of questions and exportable stats
+- 🏅 **Certificates & Leaderboard** — Auto-generated PDF certificates and an XP-based leaderboard
 - 🧪 **Hands-On Labs** — TryHackMe-style labs with difficulty badges, VPN access, and SHA-256 flag submission
 - 🖥️ **Browser-Based Attack Box** — Remote access to a Kali Linux environment via Apache Guacamole (no local VM setup needed)
+- 💬 **Discussion Forum** — Threaded forum with attachments, category tags, and pinning
 - 🤖 **AI Chatbot Assistant** — Cybersecurity-focused Q&A powered by Groq (Llama 3.1)
-- 🏆 **Admin Dashboard** — Full CRUD management for users, labs, courses, and quizzes
+- 🏆 **Admin Dashboard** — Full CRUD management for users, courses, quizzes, labs, materials, and the forum, plus contact messages and reports
 - 🎨 **Cybersecurity-Themed UI** — Dark mode design with a custom design system
 
 ---
@@ -38,13 +40,14 @@ The platform serves three types of users:
 **Frontend / Backend**
 - ASP.NET Web Forms (.NET Framework 4.7.2)
 - C#, HTML5, CSS3, JavaScript
-- SQL Server Express (SSMS)
+- SQL Server Express
 
 **Infrastructure**
 - AWS EC2 (Windows Server 2022 web host, Ubuntu VPN & target machines, Kali Linux attack box)
 - OpenVPN — secure access into the lab environment
 - Apache Guacamole (Docker) — browser-based remote desktop access
 - Resend + Cloudflare DNS — transactional email delivery
+- Git LFS — versioning the local SQL Server database and other binary assets
 
 **Integrations**
 - Groq API (`llama-3.1-8b-instant`) — AI chatbot
@@ -79,34 +82,32 @@ All lab instances live in a private subnet and are reachable only via VPN or Gua
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Visual Studio (2022 recommended) with ASP.NET workload
-- SQL Server 2025 Express + SQL Server Management Studio (SSMS)
+- Visual Studio 2022 (17.13+, for `.slnx` support) with ASP.NET workload
+- SQL Server Express + SQL Server Management Studio (SSMS)
 - .NET Framework 4.7.2
+- [Git LFS](https://git-lfs.com/) — required to pull the database and other binary assets correctly
 
 ### Setup
 
-1. **Clone the repository**
+1. **Clone the repository** (make sure Git LFS is installed first, so the `.mdf`/`.ldf` files come down properly)
    ```bash
+   git lfs install
    git clone https://github.com/Jackw9829/CyberLearnHub.git
    ```
 
-2. **Set up the database**
-   - Open SSMS and create a new database.
-   - Run the provided `.sql` scripts (schema + seed data) from the `database` folder.
+2. **Attach the database**
+   - The local SQL Server database (`Database1.mdf` / `Database1_log.ldf`) is included under `CyberLearnHub/App_Data/` via Git LFS.
+   - Attach it in SSMS, or let IIS Express/Visual Studio auto-attach it via the connection string in `Web.config`.
 
-3. **Configure `Web.config`**
-   - Copy `Web.config.example` to `Web.config`.
-   - Fill in your own values:
+3. **Fill in your secrets in `Web.config`**
+   - `Web.config` is committed with placeholder values so the project builds out of the box. Replace the placeholders with your own keys before running features that depend on them:
      ```xml
-     <add key="CyberLearnConnection" value="Data Source=.\SQLEXPRESS;Initial Catalog=CyberLearnHub;Integrated Security=True" />
-     <add key="GroqApiKey" value="YOUR_GROQ_API_KEY" />
-     <add key="ResendApiKey" value="YOUR_RESEND_API_KEY" />
-     <add key="ResendFromEmail" value="noreply@yourdomain.com" />
-     <add key="SiteBaseUrl" value="http://localhost:PORT" />
+     <add key="GroqApiKey" value="PUT_YOUR_GROQ_API_KEY_HERE" />
+     <add key="ResendApiKey" value="PUT_YOUR_RESEND_API_KEY_HERE" />
      ```
-   > ⚠️ Never commit your real `Web.config` — it's excluded via `.gitignore`.
+   > ⚠️ Never commit your real keys back over the placeholders — keep them local only.
 
-4. **Open in Visual Studio** and run the solution (`CyberLearnHub.sln`) via IIS Express.
+4. **Open `CyberLearnHub.slnx` in Visual Studio** and run via IIS Express.
 
 ---
 
@@ -114,14 +115,24 @@ All lab instances live in a private subnet and are reachable only via VPN or Gua
 
 ```
 CyberLearnHub/
-├── Admin/                  # Admin CRUD pages (ManageLabs, ManageUsers, etc.)
-├── Chatbot.aspx(.cs)       # AI chatbot page
-├── ChatbotHandler.ashx     # Groq API handler
-├── Labs.aspx(.cs)          # Student lab listing & flag submission
-├── Login.aspx / Register.aspx
-├── cyberlearnhub_homepage.aspx
-├── Web.config.example      # Template config (no secrets)
-└── ...
+├── CyberLearnHub.slnx          # Visual Studio solution
+├── CyberLearnHub/
+│   ├── Admin/                  # Admin CRUD pages (ManageUsers, ManageCourses, ManageLabs, ManageForums, Reports, ...)
+│   ├── App_Code/                # AuthHelper, DbHelper, CertificateHelper, AdminBasePage
+│   ├── App_Data/                 # Local SQL Server database (Git LFS)
+│   ├── Forum/                   # Discussion forum (Index, ThreadDetail)
+│   ├── LabMaterials/             # Per-lab downloadable files
+│   ├── Styles/                   # Per-page CSS (cyberpunk dark theme, --cyber-* variables)
+│   ├── Uploads/                  # User-uploaded content (avatars, certificates, forum/course attachments)
+│   ├── VPNConfigs/                # .ovpn files issued to students for lab access
+│   ├── Site.Master                # Shared site layout (includes the AI chatbot widget)
+│   ├── Chatbot.aspx / ChatbotHandler.ashx
+│   ├── Login.aspx / Register.aspx / ForgotPassword.aspx / ResetPassword.aspx
+│   ├── CourseListing.aspx / CourseDetail.aspx / MyCourses.aspx
+│   ├── Quiz.aspx / QuizResult.aspx / Leaderboard.aspx / MyProgress.aspx
+│   ├── Labs.aspx / Dashboard.aspx / Profile.aspx / Contact.aspx / About.aspx
+│   └── Web.config                # App settings & connection strings (placeholders committed)
+└── docs/                        # Project & planning docs
 ```
 
 ---
@@ -130,10 +141,9 @@ CyberLearnHub/
 
 | Name |
 |---|
-| Benny Yong Bin 
-| Wang Zi Jie 
-| Wong Jun Ming 
-
+| Benny Yong Bin |
+| Wang Zi Jie |
+| Wong Jun Ming |
 
 ---
 
