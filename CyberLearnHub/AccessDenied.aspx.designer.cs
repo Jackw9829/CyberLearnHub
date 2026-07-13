@@ -8,5 +8,9 @@ namespace CyberLearnHub
 {
     public partial class AccessDenied
     {
+        protected global::System.Web.UI.WebControls.Panel pnlDesktopRequired;
+        protected global::System.Web.UI.WebControls.Panel pnlAccessDenied;
+        protected global::System.Web.UI.WebControls.Panel pnlLoginLink;
+        protected global::System.Web.UI.WebControls.Label lblDesktopMsg;
     }
 }

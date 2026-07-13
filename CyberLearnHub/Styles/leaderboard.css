@@ -14,3 +14,17 @@
         .xp-val { font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:700; color:var(--cyber-amber); }
         .streak-val { color:var(--cyber-danger); font-family:'Share Tech Mono',monospace; font-size:11px; }
         .lb-divider { border:none; border-top:1px dashed var(--cyber-border); margin:4px 0; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .leaderboard-wrapper { padding: 20px 16px; }
+    .leaderboard-card    { padding: 20px 16px; }
+    .lb-table-wrap       { overflow-x: auto; }
+    table { min-width: 520px; }
+    .podium              { flex-direction: column; align-items: center; gap: 12px; }
+    .podium-item         { width: 100%; max-width: 260px; }
+    .page-content        { padding: 20px 16px; }
+}
+@media (max-width: 480px) {
+    .lb-rank { font-size: 11px; }
+}

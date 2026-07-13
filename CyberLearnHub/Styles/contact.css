@@ -169,3 +169,16 @@
             line-height: 1.55;
             margin: 0;
         }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .contact-wrapper  { padding: 20px 16px; }
+    .contact-card     { padding: 28px 20px; }
+    .contact-layout   { flex-direction: column; gap: 20px; }
+    .form-control     { font-size: 16px; min-height: 44px; }
+    textarea.form-control { min-height: 100px; }
+    .btn-primary      { min-height: 44px; width: 100%; }
+}
+@media (max-width: 480px) {
+    .contact-card { padding: 20px 14px; }
+}

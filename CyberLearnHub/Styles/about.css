@@ -280,3 +280,27 @@
             border-top: 1px solid var(--cyber-border);
             margin: 44px 0;
         }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .about-hero   { padding: 40px 20px; }
+    .about-card   { padding: 20px 16px; }
+    .about-section, .about-hero { padding: 32px 16px; }
+
+    /* Actual grid classes used in About.aspx */
+    .mv-grid      { grid-template-columns: 1fr; gap: 16px; }
+    .offer-grid   { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .achieve-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .contact-grid { grid-template-columns: 1fr; gap: 12px; }
+
+    /* Section wrappers */
+    .about-wrapper { padding: 24px 16px 40px; max-width: 100%; }
+
+    /* Prevent any child from exceeding viewport */
+    .about-page, section { max-width: 100%; overflow-x: hidden; }
+}
+@media (max-width: 480px) {
+    .offer-grid   { grid-template-columns: 1fr; }
+    .achieve-grid { grid-template-columns: 1fr 1fr; }
+    h1, .about-title, .page-title { font-size: clamp(22px, 6vw, 36px); }
+}

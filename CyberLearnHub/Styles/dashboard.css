@@ -179,3 +179,19 @@
             letter-spacing: 1px;
         }
         .dash-empty i { font-size: 36px; display: block; margin-bottom: 12px; color: var(--cyber-border); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .dashboard-grid   { grid-template-columns: 1fr; gap: 16px; }
+    .stats-grid       { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .dashboard-section { padding: 20px 16px; }
+    .page-content     { padding: 20px 16px; }
+    .progress-bar-row { flex-direction: column; gap: 4px; }
+    table { min-width: 600px; }
+    .table-wrapper, .table-scroll { overflow-x: auto; display: block; }
+}
+@media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .stat-card  { padding: 16px; }
+    .stat-value { font-size: 28px; }
+}

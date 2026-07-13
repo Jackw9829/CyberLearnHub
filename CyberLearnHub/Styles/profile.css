@@ -244,3 +244,17 @@
             font-family: 'Share Tech Mono', monospace; line-height: 1.5;
         }
         .cert-empty i { font-size: 18px; color: var(--cyber-accent); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .profile-layout   { flex-direction: column; gap: 20px; }
+    .profile-sidebar  { width: 100%; max-width: 100%; }
+    .profile-card     { padding: 20px 16px; }
+    .profile-avatar   { width: 80px; height: 80px; font-size: 28px; }
+    .form-control     { font-size: 16px; min-height: 44px; }
+    .btn-primary, .btn-ghost, .btn-danger { min-height: 44px; width: 100%; }
+    .page-content     { padding: 20px 16px; }
+}
+@media (max-width: 480px) {
+    .profile-card { padding: 16px 12px; }
+}

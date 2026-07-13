@@ -35,6 +35,12 @@
             letter-spacing: -2px;
         }
 
+        /* Smaller for text-based watermark (desktop-required variant) */
+        .error-code-text {
+            font-size: 28px;
+            letter-spacing: 2px;
+        }
+
         .error-icon {
             width: 60px;
             height: 60px;

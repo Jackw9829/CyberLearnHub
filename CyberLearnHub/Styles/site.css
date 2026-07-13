@@ -662,8 +662,10 @@
             position: fixed;
             bottom: 28px;
             right: 28px;
-            z-index: 9998;
+            z-index: 10002;
             user-select: none;
+            pointer-events: auto;
+            touch-action: none;
         }
 
         /* Toggle button */
@@ -671,6 +673,8 @@
             position: relative;
             width: 54px;
             height: 54px;
+            min-width: 44px;
+            min-height: 44px;
             background: linear-gradient(135deg, #0f3460, #00d4ff);
             border-radius: 50%;
             display: flex;
@@ -682,6 +686,7 @@
             font-size: 22px;
             border: none;
             z-index: 1;
+            touch-action: none;
         }
 
         #cb-toggle:active { cursor: grabbing; }
@@ -1004,4 +1009,141 @@
         .logout-modal-actions .btn-ghost,
         .logout-modal-actions .btn-danger {
             min-width: 110px;
+        }
+
+        /* =============================================
+           HAMBURGER / RESPONSIVE NAV
+        ============================================= */
+        .btn-hamburger {
+            display: none;
+            background: none;
+            border: 1px solid var(--cyber-border);
+            color: var(--cyber-accent);
+            border-radius: 6px;
+            width: 38px;
+            height: 38px;
+            font-size: 20px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            order: 3;
+        }
+
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 9998;
+            pointer-events: none;
+        }
+        .nav-overlay.open { display: block; }
+
+        @media (max-width: 768px) {
+            /* Prevent any overflowing element from creating horizontal scroll */
+            html, body { overflow-x: hidden; max-width: 100vw; }
+
+            .btn-hamburger { display: inline-flex; align-items: center; justify-content: center; }
+
+            /* Remove z-index from navbar so it does NOT create a stacking context.
+               Without a stacking context, position:fixed children (nav-links, nav-buttons)
+               compete in the ROOT stacking context with their own z-index values (9999),
+               placing them above the overlay (9998) and making them clickable. */
+            .navbar {
+                padding: 12px 20px;
+                backdrop-filter: none;
+                z-index: auto;
+            }
+            /* Hamburger must stay above the overlay independently */
+            .btn-hamburger {
+                position: relative;
+                z-index: 10000;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0; right: 0;
+                height: 100vh;
+                width: min(80vw, 300px);
+                flex-direction: column;
+                background: var(--cyber-surface, #0d1520);
+                border-left: 1px solid var(--cyber-border);
+                padding: 80px 20px 20px;
+                transform: translateX(100%);
+                transition: transform 0.25s ease;
+                z-index: 9999;
+                overflow-y: auto;
+                gap: 0;
+            }
+            .nav-links.open { transform: translateX(0); }
+            .nav-links li { width: 100%; }
+            .nav-links li a {
+                display: block;
+                padding: 14px 8px;
+                font-size: 13px;
+                border-bottom: 1px solid rgba(26,48,80,0.5);
+            }
+
+            .nav-buttons {
+                position: fixed;
+                bottom: 0; right: 0;
+                width: min(80vw, 300px);
+                height: auto;
+                display: flex;
+                flex-direction: column;
+                padding: 20px;
+                background: var(--cyber-surface, #0d1520);
+                border-top: 1px solid var(--cyber-border);
+                transform: translateX(100%);
+                transition: transform 0.25s ease;
+                z-index: 9999;
+                pointer-events: none;
+                gap: 0;
+            }
+            .nav-buttons.open {
+                transform: translateX(0);
+                pointer-events: auto;
+            }
+            .nav-buttons .btn-ghost,
+            .nav-buttons .btn-primary,
+            .nav-buttons .btn-danger,
+            .nav-buttons a.btn-ghost { width: 100%; margin-top: 8px; text-align: center; }
+
+            /* Stack username chip above Profile / Log Out */
+            .nav-buttons > div { display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: 0 !important; width: 100%; }
+            .nav-buttons .nav-user-chip {
+                width: 100%;
+                justify-content: center;
+                padding: 10px 0;
+                border-bottom: 1px solid var(--cyber-border);
+                margin-bottom: 8px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .btn-hamburger { display: none !important; }
+            .nav-overlay { display: none !important; }
+            .nav-links {
+                position: static !important;
+                transform: none !important;
+                flex-direction: row !important;
+                background: transparent !important;
+                border-left: none !important;
+                padding: 0 !important;
+                height: auto !important;
+                width: auto !important;
+                overflow-y: visible !important;
+            }
+            .nav-buttons {
+                position: static !important;
+                transform: none !important;
+                flex-direction: row !important;
+                background: transparent !important;
+                height: auto !important;
+                width: auto !important;
+                padding: 0 !important;
+                pointer-events: auto !important;
+                justify-content: flex-end !important;
+            }
         }

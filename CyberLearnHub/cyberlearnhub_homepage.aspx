@@ -26,7 +26,11 @@
         <!-- =============================================
              NAVIGATION
         ============================================= -->
+        <!-- Nav overlay outside <nav> so position:fixed isn't clipped by backdrop-filter stacking context -->
+        <div class="nav-overlay" id="navOverlay"></div>
+
         <nav class="navbar" role="navigation" aria-label="Main navigation">
+
             <a href="cyberlearnhub_homepage.aspx" class="logo">
                 <div class="logo-icon" aria-hidden="true">
                     <i class="ti ti-shield-lock"></i>
@@ -34,7 +38,7 @@
                 CYBER<span class="logo-accent">LEARN</span> HUB
             </a>
 
-            <ul class="nav-links">
+            <ul class="nav-links" id="navLinks">
                 <li><a href="CourseListing.aspx">Courses</a></li>
                 <li><a href="About.aspx">About</a></li>
                 <asp:PlaceHolder ID="pnlUserNav" runat="server" Visible="false">
@@ -48,6 +52,10 @@
                 <asp:PlaceHolder ID="pnlAdminNav" runat="server" Visible="false">
                 </asp:PlaceHolder>
             </ul>
+
+            <button class="btn-hamburger" id="navHamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+                <i class="ti ti-menu-2"></i>
+            </button>
 
             <div class="nav-buttons">
                 <%-- Guest buttons: shown when not logged in --%>
@@ -574,5 +582,6 @@
         </script>
 
     </form><!-- end form1 -->
+    <script src="Scripts/nav.js"></script>
 </body>
 </html>

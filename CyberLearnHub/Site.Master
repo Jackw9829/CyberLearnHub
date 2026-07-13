@@ -27,6 +27,10 @@
     <form id="MasterForm" runat="server">
         <div class="page-wrapper">
 
+            <!-- Nav overlay — must be OUTSIDE <nav> so position:fixed is relative to viewport,
+                 not the navbar's backdrop-filter stacking context -->
+            <div class="nav-overlay" id="navOverlay"></div>
+
             <!-- NAVIGATION -->
             <nav class="navbar" role="navigation" aria-label="Main navigation">
 
@@ -37,7 +41,7 @@
                     CYBER<span class="logo-accent">LEARN</span> HUB
                 </a>
 
-                <ul class="nav-links">
+                <ul class="nav-links" id="navLinks">
                     <li><a href="~/CourseListing.aspx" runat="server">Courses</a></li>
                     <li><a href="~/About.aspx"         runat="server">About</a></li>
 
@@ -53,6 +57,10 @@
                     <asp:PlaceHolder ID="pnlAdminNav" runat="server" Visible="false">
                     </asp:PlaceHolder>
                 </ul>
+
+                <button class="btn-hamburger" id="navHamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+                    <i class="ti ti-menu-2"></i>
+                </button>
 
                 <div class="nav-buttons">
                     <asp:Panel ID="pnlGuestButtons" runat="server" Visible="true">
@@ -166,7 +174,7 @@
             (function () {
                 var container = document.getElementById('cb-container');
                 var toggle = document.getElementById('cb-toggle');
-                var startX, startY, origLeft, origTop, moved;
+                var startX, startY, origLeft, origTop, dragged;
 
                 function getPos() {
                     var r = container.getBoundingClientRect();
@@ -180,7 +188,7 @@
                     var pos = getPos();
                     origLeft = pos.left;
                     origTop = pos.top;
-                    moved = false;
+                    dragged = false;
                     document.addEventListener('mousemove', onMove);
                     document.addEventListener('mouseup', onUp);
                     document.addEventListener('touchmove', onMove, { passive: false });
@@ -192,7 +200,8 @@
                     var pt = e.touches ? e.touches[0] : e;
                     var dx = pt.clientX - startX;
                     var dy = pt.clientY - startY;
-                    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+                    if (Math.abs(dx) > 8 || Math.abs(dy) > 8) dragged = true;
+                    if (!dragged) return;
                     var newLeft = Math.max(0, Math.min(origLeft + dx, window.innerWidth - container.offsetWidth));
                     var newTop = Math.max(0, Math.min(origTop + dy, window.innerHeight - container.offsetHeight));
                     container.style.left = newLeft + 'px';
@@ -206,11 +215,20 @@
                     document.removeEventListener('mouseup', onUp);
                     document.removeEventListener('touchmove', onMove);
                     document.removeEventListener('touchend', onUp);
-                    if (!moved) cbToggle();
+                    // If a real drag happened, cancel the upcoming synthetic click
+                    if (dragged) {
+                        toggle.addEventListener('click', function absorbClick(ev) {
+                            ev.stopImmediatePropagation();
+                            ev.preventDefault();
+                            toggle.removeEventListener('click', absorbClick, true);
+                        }, true);
+                    }
                 }
 
+                // Toggle is driven by click (fires after mouseup OR touch tap)
+                toggle.addEventListener('click', function () { cbToggle(); });
                 toggle.addEventListener('mousedown', onDown);
-                toggle.addEventListener('touchstart', onDown, { passive: true });
+                toggle.addEventListener('touchstart', onDown, { passive: false });
             })();
             // ---- End drag logic ----
 
@@ -398,6 +416,7 @@
 
     </form>
 
+    <script src="<%= ResolveUrl("~/Scripts/nav.js") %>"></script>
 </body>
 </html>
 

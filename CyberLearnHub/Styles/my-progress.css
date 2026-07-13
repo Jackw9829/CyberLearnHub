@@ -157,3 +157,16 @@
             color: var(--cyber-muted);
             padding: 24px 0;
         }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .progress-grid   { grid-template-columns: 1fr; gap: 16px; }
+    .progress-card   { padding: 20px 16px; }
+    .progress-header { flex-direction: column; gap: 8px; }
+    .page-content    { padding: 20px 16px; }
+    table { min-width: 480px; }
+    .table-wrap { overflow-x: auto; }
+}
+@media (max-width: 480px) {
+    .progress-pct { font-size: 28px; }
+}

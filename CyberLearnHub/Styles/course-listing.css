@@ -191,3 +191,17 @@
         }
         .empty-state i { font-size: 48px; margin-bottom: 16px; display: block; color: var(--cyber-border); }
         .empty-state p { font-family: 'Share Tech Mono', monospace; font-size: 13px; letter-spacing: 1px; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .courses-grid   { grid-template-columns: 1fr; gap: 16px; }
+    .filter-bar     { flex-direction: column; gap: 10px; align-items: stretch; }
+    .filter-bar select, .filter-bar input { width: 100%; }
+    .page-content   { padding: 20px 16px; }
+    .course-card    { padding: 20px 16px; }
+    .btn-primary    { min-height: 44px; }
+}
+@media (max-width: 480px) {
+    .courses-grid { grid-template-columns: 1fr; }
+    .page-title   { font-size: clamp(20px, 5vw, 28px); }
+}

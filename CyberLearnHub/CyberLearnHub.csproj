@@ -74,6 +74,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\nav.js" />
     <Content Include="Styles\site.css" />
     <Content Include="Styles\admin.css" />
     <Content Include="Styles\about.css" />
@@ -468,6 +469,7 @@
     </Compile>
     <Compile Include="App_Code\AuthHelper.cs" />
     <Compile Include="App_Code\DbHelper.cs" />
+    <Compile Include="App_Code\DeviceHelper.cs" />
     <Compile Include="ForumDAL.cs" />
     <Compile Include="ForumHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
