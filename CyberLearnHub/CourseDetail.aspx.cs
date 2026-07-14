@@ -184,7 +184,15 @@ namespace CyberLearnHub
                     }
                     else if (!string.IsNullOrEmpty(filePath))
                     {
-                        sb.AppendFormat("<p style=\"font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--cyber-muted);\">Video URL: <a href=\"{0}\" target=\"_blank\" style=\"color:var(--cyber-accent);\">{0}</a></p>",
+                        sb.AppendFormat(
+                            "<div style=\"padding:16px 0;\">" +
+                            "<a href=\"{0}\" target=\"_blank\" rel=\"noopener noreferrer\" " +
+                            "style=\"display:inline-flex;align-items:center;gap:8px;padding:10px 20px;" +
+                            "background:var(--cyber-accent);color:#080d14;font-family:'Rajdhani',sans-serif;" +
+                            "font-weight:700;font-size:14px;letter-spacing:1px;border-radius:5px;" +
+                            "text-decoration:none;text-transform:uppercase;\">" +
+                            "<i class=\"ti ti-player-play\"></i> Watch Video" +
+                            "</a></div>",
                             Server.HtmlEncode(filePath));
                     }
                     if (!string.IsNullOrEmpty(content))

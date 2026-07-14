@@ -208,6 +208,16 @@ public static class DbHelper
                         CreatedAt  DATETIME NOT NULL DEFAULT GETDATE(),
                         IsResolved BIT NOT NULL DEFAULT 0
                     )");
+
+                // Widen LearningMaterials.FilePath to handle long URLs (e.g. Bing redirect links)
+                Execute(conn, @"
+                    IF EXISTS (SELECT 1 FROM sys.columns
+                        WHERE object_id=OBJECT_ID('dbo.LearningMaterials') AND name='FilePath'
+                          AND max_length < 2048)
+                    BEGIN
+                        UPDATE dbo.LearningMaterials SET FilePath='' WHERE FilePath IS NULL;
+                        ALTER TABLE dbo.LearningMaterials ALTER COLUMN FilePath VARCHAR(2048) NOT NULL
+                    END");
             }
             _schemaReady = true;
         }
