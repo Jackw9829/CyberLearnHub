@@ -113,7 +113,7 @@ All lab instances live in a private subnet and are reachable only via VPN or Gua
 
 ## 🩹 Disaster Recovery / Local Fallback
 
-If the hosted AWS lab environment (Guacamole/Kali/Target) is ever unreachable, the network-based CTF labs can still be completed locally using a self-contained Docker bundle at [`/kali-fallback`](./kali-fallback). It runs a local Kali attack box against a local DVWA target — no AWS access required — and flags can still be submitted normally on the live platform, since flag checking only validates the hash, not where it was solved.
+If the hosted AWS lab environment (Guacamole/Kali/Target) is ever unreachable, the network-based CTF labs can still be completed locally using a self-contained Docker bundle at [`/kali-fallback`](./kali-fallback). It runs a local Kali attack box against a local DVWA target (no AWS access required) and flags can still be submitted normally on the live platform, since flag checking only validates the hash, not where it was solved.
 
 ```bash
 cd kali-fallback
