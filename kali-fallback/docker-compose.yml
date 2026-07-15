@@ -1,0 +1,23 @@
+services:
+  kali:
+    build: .
+    container_name: clh-kali-fallback
+    tty: true
+    stdin_open: true
+    networks:
+      - lab-net
+    # No ports published — this container is only reached via `docker exec`,
+    # it doesn't need to be exposed to the host or internet.
+
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: clh-dvwa-fallback
+    ports:
+      - "8080:80"
+    networks:
+      - lab-net
+    restart: unless-stopped
+
+networks:
+  lab-net:
+    driver: bridge
