@@ -182,6 +182,8 @@
         .form-label          { display:block; font-family:'Rajdhani',sans-serif; font-size:12px; font-weight:600; color:var(--cyber-muted); margin-bottom:5px; }
         .form-control        { width:100%; background:#0d1520; border:1px solid #1a3050; border-radius:6px; padding:10px 12px; color:var(--cyber-text,#c8dff0); font-size:14px; box-sizing:border-box; }
         .form-control:focus  { outline:none; border-color:var(--cyber-accent); }
+        .btn-ghost           { padding:9px 20px; border:1px solid var(--cyber-border,#1a3050); background:transparent; color:var(--cyber-text,#c8dff0); font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:600; letter-spacing:1px; border-radius:5px; cursor:pointer; text-transform:uppercase; transition:all 0.2s; }
+        .btn-ghost:hover     { border-color:var(--cyber-accent,#00d4ff); color:var(--cyber-accent,#00d4ff); }
     </style>
 
     <script type="text/javascript">

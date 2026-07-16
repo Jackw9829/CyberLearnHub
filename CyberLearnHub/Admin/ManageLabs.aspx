@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            <div class="form-row">
+            <div class="checkbox-row">
                 <asp:CheckBox ID="chkIsActive" runat="server" Checked="true" Text=" Active (visible to students)" />
             </div>
 
