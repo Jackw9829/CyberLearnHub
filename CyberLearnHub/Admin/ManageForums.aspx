@@ -91,9 +91,7 @@
                             <%# !(bool)Eval("IsDeleted")
                                 ? "<a href=\"../Forum/ThreadDetail.aspx?id=" + Eval("ForumID") + "\" class=\"btn-admin-sm btn-view\" target=\"_blank\"><i class=\"ti ti-eye\"></i> View</a>"
                                 : "" %>
-                            <%# !(bool)Eval("IsDeleted")
-                                ? "<button type=\"button\" class=\"btn-admin-sm btn-edit\" onclick=\"openEditModal(" + Eval("ForumID") + ",'" + (Eval("Title") as string ?? "").Replace("'","&#39;") + "')\"><i class=\"ti ti-pencil\"></i> Edit</button>"
-                                : "" %>
+                            <%# RenderEditBtn(Eval("ForumID"), Eval("IsDeleted"), Eval("Title"), Eval("Body"), Eval("CategoryID")) %>
 
                             <%# !(bool)Eval("IsDeleted")
                                 ? "<button type=\"button\" class=\"btn-admin-sm btn-delete\" onclick=\"openConfirm('soft','" + Eval("ForumID") + "')\"><i class=\"ti ti-trash\"></i> Delete</button>"
@@ -139,6 +137,25 @@
                 <div class="form-group">
                     <label class="form-label">Category</label>
                     <asp:DropDownList ID="ddlEditCategory" runat="server" CssClass="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Attachment <span class="muted">(optional — leave empty to keep existing)</span></label>
+                    <div id="editAttachDropZone" onclick="document.getElementById('<%= fuEditAttachment.ClientID %>').click()"
+                         style="border:1.5px dashed var(--cyber-border);border-radius:8px;padding:20px 16px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--cyber-muted);font-family:'Share Tech Mono',monospace;font-size:12px;transition:border-color .2s;">
+                        <i class="ti ti-upload" style="font-size:24px;"></i>
+                        <div>Click to attach a file</div>
+                        <div style="font-size:11px;opacity:.7;">Images: jpg/png/gif/webp &le;5MB &nbsp;&bull;&nbsp; Documents: pdf/docx/doc/xlsx/pptx &le;20MB</div>
+                    </div>
+                    <asp:FileUpload ID="fuEditAttachment" runat="server" Style="display:none"
+                        accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.docx,.doc,.xlsx,.pptx"
+                        onchange="editPreviewAttach(this)" />
+                    <div id="editAttachPreview" style="display:none;margin-top:8px;">
+                        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.25);border-radius:6px;padding:6px 12px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--cyber-text);">
+                            <i class="ti ti-paperclip"></i>
+                            <span id="editAttachName"></span>
+                            <button type="button" onclick="editClearAttach()" style="background:none;border:none;color:var(--cyber-muted);cursor:pointer;padding:0;font-size:14px;line-height:1;"><i class="ti ti-x"></i></button>
+                        </div>
+                    </div>
                 </div>
                 <div class="forum-modal-footer" style="margin-top:16px;">
                     <button type="button" class="btn-ghost" onclick="closeEditModal()">Cancel</button>
@@ -228,11 +245,33 @@
             if (e.target === this) closeConfirm();
         });
 
-        function openEditModal(id, title) {
-            document.getElementById('<%= hdnEditId.ClientID %>').value = id;
+        function openEditModal(btn) {
+            var id    = btn.dataset.id;
+            var title = btn.dataset.title;
+            var body  = btn.dataset.body;
+            var cat   = btn.dataset.cat;
+            document.getElementById('<%= hdnEditId.ClientID %>').value       = id;
+            document.getElementById('<%= txtEditTitle.ClientID %>').value    = title || '';
+            document.getElementById('<%= txtEditBody.ClientID %>').value     = body  || '';
+            var ddl = document.getElementById('<%= ddlEditCategory.ClientID %>');
+            if (ddl) ddl.value = cat || '';
+            editClearAttach();
             document.getElementById('editModal').style.display = 'flex';
         }
         function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
+
+        function editPreviewAttach(input) {
+            if (!input.files || !input.files[0]) return;
+            document.getElementById('editAttachName').textContent = input.files[0].name;
+            document.getElementById('editAttachDropZone').style.display = 'none';
+            document.getElementById('editAttachPreview').style.display = 'block';
+        }
+        function editClearAttach() {
+            var fu = document.getElementById('<%= fuEditAttachment.ClientID %>');
+            if (fu) fu.value = '';
+            document.getElementById('editAttachDropZone').style.display = '';
+            document.getElementById('editAttachPreview').style.display = 'none';
+        }
 
         function submitCommand(cmd, id) {
             document.getElementById('<%= hdnActionForumId.ClientID %>').value = id;
@@ -245,7 +284,7 @@
         }
 
         <%if (ViewState["ShowEditModal"] != null && (bool)ViewState["ShowEditModal"]) { %>
-        window.addEventListener('load', function() { openEditModal('', ''); });
+        window.addEventListener('load', function() { document.getElementById('editModal').style.display = 'flex'; });
         <%} %>
 
         function adminPreviewAttach(input) {

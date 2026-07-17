@@ -185,14 +185,20 @@ public static class ForumDAL
     }
 
     public static void UpdateForum(int forumId, string title, string body,
-                                    int? categoryId, int requestingUserId, bool isAdmin)
+                                    int? categoryId, int requestingUserId, bool isAdmin,
+                                    string attachPath = null, string attachType = null)
     {
         var f = GetForumById(forumId);
         if (f == null) throw new Exception("Forum not found.");
         if (!isAdmin && f.AuthorID != requestingUserId) throw new UnauthorizedAccessException();
-        const string sql = @"
-            UPDATE dbo.Forums SET Title=@title, Body=@body, CategoryID=@catId, UpdatedAt=GETDATE()
-            WHERE  ForumID=@id";
+
+        string sql = attachPath != null
+            ? @"UPDATE dbo.Forums SET Title=@title, Body=@body, CategoryID=@catId,
+                    AttachmentPath=@attach, AttachmentType=@attachType, UpdatedAt=GETDATE()
+                WHERE ForumID=@id"
+            : @"UPDATE dbo.Forums SET Title=@title, Body=@body, CategoryID=@catId, UpdatedAt=GETDATE()
+                WHERE ForumID=@id";
+
         using (var conn = Open())
         using (var cmd  = new SqlCommand(sql, conn))
         {
@@ -200,6 +206,11 @@ public static class ForumDAL
             cmd.Parameters.AddWithValue("@body",  body);
             cmd.Parameters.AddWithValue("@catId", (object)categoryId ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@id",    forumId);
+            if (attachPath != null)
+            {
+                cmd.Parameters.AddWithValue("@attach",     attachPath);
+                cmd.Parameters.AddWithValue("@attachType", (object)attachType ?? DBNull.Value);
+            }
             cmd.ExecuteNonQuery();
         }
     }

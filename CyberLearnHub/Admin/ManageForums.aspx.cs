@@ -145,7 +145,14 @@ namespace CyberLearnHub.Admin
             if (!string.IsNullOrEmpty(ddlEditCategory.SelectedValue) && int.TryParse(ddlEditCategory.SelectedValue, out int cid))
                 catId = cid;
 
-            try { ForumDAL.UpdateForum(fid, title, body, catId, CurrentUserId, isAdmin: true); }
+            string attachPath, attachType, attachError;
+            if (!TryValidateAttachment(fuEditAttachment, out attachPath, out attachType, out attachError))
+            {
+                ViewState["ShowEditModal"] = true;
+                ShowAlert("&gt; " + attachError, false); LoadForums(); LoadCategoryDropdowns(); return;
+            }
+
+            try { ForumDAL.UpdateForum(fid, title, body, catId, CurrentUserId, isAdmin: true, attachPath: attachPath, attachType: attachType); }
             catch (UnauthorizedAccessException) { }
 
             ViewState["ShowEditModal"] = false;
@@ -191,6 +198,31 @@ namespace CyberLearnHub.Admin
             lblAlert.Text     = msg;
             pnlAlert.CssClass = "admin-alert " + (success ? "success" : "error");
             pnlAlert.Visible  = true;
+        }
+
+        // Renders the Edit button using data-* attributes so the modal pre-populates correctly.
+        // data-* values are HTML-attribute-encoded (quotes → &quot;, newlines → &#10;) so they
+        // survive the HTML parser; dataset in JS gives the correctly decoded strings.
+        protected string RenderEditBtn(object forumId, object isDeleted, object title, object body, object categoryId)
+        {
+            if (isDeleted is bool b && b) return "";
+            return string.Format(
+                "<button type=\"button\" class=\"btn-admin-sm btn-edit\" " +
+                "data-id=\"{0}\" data-title=\"{1}\" data-body=\"{2}\" data-cat=\"{3}\" " +
+                "onclick=\"openEditModal(this)\">" +
+                "<i class=\"ti ti-pencil\"></i> Edit</button>",
+                forumId,
+                HtmlAttr(title?.ToString()),
+                HtmlAttr(body?.ToString()),
+                (categoryId == null || categoryId == DBNull.Value) ? "" : categoryId.ToString());
+        }
+
+        private static string HtmlAttr(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return "";
+            return System.Web.HttpUtility.HtmlAttributeEncode(s)
+                .Replace("\r", "")
+                .Replace("\n", "&#10;");
         }
     }
 }
