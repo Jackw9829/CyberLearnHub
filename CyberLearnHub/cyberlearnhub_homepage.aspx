@@ -262,7 +262,7 @@
         ============================================= -->
         <footer class="site-footer" role="contentinfo">
             <span class="footer-copy">
-                © 2025 CyberLearn Hub
+                © 2026 CyberLearn Hub
             </span>
             <nav class="footer-links" aria-label="Footer navigation">
                 <a href="About.aspx">About</a>

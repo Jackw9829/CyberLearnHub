@@ -78,7 +78,7 @@
             </div>
             <div class="timeline">
                 <div class="tl-item">
-                    <div class="tl-year">2024 &mdash; THE PROBLEM</div>
+                    <div class="tl-year">2025 &mdash; THE PROBLEM</div>
                     <div class="tl-title">A Gap in Accessible Cybersecurity Learning</div>
                     <div class="tl-desc">
                         As cyberattacks increased globally, it became clear that most learning resources
@@ -87,7 +87,7 @@
                     </div>
                 </div>
                 <div class="tl-item">
-                    <div class="tl-year">2025 &mdash; THE IDEA</div>
+                    <div class="tl-year">2026 &mdash; THE IDEA</div>
                     <div class="tl-title">CyberLearn Hub Is Born</div>
                     <div class="tl-desc">
                         A team of computing students envisioned a platform that strips away the complexity &mdash;
@@ -96,7 +96,7 @@
                     </div>
                 </div>
                 <div class="tl-item">
-                    <div class="tl-year">2025 &mdash; TODAY</div>
+                    <div class="tl-year">2026 &mdash; TODAY</div>
                     <div class="tl-title">A Growing Learning Platform</div>
                     <div class="tl-desc">
                         Built on ASP.NET Web Forms and SQL Server, CyberLearn Hub now hosts a growing
