@@ -13,9 +13,11 @@ namespace CyberLearnHub.Admin
             int.TryParse(Request.QueryString["courseId"], out _courseId);
 
             if (_courseId <= 0) { Response.Redirect("ManageCourses.aspx"); return; }
-            hlBack.NavigateUrl = "ManageQuestions.aspx?courseId=" + _courseId;
 
-            _quizId = GetOrCreateQuizId(_courseId);
+            if (!int.TryParse(Request.QueryString["quizId"], out _quizId) || _quizId <= 0)
+                _quizId = GetOrCreateQuizId(_courseId);
+
+            hlBack.NavigateUrl = "ManageQuestions.aspx?courseId=" + _courseId + "&quizId=" + _quizId;
 
             if (!IsPostBack && _id > 0)
             {
@@ -153,7 +155,6 @@ namespace CyberLearnHub.Admin
             }
             else
             {
-                int qid = GetOrCreateQuizId(_courseId);
                 using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
                 using (SqlCommand cmd = new SqlCommand(@"
                     INSERT INTO dbo.QuizQuestions
@@ -162,7 +163,7 @@ namespace CyberLearnHub.Admin
                     VALUES (@qid, @q, @qt, @a, @b, @c, @d, @ans,
                             @diff, @topic, @expl)", conn))
                 {
-                    cmd.Parameters.AddWithValue("@qid", qid);
+                    cmd.Parameters.AddWithValue("@qid", _quizId);
                     AddParams(cmd, qText, qType, optA, optB, optC, optD, correct);
                     cmd.Parameters.AddWithValue("@diff",  difficulty);
                     cmd.Parameters.AddWithValue("@topic", string.IsNullOrEmpty(topic) ? (object)DBNull.Value : topic);
@@ -171,7 +172,7 @@ namespace CyberLearnHub.Admin
                 }
             }
 
-            Response.Redirect("ManageQuestions.aspx?courseId=" + _courseId + "&saved=1");
+            Response.Redirect("ManageQuestions.aspx?courseId=" + _courseId + "&quizId=" + _quizId + "&saved=1");
         }
 
         private static void AddParams(SqlCommand cmd, string q, string qt,

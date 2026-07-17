@@ -82,6 +82,10 @@ namespace CyberLearnHub.Admin
             string title   = txtTitle.Text.Trim();
             string filePath, content;
 
+            var validTypes = new System.Collections.Generic.HashSet<string>
+                { "Article", "Video", "PDF", "Image", "Link" };
+            if (!validTypes.Contains(mType)) mType = "Article";
+
             if (string.IsNullOrWhiteSpace(title))
             {
                 ShowAlert("&gt; Title is required.", false); return;

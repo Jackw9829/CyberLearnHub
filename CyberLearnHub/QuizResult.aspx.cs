@@ -30,11 +30,11 @@ namespace CyberLearnHub
         {
             int courseId, quizId, score, total;
             bool passed;
-            string courseName;
+            string courseName, quizTitle;
 
             using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
             using (SqlCommand cmd = new SqlCommand(@"
-                SELECT qr.QuizID, qz.CourseID, qr.Score, qr.TotalQuestions, qr.Passed, c.Title
+                SELECT qr.QuizID, qz.CourseID, qr.Score, qr.TotalQuestions, qr.Passed, c.Title, qz.Title
                 FROM   dbo.QuizResults qr
                 JOIN   dbo.Quizzes qz ON qz.QuizID   = qr.QuizID
                 JOIN   dbo.Courses c  ON c.CourseID   = qz.CourseID
@@ -52,6 +52,7 @@ namespace CyberLearnHub
                     total      = r.GetInt32(3);
                     passed     = r.GetBoolean(4);
                     courseName = r.GetString(5);
+                    quizTitle  = r.GetString(6);
                 }
             }
 
@@ -66,11 +67,13 @@ namespace CyberLearnHub
             sb.AppendFormat("<div class=\"score-label\">{0}</div>", verdict);
             sb.AppendFormat("<div class=\"score-number\">{0}%</div>", pct);
             sb.AppendFormat("<div class=\"score-total\">{0} / {1} correct</div>", score, total);
+            sb.AppendFormat("<div class=\"score-quiz\" style=\"font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:var(--cyber-heading);margin-bottom:4px;\">{0}</div>",
+                Server.HtmlEncode(quizTitle));
             sb.AppendFormat("<div class=\"score-course\">// {0}</div>", Server.HtmlEncode(courseName));
             sb.Append("</div>");
             pnlScore.Controls.Add(new System.Web.UI.LiteralControl(sb.ToString()));
 
-            hlRetake.NavigateUrl = "~/Quiz.aspx?courseId=" + courseId;
+            hlRetake.NavigateUrl = "~/Quiz.aspx?courseId=" + courseId + "&quizId=" + quizId;
             hlBack.NavigateUrl   = "~/CourseDetail.aspx?id=" + courseId;
 
             if (Request.QueryString["expired"] == "1")
@@ -98,10 +101,10 @@ namespace CyberLearnHub
                 {
                     // Show how many quizzes remain
                     int[] progress = QuizProgress(uid, courseId);
-                    pnlScore.Controls.Add(new System.Web.UI.LiteralControl(string.Format(
-                        "<div style=\"background:rgba(250,199,117,0.08);border:1px solid rgba(250,199,117,0.3);color:var(--cyber-amber);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 16px;border-radius:6px;margin-top:12px;\">" +
-                        "&gt; Certificate unlocks when you pass all quizzes in this course. Progress: {0} / {1} passed." +
-                        "</div>", progress[0], progress[1])));
+                    lblCertProgress.Text  = string.Format(
+                        "Certificate unlocks when you pass all quizzes in this course. Progress: {0} / {1} passed.",
+                        progress[0], progress[1]);
+                    pnlCertProgress.Visible = true;
                 }
             }
         }

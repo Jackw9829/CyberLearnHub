@@ -52,8 +52,20 @@ namespace CyberLearnHub.Admin
 
             string title = txtTitle.Text.Trim();
             string desc  = txtDescription.Text.Trim();
-            int?   timeLimit   = string.IsNullOrWhiteSpace(txtTimeLimit.Text)   ? (int?)null : int.Parse(txtTimeLimit.Text.Trim());
-            int?   maxAttempts = string.IsNullOrWhiteSpace(txtMaxAttempts.Text) ? (int?)null : int.Parse(txtMaxAttempts.Text.Trim());
+            int? timeLimit = null;
+            if (!string.IsNullOrWhiteSpace(txtTimeLimit.Text))
+            {
+                if (!int.TryParse(txtTimeLimit.Text.Trim(), out int tl) || tl < 1)
+                { ShowAlert("&gt; Time limit must be a whole number of minutes (e.g. 30).", false); return; }
+                timeLimit = tl;
+            }
+            int? maxAttempts = null;
+            if (!string.IsNullOrWhiteSpace(txtMaxAttempts.Text))
+            {
+                if (!int.TryParse(txtMaxAttempts.Text.Trim(), out int ma) || ma < 1)
+                { ShowAlert("&gt; Max attempts must be a whole number (e.g. 3).", false); return; }
+                maxAttempts = ma;
+            }
             bool   randomize   = chkRandomize.Checked;
 
             if (_id > 0)
@@ -94,6 +106,13 @@ namespace CyberLearnHub.Admin
             }
 
             Response.Redirect("ManageQuizzes.aspx?courseId=" + _courseId + "&saved=1");
+        }
+
+        private void ShowAlert(string msg, bool success)
+        {
+            lblAlert.Text     = msg;
+            pnlAlert.CssClass = "admin-alert " + (success ? "success" : "error");
+            pnlAlert.Visible  = true;
         }
     }
 }

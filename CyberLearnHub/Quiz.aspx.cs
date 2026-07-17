@@ -33,11 +33,71 @@ namespace CyberLearnHub
             }
 
             if (!IsPostBack)
-                LoadQuiz(uid);
+            {
+                if (int.TryParse(Request.QueryString["quizId"], out int qidParam) && qidParam > 0)
+                    LoadQuiz(uid, qidParam);
+                else
+                    LoadQuizOrSelect(uid);
+            }
         }
 
-        private void LoadQuiz(int uid)
+        private void LoadQuizOrSelect(int uid)
         {
+            string courseTitle = "";
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(
+                "SELECT Title FROM dbo.Courses WHERE CourseID = @id AND IsPublished = 1", conn))
+            {
+                cmd.Parameters.AddWithValue("@id", _courseId);
+                conn.Open();
+                object r = cmd.ExecuteScalar();
+                if (r == null) { Response.Redirect("~/Error.aspx"); return; }
+                courseTitle = r.ToString();
+            }
+
+            DataTable dt = new DataTable();
+            using (SqlConnection conn = new SqlConnection(DbHelper.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                SELECT q.QuizID, q.CourseID, q.Title, q.PassingScore, ISNULL(q.TimeLimitMinutes,0) AS TimeLimitMinutes,
+                       (SELECT COUNT(*) FROM dbo.QuizQuestions WHERE QuizID = q.QuizID) AS QuestionCount
+                FROM   dbo.Quizzes q
+                WHERE  q.CourseID = @cid
+                ORDER  BY q.QuizID", conn))
+            {
+                cmd.Parameters.AddWithValue("@cid", _courseId);
+                conn.Open();
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    da.Fill(dt);
+            }
+
+            if (dt.Rows.Count == 0)
+            {
+                lblCourseName.Text = Server.HtmlEncode(courseTitle);
+                pnlQuiz.Visible  = false;
+                pnlAlert.Visible = true;
+                lblAlert.Text    = "&gt; No quiz available for this course yet.";
+                return;
+            }
+
+            if (dt.Rows.Count == 1)
+            {
+                // Only one quiz — jump straight in
+                int singleQuizId = (int)dt.Rows[0]["QuizID"];
+                Response.Redirect("Quiz.aspx?courseId=" + _courseId + "&quizId=" + singleQuizId);
+                return;
+            }
+
+            // Multiple quizzes — show selection panel, hide quiz body
+            lblSelectCourseName.Text = Server.HtmlEncode(courseTitle);
+            pnlQuizSelect.Visible = true;
+            pnlQuizMain.Visible   = false;
+            rptQuizzes.DataSource = dt;
+            rptQuizzes.DataBind();
+        }
+
+        private void LoadQuiz(int uid, int quizId)
+        {
+            _quizId = quizId;
             int timeLimitMinutes = 0;
             int maxAttempts      = 0;
             bool randomize       = false;
@@ -56,9 +116,10 @@ namespace CyberLearnHub
                 }
 
                 using (SqlCommand cmd = new SqlCommand(@"
-                    SELECT TOP 1 QuizID, ISNULL(TimeLimitMinutes,0), ISNULL(MaxAttempts,0), ISNULL(RandomizeQuestions,0)
-                    FROM dbo.Quizzes WHERE CourseID = @cid", conn))
+                    SELECT QuizID, ISNULL(TimeLimitMinutes,0), ISNULL(MaxAttempts,0), ISNULL(RandomizeQuestions,0)
+                    FROM dbo.Quizzes WHERE QuizID = @qid AND CourseID = @cid", conn))
                 {
+                    cmd.Parameters.AddWithValue("@qid", _quizId);
                     cmd.Parameters.AddWithValue("@cid", _courseId);
                     using (SqlDataReader r = cmd.ExecuteReader())
                     {
@@ -66,10 +127,9 @@ namespace CyberLearnHub
                         {
                             pnlQuiz.Visible  = false;
                             pnlAlert.Visible = true;
-                            lblAlert.Text    = "&gt; No quiz available for this course yet.";
+                            lblAlert.Text    = "&gt; Quiz not found.";
                             return;
                         }
-                        _quizId          = r.GetInt32(0);
                         timeLimitMinutes = r.GetInt32(1);
                         maxAttempts      = r.GetInt32(2);
                         randomize        = r.GetBoolean(3);

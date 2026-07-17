@@ -22,6 +22,14 @@
             </asp:HyperLink>
         </div>
 
+        <!-- Certificate progress banner -->
+        <asp:Panel ID="pnlCertProgress" runat="server" Visible="false">
+            <div class="cert-progress-banner">
+                <i class="ti ti-lock" style="font-size:15px;"></i>
+                <asp:Label ID="lblCertProgress" runat="server" />
+            </div>
+        </asp:Panel>
+
         <!-- Certificate download -->
         <asp:Panel ID="pnlCertBtn" runat="server" Visible="false">
             <div style="text-align:center;margin-bottom:28px;">

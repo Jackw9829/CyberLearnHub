@@ -18,7 +18,8 @@ namespace CyberLearnHub.Admin
                 return;
             }
 
-            _quizId = GetOrCreateQuizId(_courseId);
+            if (!int.TryParse(Request.QueryString["quizId"], out _quizId) || _quizId <= 0)
+                _quizId = GetOrCreateQuizId(_courseId);
 
             if (!IsPostBack)
             {

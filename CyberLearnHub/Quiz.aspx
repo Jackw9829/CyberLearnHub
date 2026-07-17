@@ -9,6 +9,33 @@
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="quiz-wrap">
 
+        <%-- Quiz selection panel — shown when a course has multiple quizzes --%>
+        <asp:Panel ID="pnlQuizSelect" runat="server" Visible="false">
+            <div class="quiz-header">
+                <div class="quiz-course-name"><asp:Label ID="lblSelectCourseName" runat="server" /></div>
+                <div class="quiz-title">// Select a Quiz</div>
+            </div>
+            <div class="quiz-select-list">
+                <asp:Repeater ID="rptQuizzes" runat="server">
+                    <ItemTemplate>
+                        <a href='<%# "Quiz.aspx?courseId=" + Eval("CourseID") + "&quizId=" + Eval("QuizID") %>'
+                           class="quiz-select-card">
+                            <div class="quiz-select-title"><%# Server.HtmlEncode(Eval("Title") as string) %></div>
+                            <div class="quiz-select-meta">
+                                <span><%# Eval("QuestionCount") %> questions</span>
+                                &nbsp;&bull;&nbsp;
+                                <span>Passing: <%# Eval("PassingScore") %>%</span>
+                                <%# (int)Eval("TimeLimitMinutes") > 0 ? "&nbsp;&bull;&nbsp;<span>" + Eval("TimeLimitMinutes") + " min</span>" : "" %>
+                            </div>
+                            <div class="quiz-select-arrow"><i class="ti ti-arrow-right"></i></div>
+                        </a>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
+        </asp:Panel>
+
+        <asp:Panel ID="pnlQuizMain" runat="server">
+
         <div class="quiz-header">
             <div class="quiz-course-name"><asp:Label ID="lblCourseName" runat="server" /></div>
             <div class="quiz-title">// Course Quiz</div>
@@ -94,30 +121,71 @@
                     OnClientClick="return confirmSubmit();" />
             </div>
         </asp:Panel>
+        </asp:Panel><%-- /pnlQuizMain --%>
+    </div>
+
+    <%-- Custom submit confirmation modal --%>
+    <div id="quizConfirmModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:3000;align-items:center;justify-content:center;">
+        <div style="background:#0d1520;border:1px solid #1a3050;border-radius:12px;padding:32px 28px 24px;width:100%;max-width:420px;box-shadow:0 8px 40px rgba(0,0,0,0.7);margin:0 16px;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                <div style="width:44px;height:44px;border-radius:50%;background:rgba(250,199,117,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="ti ti-alert-triangle" style="font-size:22px;color:#fac777;"></i>
+                </div>
+                <h3 style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#e8f4ff;margin:0;">Unanswered Questions</h3>
+            </div>
+            <p id="quizConfirmMsg" style="font-size:14px;color:#5a7a99;line-height:1.6;margin:0 0 24px;padding-left:58px;font-family:'Share Tech Mono',monospace;"></p>
+            <div style="display:flex;gap:10px;justify-content:flex-end;">
+                <button type="button" id="quizConfirmCancel"
+                    style="padding:10px 22px;border-radius:7px;border:1px solid #1a3050;background:transparent;color:#5a7a99;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .2s;">
+                    KEEP ANSWERING
+                </button>
+                <button type="button" id="quizConfirmOk"
+                    style="padding:10px 22px;border-radius:7px;border:none;background:var(--cyber-accent,#00d4ff);color:#080d14;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:all .2s;">
+                    SUBMIT ANYWAY
+                </button>
+            </div>
+        </div>
     </div>
 
 <script type="text/javascript">
+    var _quizSubmitConfirmed = false;
+
     function confirmSubmit() {
+        if (_quizSubmitConfirmed) { _quizSubmitConfirmed = false; return true; }
+
         var answered = 0, total = 0;
-        // Count radio groups answered
         var radioGroups = {};
         document.querySelectorAll('.option-list:not([style*="display:none"]) input[type="radio"]').forEach(function(r) {
             if (!radioGroups[r.name]) radioGroups[r.name] = false;
             if (r.checked) radioGroups[r.name] = true;
         });
         Object.values(radioGroups).forEach(function(v) { total++; if (v) answered++; });
-
-        // Count fill-in inputs answered
         document.querySelectorAll('.fill-input-wrap:not([style*="display:none"]) .quiz-fill-input').forEach(function(inp) {
             total++;
             if (inp.value.trim()) answered++;
         });
 
         if (answered < total) {
-            return confirm('You have ' + (total - answered) + ' unanswered question(s). Submit anyway?');
+            var unanswered = total - answered;
+            document.getElementById('quizConfirmMsg').textContent =
+                'You have ' + unanswered + ' unanswered question' + (unanswered > 1 ? 's' : '') + '. Are you sure you want to submit?';
+            document.getElementById('quizConfirmModal').style.display = 'flex';
+            return false; // block the postback
         }
         return true;
     }
+
+    document.getElementById('quizConfirmOk').addEventListener('click', function() {
+        document.getElementById('quizConfirmModal').style.display = 'none';
+        _quizSubmitConfirmed = true;
+        document.getElementById('<%= btnSubmit.ClientID %>').click();
+    });
+    document.getElementById('quizConfirmCancel').addEventListener('click', function() {
+        document.getElementById('quizConfirmModal').style.display = 'none';
+    });
+    document.getElementById('quizConfirmModal').addEventListener('click', function(e) {
+        if (e.target === this) this.style.display = 'none';
+    });
 
     (function() {
         var limitSeconds = parseInt('<%: ViewState["TimeLimitMinutes"] ?? 0 %>') * 60;
@@ -130,6 +198,7 @@
         function tick() {
             if (remaining <= 0) {
                 display.textContent = '00:00';
+                _quizSubmitConfirmed = true; // bypass confirmation modal on timeout
                 submitBtn.click();
                 return;
             }

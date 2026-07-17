@@ -2,6 +2,10 @@ namespace CyberLearnHub
 {
     public partial class Quiz
     {
+        protected global::System.Web.UI.WebControls.Panel pnlQuizMain;
+        protected global::System.Web.UI.WebControls.Panel pnlQuizSelect;
+        protected global::System.Web.UI.WebControls.Label lblSelectCourseName;
+        protected global::System.Web.UI.WebControls.Repeater rptQuizzes;
         protected global::System.Web.UI.WebControls.Label lblCourseName;
         protected global::System.Web.UI.WebControls.Label lblProgress;
         protected global::System.Web.UI.WebControls.Panel pnlAlert;

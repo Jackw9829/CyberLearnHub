@@ -209,6 +209,23 @@ public static class DbHelper
                         IsResolved BIT NOT NULL DEFAULT 0
                     )");
 
+                // Fix MaterialType CHECK constraint — drop whatever constraint exists and replace
+                // with the exact set the form uses, so designer-generated constraints don't conflict
+                Execute(conn, @"
+                    DECLARE @cn NVARCHAR(200)
+                    SELECT @cn = name FROM sys.check_constraints
+                    WHERE parent_object_id = OBJECT_ID('dbo.LearningMaterials')
+                      AND CHARINDEX('MaterialType', definition) > 0
+                    IF @cn IS NOT NULL
+                        EXEC('ALTER TABLE dbo.LearningMaterials DROP CONSTRAINT [' + @cn + ']')
+                    IF NOT EXISTS (
+                        SELECT 1 FROM sys.check_constraints
+                        WHERE parent_object_id = OBJECT_ID('dbo.LearningMaterials')
+                          AND name = 'CK_LearningMaterials_MaterialType')
+                        ALTER TABLE dbo.LearningMaterials
+                            ADD CONSTRAINT CK_LearningMaterials_MaterialType
+                            CHECK (MaterialType IN ('Article','Video','PDF','Image','Link'))");
+
                 // Widen LearningMaterials.FilePath to handle long URLs (e.g. Bing redirect links)
                 Execute(conn, @"
                     IF EXISTS (SELECT 1 FROM sys.columns

@@ -8,6 +8,8 @@ namespace CyberLearnHub
         protected global::System.Web.UI.WebControls.Repeater rptReview;
         protected global::System.Web.UI.WebControls.Panel pnlLeaderboard;
         protected global::System.Web.UI.WebControls.Literal litLeaderboard;
+        protected global::System.Web.UI.WebControls.Panel pnlCertProgress;
+        protected global::System.Web.UI.WebControls.Label lblCertProgress;
         protected global::System.Web.UI.WebControls.Panel pnlCertBtn;
         protected global::System.Web.UI.WebControls.HyperLink hlCert;
     }

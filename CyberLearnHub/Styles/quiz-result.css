@@ -130,6 +130,20 @@
         .review-answer.your-correct { color: var(--cyber-accent2); }
         .review-answer.your-wrong   { color: var(--cyber-danger); }
         .review-answer.correct-ans  { color: var(--cyber-accent); margin-top: 4px; }
+        /* Certificate progress banner */
+        .cert-progress-banner {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(250,199,117,0.07);
+            border: 1px solid rgba(250,199,117,0.3);
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin-bottom: 28px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            color: var(--cyber-amber);
+            line-height: 1.5;
+        }
+
         .review-explanation {
             margin-top: 8px; padding: 8px 12px;
             background: rgba(250,199,117,0.06);

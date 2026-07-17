@@ -15,7 +15,7 @@
         <div class="admin-card-title" style="justify-content:space-between;">
             <span><i class="ti ti-help-circle"></i> Questions</span>
             <div style="display:flex;gap:8px;">
-                <a href='<%= "QuestionForm.aspx?courseId=" + Request.QueryString["courseId"] %>' class="btn-admin-primary">
+                <a href='<%= "QuestionForm.aspx?courseId=" + Request.QueryString["courseId"] + "&quizId=" + Request.QueryString["quizId"] %>' class="btn-admin-primary">
                     <i class="ti ti-plus"></i> Add Question
                 </a>
                 <a href="ManageCourses.aspx" class="btn-secondary"><i class="ti ti-arrow-left"></i> Back</a>
@@ -61,7 +61,7 @@
                     </td>
                     <td>
                         <div style="display:flex;gap:6px;">
-                            <a href='QuestionForm.aspx?id=<%# Eval("QuestionID") %>&courseId=<%# Eval("CourseID") %>' class="btn-admin-sm btn-edit">
+                            <a href='QuestionForm.aspx?id=<%# Eval("QuestionID") %>&courseId=<%# Eval("CourseID") %>&quizId=<%= Request.QueryString["quizId"] %>' class="btn-admin-sm btn-edit">
                                 <i class="ti ti-pencil"></i> Edit
                             </a>
                             <asp:LinkButton ID="lbDelete" runat="server"
