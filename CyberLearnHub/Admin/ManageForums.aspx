@@ -139,7 +139,7 @@
                     <asp:DropDownList ID="ddlEditCategory" runat="server" CssClass="form-control" />
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Attachment <span class="muted">(optional — leave empty to keep existing)</span></label>
+                    <label class="form-label">Attachment <span class="muted">(optional - leave empty to keep existing)</span></label>
                     <div id="editAttachDropZone" onclick="document.getElementById('<%= fuEditAttachment.ClientID %>').click()"
                          style="border:1.5px dashed var(--cyber-border);border-radius:8px;padding:20px 16px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--cyber-muted);font-family:'Share Tech Mono',monospace;font-size:12px;transition:border-color .2s;">
                         <i class="ti ti-upload" style="font-size:24px;"></i>
