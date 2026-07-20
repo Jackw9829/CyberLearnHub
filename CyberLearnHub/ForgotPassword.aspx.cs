@@ -53,11 +53,15 @@ namespace CyberLearnHub
                     }
                 }
 
-                // Always show the same message to avoid leaking which emails are registered
-                ShowMessage("If that email is registered, a reset link has been sent. Check your inbox (and spam folder).", "success");
-
                 if (userFound)
+                {
                     System.Threading.Tasks.Task.Run(() => SendResetEmailAsync(email, token));
+                    ShowMessage("A reset link has been sent to your email. Check your inbox (and spam folder).", "success");
+                }
+                else
+                {
+                    ShowMessage("No account found with that email address.", "error");
+                }
             }
             catch (Exception ex)
             {
